@@ -57,8 +57,10 @@ class common
     {
         try {
             $stmt = $this->db_connection->prepare($queryText);
-            foreach ($queryParams as $key => $value) {
-                $stmt->bindValue($key, $value);
+            if ($queryParams) {
+                foreach ($queryParams as $key => $value) {
+                    $stmt->bindValue($key, $value);
+                }
             }
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -68,12 +70,14 @@ class common
         }
     }
 
-    public function query_to_md_array($queryText, $queryParams)
+    public function query_to_md_array($queryText, $queryParams = false)
     {
         try {
             $stmt = $this->db_connection->prepare($queryText);
-            foreach ($queryParams as $key => $value) {
-                $stmt->bindValue($key, $value);
+            if ($queryParams) {
+                foreach ($queryParams as $key => $value) {
+                    $stmt->bindValue($key, $value);
+                }
             }
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -146,6 +150,27 @@ class common
     {
         if (!isset($_SESSION['userID'])) {
             die("No Login");
+        }
+    }
+
+    public function print_template_card($title, $type = 'start')
+    {
+        if ($type == 'start_no_title') {
+            echo '<div id="main-card-container" class="card" style="">
+                    <div class="card-body pt-3">
+                        <div class="media">
+                        <div class="media-body" style="">';
+        } else if ($type == 'start') {
+            echo '<div id="main-card-container" class="card" style="">
+                <h5 class="card-header">' . $title . '</h5>
+                    <div class="card-body pt-3">
+                        <div class="media">
+                        <div class="media-body" style="">';
+        } else if ($type == 'end') {
+            echo '<p style="visibility: hidden">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ultrices venenatis suscipit. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum vel nisi ac leo pulvinar mollis. Suspendisse lacus lorem, euismod id libero non, sodales varius nunc. Proin scelerisque aliquam turpis et dignissim. Ut volutpat condimentum libero, quis facilisis metus accumsan ac. Etiam quis mi ut tortor lacinia laoreet. Nunc eget felis sed erat tincidunt laoreet. Nullam quis turpis sed orci vehicula euismod.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ultrices venenatis suscipit. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum vel nisi ac leo pulvinar mollis. Suspendisse lacus lorem, euismod id libero non, sodales varius nunc. Proin scelerisque aliquam turpis et dignissim. Ut volutpat condimentum libero, quis facilisis metus accumsan ac. Etiam quis mi ut tortor lacinia laoreet. Nunc eget felis sed erat tincidunt laoreet. Nullam quis turpis sed orci vehicula euismod.
+            </p>';
+            echo '</div></div></div></div>';
         }
     }
 }

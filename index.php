@@ -4,6 +4,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/classes/router.php');
 session_start();
 $env = parse_ini_file('.env');
 //instantiate the common class
+$test = 'test';
 
 try {
     $common = new common($env);
@@ -12,7 +13,7 @@ try {
     exit;
 }
 
-print_r($common->get_all_config_values());
+//print_r($common->get_all_config_values());
 
 //Sample Query to multi-dimensional array
 //$queryText = "SELECT * FROM config WHERE setting = :setting";
@@ -34,15 +35,12 @@ print_r($common->get_all_config_values());
 //instantiate the router class - determines the page to load
 $router = new router();
 
-
 ($common->get_env_value('DEBUGGING') == '1') ? ini_set('display_errors', 1) : ini_set('log_errors', 0); //turns off error logging if not debugging
 
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 header("Expires: -1"); //for the above - prevents browsers from caching dynamic page.
-
-
 
 //allows only local access or otherwise defined from .env file
 $common->local_only();
@@ -143,10 +141,24 @@ if (!isset($_SESSION['user_id'])) {
                         <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
                     </svg> Dashboard<span class="badge badge-sm bg-info ms-auto">NEW</span></a></li>
             <li class="nav-title">Core Functions</li>
-            <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
-                    <i class="fa fa-search"></i> &nbsp;Searches</a>
+            <li class="nav-group">
+                <a class="nav-link nav-group-toggle" href="#">
+                    <i class="fa fa-search"></i> &nbsp;Searches
+                </a>
                 <ul class="nav-group-items">
                     <li class="nav-item"><a class="nav-link" href="/?s1=Search&s2=Main"><span class="nav-icon"></span><i class="fa fa-fire"></i> &nbsp; Main Search</a></li>
+                </ul>
+            </li>
+            <li class="nav-group">
+                <a class="nav-link nav-group-toggle" href="#">
+                    <i class="fa fa-gear"></i> &nbsp;Settings
+                </a>
+                <ul class="nav-group-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/?s1=Settings&s2=Clients">
+                            <span class="nav-icon"></span><i class="fa fa-person"></i> &nbsp; Clients
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li class="nav-item mt-auto"><a class="nav-link" href="/?s1=Docs" target="_blank">
@@ -223,6 +235,7 @@ if (!isset($_SESSION['user_id'])) {
                                     <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-settings"></use>
                                 </svg> Settings</a><a class="dropdown-item" href="#">
 
+
                                 <div class="dropdown-divider"></div><a class="dropdown-item" href="#">
                                     <svg class="icon me-2">
                                         <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-account-logout"></use>
@@ -231,7 +244,7 @@ if (!isset($_SESSION['user_id'])) {
                     </li>
                 </ul>
             </div>
-            <div class="container-fluid px-4">
+            <!--<div class="container-fluid px-4">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb my-0">
                         <li class="breadcrumb-item"><a href="/">Home</a>
@@ -240,13 +253,13 @@ if (!isset($_SESSION['user_id'])) {
                         </li>
                     </ol>
                 </nav>
-            </div>
+            </div>-->
         </header>
         <div class="body flex-grow-1">
-            <div class="container-lg px-4">
+            <div class="px-4">
                 <?php
                 try {
-                    $router->route();
+                    include($router->get_file_path());
                 } catch (Exception $e) {
                     include($_SERVER['DOCUMENT_ROOT'] . '/pages/ERROR/404.html');
                 }
