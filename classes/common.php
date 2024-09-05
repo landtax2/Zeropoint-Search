@@ -11,12 +11,76 @@ class common
         $this->env = $env;
         //set the timezone
         date_default_timezone_set($env['TIME_ZONE']);
+        $this->db_connect();
     }
 
     //connects to a postgre database using PDO
     public function db_connect()
     {
         //this function will connect to the database
+        try {
+            $pdo = new PDO("pgsql:host=" . $this->env['DB_HOST'] . ";dbname=" . $this->env['DB_NAME'], $this->env['DB_USER'], $this->env['DB_PASS']);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->db_connection = $pdo;
+        } catch (Exception $e) {
+            throw new Exception("Database connection failed: " . $e->getMessage(), 1);
+        }
+    }
+
+    public function get_config_value($setting)
+    {
+        try {
+            $stmt = $this->db_connection->prepare("SELECT value FROM config WHERE setting = :setting");
+            $stmt->bindParam(':setting', $setting);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result;
+        } catch (Exception $e) {
+            throw new Exception("Database connection failed: " . $e->getMessage(), 1);
+        }
+    }
+
+    //function to get all config values
+    public function get_all_config_values()
+    {
+        try {
+            $stmt = $this->db_connection->prepare("SELECT * FROM config");
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        } catch (Exception $e) {
+            throw new Exception("Database connection failed: " . $e->getMessage(), 1);
+        }
+    }
+
+    public function query_to_sd_array($queryText, $queryParams)
+    {
+        try {
+            $stmt = $this->db_connection->prepare($queryText);
+            foreach ($queryParams as $key => $value) {
+                $stmt->bindValue($key, $value);
+            }
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result;
+        } catch (Exception $e) {
+            throw new Exception("Database query failed: " . $e->getMessage(), 1);
+        }
+    }
+
+    public function query_to_md_array($queryText, $queryParams)
+    {
+        try {
+            $stmt = $this->db_connection->prepare($queryText);
+            foreach ($queryParams as $key => $value) {
+                $stmt->bindValue($key, $value);
+            }
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        } catch (Exception $e) {
+            throw new Exception("Database query failed: " . $e->getMessage(), 1);
+        }
     }
 
     public function get_db_connection()

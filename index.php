@@ -4,7 +4,32 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/classes/router.php');
 session_start();
 $env = parse_ini_file('.env');
 //instantiate the common class
-$common = new common($env);
+
+try {
+    $common = new common($env);
+} catch (Exception $e) {
+    echo json_encode(array('success' => false, 'message' => 'Database connection failed: ' . $e->getMessage()));
+    exit;
+}
+
+print_r($common->get_all_config_values());
+
+//Sample Query to multi-dimensional array
+//$queryText = "SELECT * FROM config WHERE setting = :setting";
+//$queryParams = array(':setting' => 'db_version');
+//$result = $common->query_to_md_array($queryText, $queryParams);
+//print_r($result);
+//die($result[0]['value']);
+
+
+//Sample query to single array
+//$queryText = "SELECT * FROM config WHERE setting = :setting";
+//$queryParams = array(':setting' => 'db_version');
+//$result = $common->query_to_sd_array($queryText, $queryParams);
+//print_r($result);
+//die($result['value']);
+
+
 
 //instantiate the router class - determines the page to load
 $router = new router();
@@ -23,9 +48,9 @@ header("Expires: -1"); //for the above - prevents browsers from caching dynamic 
 $common->local_only();
 
 //checks if the user is logged in
-if (!isset($_SESSION['userID'])) {
-    //header('Location: /pages/login/login.php');
-    //die();
+if (!isset($_SESSION['user_id'])) {
+    header('Location: /account/login/index.php');
+    die();
 }
 
 ?>
@@ -67,7 +92,7 @@ if (!isset($_SESSION['userID'])) {
     <script src="/coreui/js/config.js"></script>
     <script src="/coreui/js/color-modes.js"></script>
     <!-- CoreUI Chartjs -->
-    <link href="/coreui/vendors/@coreui/chartjs/css/coreui-chartjs.css" rel="stylesheet">
+    <!--<link href="/coreui/vendors/@coreui/chartjs/css/coreui-chartjs.css" rel="stylesheet">-->
 
     <!--Non CoreUI Components-->
     <!-- Data Tables Main-->
@@ -246,10 +271,10 @@ if (!isset($_SESSION['userID'])) {
         });
     </script>
     <!-- Plugins and scripts required by this view-->
-    <script src="/coreui/vendors/chart.js/js/chart.umd.js"></script>
+    <!--<script src="/coreui/vendors/chart.js/js/chart.umd.js"></script>
     <script src="/coreui/vendors/@coreui/chartjs/js/coreui-chartjs.js"></script>
     <script src="/coreui/vendors/@coreui/utils/js/index.js"></script>
-    <script src="/coreui/js/main.js"></script>
+    <script src="/coreui/js/main.js"></script>-->
     <script>
     </script>
 
