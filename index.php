@@ -10,11 +10,7 @@ $common = new common($env);
 $router = new router();
 
 
-if ($env['DEBUGGING'] == '1') {
-    ini_set('display_errors', 1);
-} else {
-    ini_set('log_errors', 0); //turns off error logging
-}
+($common->get_env_value('DEBUGGING') == '1') ? ini_set('display_errors', 1) : ini_set('log_errors', 0); //turns off error logging if not debugging
 
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
@@ -128,7 +124,7 @@ if (!isset($_SESSION['userID'])) {
                     <li class="nav-item"><a class="nav-link" href="/?page=Search&sub_dir=Main"><span class="nav-icon"></span><i class="fa fa-fire"></i> &nbsp; Main Search</a></li>
                 </ul>
             </li>
-            <li class="nav-item mt-auto"><a class="nav-link" href="https://coreui.io/docs/templates/installation/" target="_blank">
+            <li class="nav-item mt-auto"><a class="nav-link" href="/?page=Docs" target="_blank">
                     <svg class="nav-icon">
                         <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-description"></use>
                     </svg> Docs</a></li>
@@ -233,8 +229,8 @@ if (!isset($_SESSION['userID'])) {
             </div>
         </div>
         <footer class="footer px-4">
-            <div><?= $router->get_file_path(); ?></div>
-            <div class="ms-auto">Powered by&nbsp;<a href="https://coreui.io/docs/">CoreUI UI Components</a></div>
+            <div><?= ($common->get_env_value('DEBUGGING') == '1') ? 'File Path: ' . $router->get_file_path() : ''; ?></div>
+            <div class="ms-auto">Powered by&nbsp;<a href="https://coreui.io/">CoreUI</a></div>
         </footer>
     </div>
     <!-- CoreUI and necessary plugins-->
