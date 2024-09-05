@@ -9,7 +9,7 @@ class router
 
     public function __construct()
     {
-        $this->page = isset($_GET['page']) ? $_GET['page'] : 'home';
+        $this->page = isset($_GET['page']) ? $_GET['page'] : 'Dashboard';
         $this->sub_dir = isset($_GET['sub_dir']) ? $_GET['sub_dir'] : false;
         $this->file = isset($_GET['file']) ? $_GET['file'] : false;
 
@@ -18,11 +18,11 @@ class router
 
         if (!empty($this->sub_dir)) {
             $this->file_path .= $this->sub_dir . '/';
-        } else {
-            $this->file_path .= 'index.php';
         }
 
-        if (!empty($this->file)) {
+        if (empty($this->file)) {
+            $this->file_path .= 'index.php';
+        } else {
             $this->file_path .= $this->file . '.php';
         }
     }
@@ -52,5 +52,10 @@ class router
     public function get_file()
     {
         return $this->file;
+    }
+
+    public function get_file_path()
+    {
+        return $this->file_path;
     }
 }

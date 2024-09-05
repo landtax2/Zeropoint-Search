@@ -72,6 +72,35 @@ if (!isset($_SESSION['userID'])) {
     <script src="/coreui/js/color-modes.js"></script>
     <!-- CoreUI Chartjs -->
     <link href="/coreui/vendors/@coreui/chartjs/css/coreui-chartjs.css" rel="stylesheet">
+
+    <!--Non CoreUI Components-->
+    <!-- Data Tables Main-->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <link href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css" rel="stylesheet">
+
+    <!-- Data Tables Buttons-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <link href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.css" rel="stylesheet">
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.js"></script>
+
+    <!-- Data Tables Responsive -->
+    <link href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.css" rel="stylesheet">
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.js"></script>
+
+    <!-- Prism -->
+    <link rel="stylesheet" href="/vendors/prism/prism.css">
+
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/90add283c4.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -88,128 +117,21 @@ if (!isset($_SESSION['userID'])) {
             <button class="btn-close d-lg-none" type="button" data-coreui-dismiss="offcanvas" data-coreui-theme="dark" aria-label="Close" onclick="coreui.Sidebar.getInstance(document.querySelector(&quot;#sidebar&quot;)).toggle()"></button>
         </div>
         <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="">
-            <li class="nav-item"><a class="nav-link" href="index.html">
+            <li class="nav-item"><a class="nav-link" href="/">
                     <svg class="nav-icon">
                         <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
                     </svg> Dashboard<span class="badge badge-sm bg-info ms-auto">NEW</span></a></li>
-            <li class="nav-title">Theme</li>
-            <li class="nav-item"><a class="nav-link" href="colors.html">
-                    <svg class="nav-icon">
-                        <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-drop"></use>
-                    </svg> Colors</a></li>
-            <li class="nav-item"><a class="nav-link" href="typography.html">
-                    <svg class="nav-icon">
-                        <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-pencil"></use>
-                    </svg> Typography</a></li>
-            <li class="nav-title">Components</li>
+            <li class="nav-title">Core Functions</li>
             <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
-                    <svg class="nav-icon">
-                        <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-puzzle"></use>
-                    </svg> Base</a>
-                <ul class="nav-group-items compact">
-                    <li class="nav-item"><a class="nav-link" href="/coreui/base/accordion.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Accordion</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/base/breadcrumb.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Breadcrumb</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/base/cards.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Cards</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/base/carousel.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Carousel</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/base/collapse.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Collapse</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/base/list-group.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> List group</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/base/navs-tabs.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Navs &amp; Tabs</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/base/pagination.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Pagination</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/base/placeholders.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Placeholders</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/base/popovers.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Popovers</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/base/progress.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Progress</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/base/spinners.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Spinners</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/base/tables.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Tables</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/base/tooltips.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Tooltips</a></li>
-                </ul>
-            </li>
-            <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
-                    <svg class="nav-icon">
-                        <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-cursor"></use>
-                    </svg> Buttons</a>
-                <ul class="nav-group-items compact">
-                    <li class="nav-item"><a class="nav-link" href="/coreui/buttons/buttons.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Buttons</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/buttons/button-group.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Buttons Group</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/buttons/dropdowns.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Dropdowns</a></li>
-                </ul>
-            </li>
-            <li class="nav-item"><a class="nav-link" href="charts.html">
-                    <svg class="nav-icon">
-                        <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-chart-pie"></use>
-                    </svg> Charts</a></li>
-            <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
-                    <svg class="nav-icon">
-                        <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-notes"></use>
-                    </svg> Forms</a>
-                <ul class="nav-group-items compact">
-                    <li class="nav-item"><a class="nav-link" href="forms/form-control.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Form Control</a></li>
-                    <li class="nav-item"><a class="nav-link" href="forms/select.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Select</a></li>
-                    <li class="nav-item"><a class="nav-link" href="forms/checks-radios.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Checks and radios</a></li>
-                    <li class="nav-item"><a class="nav-link" href="forms/range.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Range</a></li>
-                    <li class="nav-item"><a class="nav-link" href="forms/input-group.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Input group</a></li>
-                    <li class="nav-item"><a class="nav-link" href="forms/floating-labels.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Floating labels</a></li>
-                    <li class="nav-item"><a class="nav-link" href="forms/layout.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Layout</a></li>
-                    <li class="nav-item"><a class="nav-link" href="forms/validation.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Validation</a></li>
-                </ul>
-            </li>
-            <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
-                    <svg class="nav-icon">
-                        <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-star"></use>
-                    </svg> Icons</a>
-                <ul class="nav-group-items compact">
-                    <li class="nav-item"><a class="nav-link" href="/coreui/icons/coreui-icons-free.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> CoreUI Icons<span class="badge badge-sm bg-success ms-auto">Free</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/icons/coreui-icons-brand.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> CoreUI Icons - Brand</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/icons/coreui-icons-flag.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> CoreUI Icons - Flag</a></li>
-                </ul>
-            </li>
-            <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
-                    <svg class="nav-icon">
-                        <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-bell"></use>
-                    </svg> Notifications</a>
-                <ul class="nav-group-items compact">
-                    <li class="nav-item"><a class="nav-link" href="/coreui/notifications/alerts.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Alerts</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/notifications/badge.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Badge</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/notifications/modals.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Modals</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/coreui/notifications/toasts.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span> Toasts</a></li>
-                </ul>
-            </li>
-            <li class="nav-item"><a class="nav-link" href="widgets.html">
-                    <svg class="nav-icon">
-                        <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-calculator"></use>
-                    </svg> Widgets<span class="badge badge-sm bg-info ms-auto">NEW</span></a></li>
-            <li class="nav-divider"></li>
-            <li class="nav-title">Extras</li>
-            <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
-                    <svg class="nav-icon">
-                        <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-star"></use>
-                    </svg> Pages</a>
-                <ul class="nav-group-items compact">
-                    <li class="nav-item"><a class="nav-link" href="login.html" target="_top">
-                            <svg class="nav-icon">
-                                <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-account-logout"></use>
-                            </svg> Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="register.html" target="_top">
-                            <svg class="nav-icon">
-                                <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-account-logout"></use>
-                            </svg> Register</a></li>
-                    <li class="nav-item"><a class="nav-link" href="404.html" target="_top">
-                            <svg class="nav-icon">
-                                <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-bug"></use>
-                            </svg> Error 404</a></li>
-                    <li class="nav-item"><a class="nav-link" href="500.html" target="_top">
-                            <svg class="nav-icon">
-                                <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-bug"></use>
-                            </svg> Error 500</a></li>
+                    <i class="fa fa-search"></i> &nbsp;Searches</a>
+                <ul class="nav-group-items">
+                    <li class="nav-item"><a class="nav-link" href="/?page=Search&sub_dir=Main"><span class="nav-icon"></span><i class="fa fa-fire"></i> &nbsp; Main Search</a></li>
                 </ul>
             </li>
             <li class="nav-item mt-auto"><a class="nav-link" href="https://coreui.io/docs/templates/installation/" target="_blank">
                     <svg class="nav-icon">
                         <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-description"></use>
                     </svg> Docs</a></li>
-            <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="https://coreui.io/product/bootstrap-dashboard-template/" target="_top">
-                    <svg class="nav-icon text-primary">
-                        <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-layers"></use>
-                    </svg> Try CoreUI PRO</a></li>
         </ul>
         <div class="sidebar-footer border-top d-none d-md-flex">
             <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
@@ -224,23 +146,9 @@ if (!isset($_SESSION['userID'])) {
                     </svg>
                 </button>
                 <ul class="header-nav d-none d-lg-flex">
-                    <li class="nav-item"><a class="nav-link" href="#">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Users</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
+                    <!--<li class="nav-item"><a class="nav-link" href="/">Dashboard</a></li>-->
                 </ul>
                 <ul class="header-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">
-                            <svg class="icon icon-lg">
-                                <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-bell"></use>
-                            </svg></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">
-                            <svg class="icon icon-lg">
-                                <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich"></use>
-                            </svg></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">
-                            <svg class="icon icon-lg">
-                                <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-envelope-open"></use>
-                            </svg></a></li>
                 </ul>
                 <ul class="header-nav">
                     <li class="nav-item py-1">
@@ -279,23 +187,11 @@ if (!isset($_SESSION['userID'])) {
                     <li class="nav-item py-1">
                         <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
                     </li>
-                    <li class="nav-item dropdown"><a class="nav-link py-0 pe-0" data-coreui-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link py-0 pe-0" data-coreui-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                             <div class="avatar avatar-md"><img class="avatar-img" src="/coreui/assets/img/avatars/8.jpg" alt="user@email.com"></div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end pt-0">
-                            <div class="dropdown-header bg-body-tertiary text-body-secondary fw-semibold rounded-top mb-2">Account</div><a class="dropdown-item" href="#">
-                                <svg class="icon me-2">
-                                    <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-bell"></use>
-                                </svg> Updates<span class="badge badge-sm bg-info ms-2">42</span></a><a class="dropdown-item" href="#">
-                                <svg class="icon me-2">
-                                    <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-envelope-open"></use>
-                                </svg> Messages<span class="badge badge-sm bg-success ms-2">42</span></a><a class="dropdown-item" href="#">
-                                <svg class="icon me-2">
-                                    <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-task"></use>
-                                </svg> Tasks<span class="badge badge-sm bg-danger ms-2">42</span></a><a class="dropdown-item" href="#">
-                                <svg class="icon me-2">
-                                    <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-comment-square"></use>
-                                </svg> Comments<span class="badge badge-sm bg-warning ms-2">42</span></a>
                             <div class="dropdown-header bg-body-tertiary text-body-secondary fw-semibold my-2">
                                 <div class="fw-semibold">Settings</div>
                             </div><a class="dropdown-item" href="#">
@@ -305,19 +201,11 @@ if (!isset($_SESSION['userID'])) {
                                 <svg class="icon me-2">
                                     <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-settings"></use>
                                 </svg> Settings</a><a class="dropdown-item" href="#">
-                                <svg class="icon me-2">
-                                    <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-credit-card"></use>
-                                </svg> Payments<span class="badge badge-sm bg-secondary ms-2">42</span></a><a class="dropdown-item" href="#">
-                                <svg class="icon me-2">
-                                    <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-file"></use>
-                                </svg> Projects<span class="badge badge-sm bg-primary ms-2">42</span></a>
-                            <div class="dropdown-divider"></div><a class="dropdown-item" href="#">
-                                <svg class="icon me-2">
-                                    <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-lock-locked"></use>
-                                </svg> Lock Account</a><a class="dropdown-item" href="#">
-                                <svg class="icon me-2">
-                                    <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-account-logout"></use>
-                                </svg> Logout</a>
+
+                                <div class="dropdown-divider"></div><a class="dropdown-item" href="#">
+                                    <svg class="icon me-2">
+                                        <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-account-logout"></use>
+                                    </svg> Logout</a>
                         </div>
                     </li>
                 </ul>
@@ -325,9 +213,9 @@ if (!isset($_SESSION['userID'])) {
             <div class="container-fluid px-4">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb my-0">
-                        <li class="breadcrumb-item"><a href="#">Home</a>
+                        <li class="breadcrumb-item"><a href="/">Home</a>
                         </li>
-                        <li class="breadcrumb-item active"><span>Dashboard</span>
+                        <li class="breadcrumb-item active"><span><?= $router->get_page(); ?></span>
                         </li>
                     </ol>
                 </nav>
@@ -345,7 +233,7 @@ if (!isset($_SESSION['userID'])) {
             </div>
         </div>
         <footer class="footer px-4">
-            <div><a href="https://coreui.io">CoreUI </a><a href="https://coreui.io/product/free-bootstrap-admin-template/">Bootstrap Admin Template</a> © 2024 creativeLabs.</div>
+            <div><?= $router->get_file_path(); ?></div>
             <div class="ms-auto">Powered by&nbsp;<a href="https://coreui.io/docs/">CoreUI UI Components</a></div>
         </footer>
     </div>
