@@ -121,10 +121,10 @@ if (!isset($_SESSION['userID'])) {
             <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
                     <i class="fa fa-search"></i> &nbsp;Searches</a>
                 <ul class="nav-group-items">
-                    <li class="nav-item"><a class="nav-link" href="/?page=Search&sub_dir=Main"><span class="nav-icon"></span><i class="fa fa-fire"></i> &nbsp; Main Search</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/?s1=Search&s2=Main"><span class="nav-icon"></span><i class="fa fa-fire"></i> &nbsp; Main Search</a></li>
                 </ul>
             </li>
-            <li class="nav-item mt-auto"><a class="nav-link" href="/?page=Docs" target="_blank">
+            <li class="nav-item mt-auto"><a class="nav-link" href="/?s1=Docs" target="_blank">
                     <svg class="nav-icon">
                         <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-description"></use>
                     </svg> Docs</a></li>
@@ -211,7 +211,7 @@ if (!isset($_SESSION['userID'])) {
                     <ol class="breadcrumb my-0">
                         <li class="breadcrumb-item"><a href="/">Home</a>
                         </li>
-                        <li class="breadcrumb-item active"><span><?= $router->get_page(); ?></span>
+                        <li class="breadcrumb-item active"><span></span>
                         </li>
                     </ol>
                 </nav>

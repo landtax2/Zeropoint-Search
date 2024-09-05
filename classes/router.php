@@ -1,23 +1,35 @@
 <?PHP
 class router
 {
-    private $page;
-    private $sub_dir;
+    private $s1;
+    private $s2;
+    private $s3;
+    private $s4;
     private $file;
     private $file_path;
 
 
     public function __construct()
     {
-        $this->page = isset($_GET['page']) ? $_GET['page'] : 'Dashboard';
-        $this->sub_dir = isset($_GET['sub_dir']) ? $_GET['sub_dir'] : false;
+        $this->s1 = isset($_GET['s1']) ? $_GET['s1'] : 'Dashboard';
+        $this->s2 = isset($_GET['s2']) ? $_GET['s2'] : false;
+        $this->s3 = isset($_GET['s3']) ? $_GET['s2'] : false;
+        $this->s4 = isset($_GET['s4']) ? $_GET['s2'] : false;
         $this->file = isset($_GET['file']) ? $_GET['file'] : false;
 
         $basePath = $_SERVER['DOCUMENT_ROOT'] . '/pages/';
-        $this->file_path = $basePath . $this->page . '/';
 
-        if (!empty($this->sub_dir)) {
-            $this->file_path .= $this->sub_dir . '/';
+        //s1 is always set
+        $this->file_path = $basePath . $this->s1 . '/';
+
+        if (!empty($this->s2)) {
+            $this->file_path .= $this->s2 . '/';
+        }
+        if (!empty($this->s3)) {
+            $this->file_path .= $this->s3 . '/';
+        }
+        if (!empty($this->s4)) {
+            $this->file_path .= $this->s4 . '/';
         }
 
         if (empty($this->file)) {
@@ -37,16 +49,6 @@ class router
             // If the file doesn't exist throw an exception
             throw new Exception('File: ' . $this->file_path . ' not found');
         }
-    }
-
-    public function get_page()
-    {
-        return $this->page;
-    }
-
-    public function get_sub_dir()
-    {
-        return $this->sub_dir;
     }
 
     public function get_file()
