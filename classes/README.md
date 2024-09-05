@@ -1,0 +1,1 @@
+This is intended for all php classes that are created for both the front and back end.

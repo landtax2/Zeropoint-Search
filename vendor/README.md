@@ -1,0 +1,1 @@
+This is intended for all vendor code outside of the coreui template.

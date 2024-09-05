@@ -1,0 +1,1 @@
+This is intended for all static assets such as images, fonts, etc.

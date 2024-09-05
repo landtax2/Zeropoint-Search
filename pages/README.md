@@ -1,0 +1,1 @@
+This is intended for all pages that are part of the front end.
