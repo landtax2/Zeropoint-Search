@@ -183,6 +183,15 @@ class common
         }
     }
 
+    public function sql2date($date)
+    {
+        if (empty($date)) {
+            return 'null';
+        } else {
+            return date('m/d/Y', strtotime($date));
+        }
+    }
+
     public function print_template_card($title, $type = 'start')
     {
         if ($type == 'start_no_title') {
