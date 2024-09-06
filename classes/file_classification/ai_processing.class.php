@@ -61,7 +61,6 @@ class ai_processing
 
     public function format_contact_information($contact_information)
     {
-        $contact_information = str_replace("'", "''", $contact_information);
         $contact_information = str_replace("Based on the provided text, I've extracted the following contact information:", "", $contact_information);
         $contact_information = str_replace("Here is the contact information I've extracted:", "", $contact_information);
         $contact_information = str_replace("####", "", $contact_information);
@@ -88,7 +87,6 @@ class ai_processing
 
     public function format_ai_tags($text)
     {
-        $text = str_replace("'", "''", $text);
         $text = str_replace("####", "", $text);
         $text = substr($text, 0, 1000);
         return $text;
@@ -112,7 +110,6 @@ class ai_processing
 
     public function format_summary($summary)
     {
-        $summary = str_replace("'", "''", $summary);
         $summary = trim(str_replace("Here is a summary of the text in under 500 words:", "", $summary));
         $summary = trim(str_replace("Here is a summary of the provided text:", "", $summary));
         $summary = trim(str_replace("Here is the summary:", "", $summary));
@@ -168,7 +165,6 @@ class ai_processing
         $title = trim(str_replace("Document Name:", "", $title));
         $title = trim(str_replace("####:", "", $title));
 
-        $title = trim(str_replace("'", "''", $title));
         $title = ucfirst($title);
         $title = substr($title, 0, 400);
         return $title;
