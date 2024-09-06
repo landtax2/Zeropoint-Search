@@ -73,7 +73,7 @@ if ($display_db_version_warning) {
                             <div class="card-body">
                                 <h5 class="card-title">Document Count</h5>
                                 <p class="card-text h3">
-                                    <?= number_format($common->query_to_sd_array("SELECT COUNT(*) as count FROM network_file", null)['count']) ?>
+                                    <?= number_format($common->query_to_sd_array("SELECT COUNT(*) as count FROM network_file WHERE ai_summary is not null", null)['count']) ?>
                                 </p>
                                 <p class="card-text text-muted">Total documents in database</p>
                             </div>

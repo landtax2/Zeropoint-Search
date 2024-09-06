@@ -120,7 +120,7 @@ function Invoke-FileClassification {
     }
 }
 
-# Usage Examples:
+# Useage Examples:
 #Invoke-FileClassification -Path "C:\Users\test\downloads"
 #Invoke-FileClassification -Path "\\storage\share"
 </code></pre>
