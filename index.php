@@ -60,10 +60,10 @@ if (!isset($_SESSION['user_id'])) {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <meta name="description" content="<?= $common->get_env_value('APPLICATION_DESCRIPTION') ?>">
+    <meta name="description" content="<?= $common->get_config_value('APPLICATION_DESCRIPTION') ?>">
     <meta name="author" content="Landtax">
     <meta name="keyword" content="File Search, AI, ZeroPoint">
-    <title><?= $common->get_env_value('APPLICATION_NAME') ?></title>
+    <title><?= $common->get_config_value('APPLICATION_NAME') ?></title>
     <link rel="apple-touch-icon" sizes="57x57" href="/assets/favicon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/assets/favicon/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="/assets/favicon/apple-icon-72x72.png">
@@ -113,6 +113,7 @@ if (!isset($_SESSION['user_id'])) {
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.js"></script>
 
     <!-- Prism -->
+    <script src="/vendors/prism/prism.js"></script>
     <link rel="stylesheet" href="/vendors/prism/prism.css">
 
     <!-- Sweet Alert -->
@@ -157,6 +158,9 @@ if (!isset($_SESSION['user_id'])) {
                     <li class="nav-item">
                         <a class="nav-link" href="/?s1=Settings&s2=Clients">
                             <span class="nav-icon"></span><i class="fa fa-person"></i> &nbsp; Clients
+                        </a>
+                        <a class="nav-link" href="/?s1=Settings&s2=Configuration">
+                            <span class="nav-icon"></span><i class="fa fa-gear"></i> &nbsp; Configuration
                         </a>
                     </li>
                 </ul>
@@ -261,7 +265,15 @@ if (!isset($_SESSION['user_id'])) {
                 try {
                     include($router->get_file_path());
                 } catch (Exception $e) {
-                    include($_SERVER['DOCUMENT_ROOT'] . '/pages/ERROR/404.html');
+                    // Check if the exception message contains "not found"
+                    if (stripos($e->getMessage(), "not found") !== false) {
+                        // If "not found" is in the message, include the 404 page
+                        include($_SERVER['DOCUMENT_ROOT'] . '/pages/ERROR/404.html');
+                    } else {
+                        // If it's a different error, you might want to show a generic error page
+                        // or rethrow the exception for further handling
+                        include($_SERVER['DOCUMENT_ROOT'] . '/pages/ERROR/500.html');
+                    }
                 }
                 ?>
             </div>

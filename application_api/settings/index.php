@@ -12,6 +12,9 @@ try {
     exit;
 }
 
+//security check - prevents access from non-logged in users
+$common->security_check();
+
 ($common->get_env_value('DEBUGGING') == '1') ? ini_set('display_errors', 1) : ini_set('log_errors', 0); //turns off error logging if not debugging
 
 // Get JSON payload
@@ -24,13 +27,11 @@ if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
 }
 
 switch ($data['action']) {
-    case 'login':
-        if ($common->get_config_value('LOGIN_PASSWORD') == $data['password']) {
-            $_SESSION['user_id'] = '1';
-            echo json_encode(array('success' => true, 'message' => 'Login Successful'));
-        } else {
-            echo json_encode(array('success' => false, 'message' => 'Login Failed. Bad Password.'));
-        }
+    case 'update_config':
+        $queryText = "UPDATE config SET value = :value WHERE id = :id";
+        $queryParams = array(':value' => $data['value'], ':id' => $data['id']);
+        $common->query_to_sd_array($queryText, $queryParams);
+        echo json_encode(array('success' => true, 'message' => 'Configuration updated successfully'));
         break;
     default:
         echo json_encode(array('success' => false, 'message' => 'Unknown action'));

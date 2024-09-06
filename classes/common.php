@@ -10,8 +10,9 @@ class common
     {
         $this->env = $env;
         //set the timezone
-        date_default_timezone_set($env['TIME_ZONE']);
+
         $this->db_connect();
+        date_default_timezone_set($this->get_config_value('TIME_ZONE'));
     }
 
     //connects to a postgre database using PDO
@@ -34,7 +35,7 @@ class common
             $stmt->bindParam(':setting', $setting);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $result;
+            return $result['value'];
         } catch (Exception $e) {
             throw new Exception("Database connection failed: " . $e->getMessage(), 1);
         }
@@ -66,7 +67,7 @@ class common
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             return $result;
         } catch (Exception $e) {
-            throw new Exception("Database query failed: " . $e->getMessage(), 1);
+            throw new Exception("Database query failed: " . $e->getMessage() . " in " . $queryText . " with params " . json_encode($queryParams), 1);
         }
     }
 
@@ -74,7 +75,7 @@ class common
     {
         try {
             $stmt = $this->db_connection->prepare($queryText);
-            if ($queryParams) {
+            if ($queryParams && is_array($queryParams)) {
                 foreach ($queryParams as $key => $value) {
                     $stmt->bindValue($key, $value);
                 }
@@ -83,7 +84,7 @@ class common
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $result;
         } catch (Exception $e) {
-            throw new Exception("Database query failed: " . $e->getMessage(), 1);
+            throw new Exception("Database query failed: " . $e->getMessage() . " in " . $queryText . " with params " . json_encode($queryParams), 1);
         }
     }
 
@@ -146,10 +147,39 @@ class common
         }
     }
 
-    public static function security_check()
+    public function security_check()
     {
-        if (!isset($_SESSION['userID'])) {
+        if (!isset($_SESSION['user_id'])) {
             die("No Login");
+        }
+    }
+
+    public function validate_api_key($api_key)
+    {
+        $data = $this->query_to_sd_array("SELECT * FROM client WHERE api_key = :api_key", array(':api_key' => $api_key));
+        if ($data) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function api_key_to_client_id($api_key)
+    {
+        $data = $this->query_to_sd_array("SELECT * FROM client WHERE api_key = :api_key", array(':api_key' => $api_key));
+        if ($data) {
+            return $data['id'];
+        } else {
+            throw new Exception("API key not found", 1);
+        }
+    }
+
+    public function datetime_to_postgres_format($datetime)
+    {
+        if (empty($datetime)) {
+            return 'null';
+        } else {
+            return date('Y-m-d H:i:s', strtotime($datetime));
         }
     }
 

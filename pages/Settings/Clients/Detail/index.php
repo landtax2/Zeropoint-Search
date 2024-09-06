@@ -47,7 +47,7 @@ $common->print_template_card('Client Details', 'start');
 <h4>Scripts</h4>
 <ul>
     <li>
-        <a href="/?page=clients&sub=ps_file_classification&id=<?PHP echo $_GET['id']; ?>">Powershell File Classification</a>
+        <a href="/?s1=Settings&s2=Clients&s3=Scripts&s4=Powershell_file_classification&id=<?PHP echo $_GET['id']; ?>">Powershell File Classification</a>
     </li>
 </ul>
 
