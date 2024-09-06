@@ -67,7 +67,7 @@ if ($display_ollama_warning) {
     echo "<div class=\"alert alert-warning\" role=\"alert\">Ollama is not configured. <a href=\"?s1=Settings&s2=Configuration&s3=Detail&id=4\">Please configure Ollama for this application to function properly.</a></div>";
 }
 if ($display_doctor_api_warning) {
-    echo "<div class=\"alert alert-warning\" role=\"alert\">Doctor API is not configured. <a href=\"?s1=Settings&s2=Configuration&s3=Detail&id=11\">Please configure Doctor API for this application to function properly.</a></div>";
+    echo "<div class=\"alert alert-warning\" role=\"alert\">Doctor API is not configured. <a href=\"?s1=Settings&s2=Configuration&s3=Detail&id=11\">Please configure Doctor API for this application to function properly.</a> <a href=\"/?s1=Docs&s2=Doctor\">Click here for information on how to set up this API endpoint.</a></div>";
 }
 if ($display_db_version_warning) {
     echo "<div class=\"alert alert-warning\" role=\"alert\">Database structure is out of date.  This application may not function properly. <a href=\"/setup/update/index.php\">Click here to update the database.</a></div>";
