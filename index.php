@@ -14,7 +14,7 @@ try {
 }
 
 //print_r($common->get_all_config_values());
-
+//
 //Sample Query to multi-dimensional array
 //$queryText = "SELECT * FROM config WHERE setting = :setting";
 //$queryParams = array(':setting' => 'db_version');
