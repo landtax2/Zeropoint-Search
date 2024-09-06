@@ -170,6 +170,9 @@ if (!isset($_SESSION['user_id'])) {
                         <a class="nav-link" href="/?s1=Settings&s2=Configuration">
                             <span class="nav-icon"></span><i class="fa fa-gear"></i> &nbsp; Configuration
                         </a>
+                        <a class="nav-link" href="/?s1=Settings&s2=Changelog">
+                            <span class="nav-icon"></span><i class="fa fa-history"></i> &nbsp; Changelog
+                        </a>
                     </li>
                 </ul>
             </li>

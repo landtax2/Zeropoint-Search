@@ -2,6 +2,7 @@
 $display_ollama_warning = false;
 $display_doctor_api_warning = false;
 $display_db_version_warning = false;
+$display_password_warning = false;
 
 //code to see if the ollama config is set
 $queryText = "SELECT * FROM config WHERE setting = 'CHAT_API_OLLAMA'";
@@ -25,6 +26,14 @@ $queryParams = null;
 $db_version = $common->query_to_sd_array($queryText, $queryParams);
 if ($db_version['value'] < $common->db_version) {
     $display_db_version_warning = true;
+}
+
+//code to see if the password was changed from notsecure
+$queryText = "SELECT * FROM config WHERE setting = 'LOGIN_PASSWORD'";
+$queryParams = null;
+$admin_password = $common->query_to_sd_array($queryText, $queryParams);
+if ($admin_password['value'] == 'notsecure') {
+    $display_password_warning = true;
 }
 
 $queryText = "SELECT * FROM network_file WHERE ai_summary is not null LIMIT 50";
@@ -51,6 +60,9 @@ $common->print_template_card('Dashboard', 'start');
 </script>
 
 <?PHP
+if ($display_password_warning) {
+    echo "<div class=\"alert alert-danger\" role=\"alert\">The default password for the admin user is still in use.  <a href=\"/?s1=Settings&s2=Configuration&s3=Detail&id=14\">Click here to update the password.</a></div>";
+}
 if ($display_ollama_warning) {
     echo "<div class=\"alert alert-warning\" role=\"alert\">Ollama is not configured. <a href=\"?s1=Settings&s2=Configuration&s3=Detail&id=4\">Please configure Ollama for this application to function properly.</a></div>";
 }
@@ -68,8 +80,19 @@ if ($display_db_version_warning) {
             <div class="card-body">
                 <h2 class="card-title mb-4">Welcome to Your Dashboard</h2>
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="card bg-light">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Application Version</h5>
+                                <p class="card-text h3">
+                                    <?= $common->get_config_value('APP_VERSION') ?>
+                                </p>
+                                <p class="card-text text-muted">The version of the application</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Document Count</h5>
                                 <p class="card-text h3">
