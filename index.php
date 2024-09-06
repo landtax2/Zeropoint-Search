@@ -12,6 +12,10 @@ try {
     exit;
 }
 
+//check if the config table exists - if not, redirect to the setup page
+if (!$common->does_table_exist('config')) {
+    header('Location: /setup/create/index.php');
+}
 //print_r($common->get_all_config_values());
 
 //Sample Query to multi-dimensional array

@@ -13,7 +13,7 @@ try {
 }
 
 ($common->get_env_value('DEBUGGING') == '1') ? ini_set('display_errors', 1) : ini_set('log_errors', 0); //turns off error logging if not debugging
-
+$common->local_only();
 // Get JSON payload
 $json_payload = file_get_contents('php://input');
 $data = json_decode($json_payload, true);

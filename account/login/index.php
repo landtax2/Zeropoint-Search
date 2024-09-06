@@ -1,3 +1,19 @@
+<?PHP
+//Gets the common class
+require_once($_SERVER['DOCUMENT_ROOT'] . '/classes/common.php');
+$env = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/.env');
+//instantiate the common class
+try {
+    $common = new common($env);
+} catch (Exception $e) {
+    echo json_encode(array('success' => false, 'message' => 'Database connection failed: ' . $e->getMessage()));
+    exit;
+}
+$common->local_only();
+($common->get_env_value('DEBUGGING') == '1') ? ini_set('display_errors', 1) : ini_set('log_errors', 0); //turns off error logging if not debugging
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 

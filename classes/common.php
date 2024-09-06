@@ -10,10 +10,14 @@ class common
     public function __construct($env)
     {
         $this->env = $env;
-        //set the timezone
-
         $this->db_connect();
-        date_default_timezone_set($this->get_config_value('TIME_ZONE'));
+
+        //set the timezone
+        try {
+            date_default_timezone_set($this->get_config_value('TIME_ZONE'));
+        } catch (Exception $e) {
+            echo 'Unable to set timezone.  Defaulting to UTC.<br/>';
+        }
     }
 
     //connects to a postgre database using PDO
@@ -38,7 +42,7 @@ class common
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             return $result['value'];
         } catch (Exception $e) {
-            throw new Exception("Database connection failed: " . $e->getMessage(), 1);
+            throw new Exception("Get config value failed: " . $e->getMessage(), 1);
         }
     }
 
@@ -51,7 +55,7 @@ class common
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $result;
         } catch (Exception $e) {
-            throw new Exception("Database connection failed: " . $e->getMessage(), 1);
+            throw new Exception("Get all config values failed: " . $e->getMessage(), 1);
         }
     }
 
@@ -86,6 +90,23 @@ class common
             return $result;
         } catch (Exception $e) {
             throw new Exception("Database query failed: " . $e->getMessage() . " in " . $queryText . " with params " . json_encode($queryParams), 1);
+        }
+    }
+
+    //function to check if a table exists
+    public function does_table_exist($table_name)
+    {
+        $queryText = "SELECT EXISTS (
+            SELECT FROM information_schema.tables 
+            WHERE  table_schema = 'public'
+            AND    table_name   = :table_name
+            ) as \"exist\";";
+        $queryParams = array(':table_name' => $table_name);
+        $result = $this->query_to_sd_array($queryText, $queryParams);
+        if ($result['exist'] == 1) {
+            return true;
+        } else {
+            return false;
         }
     }
 
