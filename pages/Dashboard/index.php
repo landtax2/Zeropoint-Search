@@ -1,10 +1,38 @@
 <?PHP
+$display_ollama_warning = false;
+$display_doctor_api_warning = false;
+$display_db_version_warning = false;
+
+//code to see if the ollama config is set
+$queryText = "SELECT * FROM config WHERE setting = 'CHAT_API_OLLAMA'";
+$queryParams = null;
+$ollama_config = $common->query_to_sd_array($queryText, $queryParams);
+if ($ollama_config['value'] == '') {
+    $display_ollama_warning = true;
+}
+
+//code to see if the doctor api is set
+$queryText = "SELECT * FROM config WHERE setting = 'DOCTOR_API'";
+$queryParams = null;
+$doctor_api_config = $common->query_to_sd_array($queryText, $queryParams);
+if ($doctor_api_config['value'] == '') {
+    $display_doctor_api_warning = true;
+}
+
+//code to see if the database is up to date
+$queryText = "SELECT * FROM config WHERE setting = 'DB_VERSION'";
+$queryParams = null;
+$db_version = $common->query_to_sd_array($queryText, $queryParams);
+if ($db_version['value'] < $common->db_version) {
+    $display_db_version_warning = true;
+}
+
 $queryText = "SELECT * FROM network_file WHERE ai_summary is not null LIMIT 50";
 $queryParams = null;
 $files = $common->query_to_md_array($queryText, $queryParams);
 
-
 $common->print_template_card('Dashboard', 'start');
+
 ?>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -21,6 +49,18 @@ $common->print_template_card('Dashboard', 'start');
         })
     });
 </script>
+
+<?PHP
+if ($display_ollama_warning) {
+    echo "<div class=\"alert alert-warning\" role=\"alert\">Ollama is not configured. <a href=\"?s1=Settings&s2=Configuration&s3=Detail&id=4\">Please configure Ollama for this application to function properly.</a></div>";
+}
+if ($display_doctor_api_warning) {
+    echo "<div class=\"alert alert-warning\" role=\"alert\">Doctor API is not configured. <a href=\"?s1=Settings&s2=Configuration&s3=Detail&id=11\">Please configure Doctor API for this application to function properly.</a></div>";
+}
+if ($display_db_version_warning) {
+    echo "<div class=\"alert alert-warning\" role=\"alert\">Database structure is out of date.  This application may not function properly. <a href=\"/setup/update/index.php\">Click here to update the database.</a></div>";
+}
+?>
 
 <div class="row">
     <div class="col-md-12">

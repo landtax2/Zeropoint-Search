@@ -16,6 +16,11 @@ try {
 if (!$common->does_table_exist('config')) {
     header('Location: /setup/create/index.php');
 }
+
+//local only after setup
+$common->local_only();
+
+
 //print_r($common->get_all_config_values());
 
 //Sample Query to multi-dimensional array

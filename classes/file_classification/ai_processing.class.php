@@ -40,7 +40,9 @@ class ai_processing
             $piiAnalysis = $this->chat->sendRequest($prompt);
             return array('pii_analysis' => json_decode($piiAnalysis, true));
         } catch (Exception $e) {
-            return array();
+            echo "Error occured with the AI endpoint: $e";
+            //Throws an exception
+            throw new Exception('An error occurred while analyzing the text for PII.');
         }
     }
 
@@ -55,7 +57,9 @@ class ai_processing
             $contact_information = $this->format_contact_information($contact_information);
             return $contact_information;
         } catch (Exception $e) {
-            return "An error occurred while summarizing the text.";
+            echo "Error occured with the AI endpoint: $e";
+            //Throws an exception
+            throw new Exception('An error occurred while summarizing the text.');
         }
     }
 
@@ -81,7 +85,9 @@ class ai_processing
             $tags = $this->format_ai_tags($tags);
             return $tags;
         } catch (Exception $e) {
-            return "An error occurred while summarizing the text.";
+            echo "Error occured with the AI endpoint: $e";
+            //Throws an exception
+            throw new Exception('An error occurred while generating tags.');
         }
     }
 
@@ -104,7 +110,9 @@ class ai_processing
             $summary = $this->format_summary($summary);
             return $summary;
         } catch (Exception $e) {
-            return "An error occurred while summarizing the text.";
+            echo "Error occured with the AI endpoint: $e";
+            //Throws an exception
+            throw new Exception('An error occurred while summarizing the text.');
         }
     }
 
@@ -149,8 +157,9 @@ class ai_processing
             $title = $this->format_title($title);
             return $title;
         } catch (Exception $e) {
-            echo $e;
-            return json_encode(['error' => 'An error occurred while generating a title.']);
+            echo "Error occured with the AI endpoint: $e";
+            //Throws an exception
+            throw new Exception('An error occurred while generating a title.');
         }
     }
 
@@ -183,7 +192,9 @@ class ai_processing
 
             return array('is_sensitive' => $is_sensitive);
         } catch (Exception $e) {
-            return json_encode(['error' => 'An error occurred while analyzing the text for sensitive data.']);
+            echo "Error occured with the AI endpoint: $e";
+            //Throws an exception
+            throw new Exception('An error occurred while analyzing the text for sensitive data.');
         }
     }
 }

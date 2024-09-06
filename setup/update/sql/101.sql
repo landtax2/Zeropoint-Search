@@ -1,0 +1,1 @@
+UPDATE public.config SET value = '101' WHERE setting = 'DB_VERSION';

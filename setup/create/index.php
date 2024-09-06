@@ -27,7 +27,7 @@ if ($result['exist'] == 1) {
 
 //Runs the database.sql file
 // Read the contents of the database.sql file
-$sql = file_get_contents('database.sql');
+$sql = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/setup/create/database.sql');
 
 // Split the SQL file into individual queries
 $queries = explode(';', $sql);
