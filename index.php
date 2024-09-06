@@ -4,7 +4,6 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/classes/router.php');
 session_start();
 $env = parse_ini_file('.env');
 //instantiate the common class
-$test = 'test';
 
 try {
     $common = new common($env);

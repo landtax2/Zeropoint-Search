@@ -1,0 +1,5 @@
+DEBUGGING="1"
+DB_HOST="docker1.example.com"
+DB_NAME="zps"
+DB_USER="zps_user"
+DB_PASS="test"

@@ -5,6 +5,7 @@ class common
 
     private $db_connection;
     private $env;
+    public $db_version = '100';
 
     public function __construct($env)
     {
