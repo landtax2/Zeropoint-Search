@@ -96,13 +96,7 @@ class common
     public function local_only()
     {
         //prevents leaks from non_local or allowed_ips
-        if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/.env')) {
-            $env = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/.env');
-        } else {
-            $env = parse_ini_file('.env');
-        }
-
-        $allowed_ips = isset($env['ALLOWED_IP']) ? explode(',', $env['ALLOWED_IP']) : [];
+        $allowed_ips = explode(',', $this->get_config_value('ALLOWED_IP'));
 
         //get the ip address of the user - handles proxy or real ip
         if (isset($_SERVER['HTTP_X_REAL_IP'])) {
@@ -112,7 +106,7 @@ class common
         }
 
         if (!$this->is_privateIP($ip) && !in_array($ip, $allowed_ips)) {
-            die('Non_local_address');
+            die('Non_local_address: ' . $ip);
         }
     }
 
