@@ -16,6 +16,7 @@ class Chat_ollama
     public function __construct($common)
     {
         //sets url and model from the config
+        $this->common = $common;
         $this->url = $common->get_config_value('CHAT_API_OLLAMA');
         $this->model = $common->get_config_value('CHAT_API_OLLAMA_MODEL');
     }
@@ -24,7 +25,10 @@ class Chat_ollama
     public function sendRequest(string $prompt): string
     {
         // Prepare the data for the API request
-        $prompt = preg_replace('/[\x00-\x1F\x7F-\xFF]/', '', $prompt); //removes non-printable characters
+        //$prompt = preg_replace('/[\x00-\x1F\x7F-\xFF]/', '', $prompt); //removes non-printable characters
+        $prompt = preg_replace('/[\x00-\x09\x0B-\x1F\x7F-\xFF]/', '', $prompt); //keeps carriage returns and line feeds
+        $this->common->write_to_log('chat', 'LLM Prompt', $prompt);
+
         $data = [
             "model" => $this->model,
             "options" => [
@@ -37,6 +41,8 @@ class Chat_ollama
             "timeout" => 240,
             "system" => 'You are a helpful, smart, and efficient AI assistant. You always fulfill the user\'s requests precisely.',
         ];
+
+        $this->common->write_to_log('chat', 'Json sent to LLM', $data);
 
         // Encode the data as JSON
         $payload = json_encode($data);
@@ -62,9 +68,12 @@ class Chat_ollama
         // Execute the cURL request
         $response = curl_exec($ch);
 
+        $this->common->write_to_log('chat', 'LLM Raw Response', $response);
+
         // Check for cURL errors
         if (curl_errno($ch)) {
             curl_close($ch);
+            $this->common->write_to_log('chat', 'Curl error: ' . curl_error($ch));
             //die('Curl error: ' . curl_error($ch));
             throw new Exception('Curl error: ' . curl_error($ch));
         }
@@ -74,9 +83,11 @@ class Chat_ollama
 
         // Decode the JSON response
         $data = json_decode($response, true);
+        $this->common->write_to_log('chat', 'LLM Decoded Response', $data);
 
         // Check for JSON decoding errors
         if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->common->write_to_log('chat', 'JSON decoding error', json_last_error_msg());
             throw new Exception('JSON decoding error: ' . json_last_error_msg());
         }
 
@@ -84,11 +95,13 @@ class Chat_ollama
         //print_r($data);
         //die('test');
         if (!isset($data['response'])) {
-            print_r($data);
+            $this->common->write_to_log('chat', 'Unexpected API response format');
+            //print_r($data);
             throw new Exception('Unexpected API response format');
         }
 
         // Return the content of the chat response
+        $this->common->write_to_log('chat', 'LLM Text Response ', $data['response']);
         return $data['response'];
     }
 }

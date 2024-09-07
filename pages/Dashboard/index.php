@@ -3,7 +3,12 @@ $display_ollama_warning = false;
 $display_doctor_api_warning = false;
 $display_db_version_warning = false;
 $display_password_warning = false;
+$display_debug_warning = false;
 
+//code to see if the debug config is set
+if ($common->get_env_value('DEBUGGING') == '1') {
+    $display_debug_warning = true;
+}
 //code to see if the ollama config is set
 $queryText = "SELECT * FROM config WHERE setting = 'CHAT_API_OLLAMA'";
 $queryParams = null;
@@ -87,6 +92,9 @@ if ($display_doctor_api_warning) {
 }
 if ($display_db_version_warning) {
     echo "<div class=\"alert alert-warning\" role=\"alert\">Database structure is out of date.  This application may not function properly. <a href=\"/setup/update/index.php\">Click here to update the database.</a></div>";
+}
+if ($display_debug_warning) {
+    echo "<div class=\"alert alert-warning\" role=\"alert\">Debugging is enabled. This may log sensitive information and cause the application to behave unpredictably. Disable debugging in the .env file to remove this warning.</div>";
 }
 ?>
 

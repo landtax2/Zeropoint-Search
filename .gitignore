@@ -1,3 +1,22 @@
+# Ignore local environment config
 .env
+.env.*
+
+# Ignore server config
 web.config
+
+# Ignore any info.php files that might be leftover from development
 info.php
+
+# Ignore vscode files
+.vscode/
+nbproject/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+*.log
+*.cache
+*.tmp

@@ -76,7 +76,7 @@ function handle_extract_action($common, $client_id)
     }
 
     $extracted_text_total_length = strlen($extracted_text);
-    $extracted_text = substr($extracted_text, 0, $common->get_config_value('FILE_CLASSIFICATION_MAX_LENGTH'));
+    $extracted_text = substr($extracted_text, 0, $common->get_config_value('AI_PROCESSING_CHAT_MAX_LENGTH'));
     $extracted_text_total_length_after = strlen($extracted_text);
 
     //Remove the temporary file
@@ -198,7 +198,15 @@ function handle_extract_action($common, $client_id)
     ];
 
     $dataFunctions->updateNetworkFile($updateData);
-    respond_with_json(['title' => $title, 'name' => $_POST['name'], 'execution_times' => $execution_times, 'extracted_text_total_length' => $extracted_text_total_length, 'extracted_text_total_length_after' => $extracted_text_total_length_after]);
+    respond_with_json([
+        'title' => $title,
+        'name' => $_POST['name'],
+        'execution_times' => $execution_times,
+        'extracted_text_total_length' => $extracted_text_total_length,
+        'extracted_text_total_length_after' => $extracted_text_total_length_after,
+        'context_window' => $common->get_config_value('AI_PROCESSING_CONTEXT_WINDOW'),
+        'summary_length' => $common->get_config_value('AI_PROCESSING_SUMMARY_LENGTH')
+    ]);
 }
 
 //validates api key is sent

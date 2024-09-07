@@ -229,6 +229,27 @@ class common
         return number_format($size) . " bytes";
     }
 
+    public function write_to_log($log_name, $title, $data = '')
+    {
+        //only write to logs if debugging is enabled
+        if ($this->get_env_value('DEBUGGING') == '0') {
+            return;
+        }
+
+        $log_file = $_SERVER['DOCUMENT_ROOT'] . '/logs/' . $log_name . '.log';
+
+        if (is_array($data)) {
+            $data = json_encode($data);
+        }
+        $data = date('Y-m-d H:i:s') . ' - ' . $title . ' ::: ' . $data . "\n";
+        try {
+            file_put_contents($log_file, $data, FILE_APPEND);
+        } catch (Exception $e) {
+            // Throw a warning exception
+            throw new Exception("Warning: Error writing to log: " . $e->getMessage(), E_WARNING);
+        }
+    }
+
     public function print_template_card($title, $type = 'start')
     {
         if ($type == 'start_no_title') {
