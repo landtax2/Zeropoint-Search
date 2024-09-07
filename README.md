@@ -1,6 +1,6 @@
 # Zeropoint-Search
 
-Setup guide for the frontend:
+Manual setup guide for the frontend. Hopefull this wont be needed once I have everything running in a docker stack.
 
 1. Setup postgres database.  Create a database called "zps" and a user called "zps_user". 
 You can use this docker compose to quickly do this, or do it the hard way by installing and configuring postgres manually:
