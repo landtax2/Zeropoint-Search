@@ -73,7 +73,7 @@ if (strlen($ai_tags) > 1) {
     $ai_tags = preg_replace('/\s+/', ' ', trim($ai_tags));
     $ai_tags = str_replace(' ', ' < ### > ', $ai_tags);
     $statements = array();
-    for ($i = 1; $i <= 10; $i++) {
+    for ($i = 1; $i <= 50; $i++) {
         $statements[] = str_replace(' ### ',  $i, $ai_tags);
     }
     $ai_tags = implode(' | ', $statements);
