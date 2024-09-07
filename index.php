@@ -49,6 +49,7 @@ if (!isset($_SESSION['user_id'])) {
 //log access to the front-end
 $common->write_to_log('access', 'index.php IP', $common->get_ip());
 $common->write_to_log('access', 'index.php User ID', $_SESSION['user_id']);
+$common->write_to_log('access', 'Arugments', $_GET);
 
 
 ?>
@@ -175,6 +176,9 @@ $common->write_to_log('access', 'index.php User ID', $_SESSION['user_id']);
                         <a class="nav-link" href="/?s1=Settings&s2=Database">
                             <span class="nav-icon"></span><i class="fa fa-database"></i> &nbsp; Database
                         </a>
+                        <a class="nav-link" href="/?s1=Settings&s2=Logs">
+                            <span class="nav-icon"></span><i class="fa fa-file-alt"></i> &nbsp; Logs
+                        </a>
                     </li>
                 </ul>
             </li>
@@ -251,8 +255,6 @@ $common->write_to_log('access', 'index.php User ID', $_SESSION['user_id']);
                                 <svg class="icon me-2">
                                     <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-settings"></use>
                                 </svg> Settings</a><a class="dropdown-item" href="#">
-
-
                                 <div class="dropdown-divider"></div><a class="dropdown-item" href="#">
                                     <svg class="icon me-2">
                                         <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-account-logout"></use>

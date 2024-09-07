@@ -27,10 +27,17 @@ switch ($data['action']) {
     case 'login':
         if ($common->get_config_value('LOGIN_PASSWORD') == $data['password']) {
             $_SESSION['user_id'] = '1';
+            $common->write_to_log('security', 'Login Success', 'IP: ' . $common->get_ip() . ' User ID: ' . $_SESSION['user_id']);
             echo json_encode(array('success' => true, 'message' => 'Login Successful'));
         } else {
+            $common->write_to_log('security', 'Login Failed Bad Password', 'IP: ' . $common->get_ip());
             echo json_encode(array('success' => false, 'message' => 'Login Failed. Bad Password.'));
         }
+        break;
+    case 'logout':
+        $common->write_to_log('security', 'Logout', 'IP: ' . $common->get_ip() . ' User ID: ' . $_SESSION['user_id']);
+        session_destroy();
+        echo json_encode(array('success' => true, 'message' => 'Logout Successful'));
         break;
     default:
         echo json_encode(array('success' => false, 'message' => 'Unknown action'));

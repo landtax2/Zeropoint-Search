@@ -44,6 +44,9 @@ $common->print_template_card('Database Settings', 'start');
                 <div class="card-body">
                     <button id="emptyNetworkFilesBtn" class="btn btn-danger">Empty Network Files Table</button>
                 </div>
+                <div class="card-body">
+                    <button id="resetDatabaseBtn" class="btn btn-danger">Reset Database</button>
+                </div>
             </div>
         </div>
 
@@ -104,6 +107,59 @@ $common->print_template_card('Database Settings', 'start');
                 }
             });
         });
+
+        // Reset Database Button
+        const resetDatabaseBtn = document.getElementById('resetDatabaseBtn');
+        resetDatabaseBtn.addEventListener('click', function() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This will reset the entire database to its initial state. All data will be lost. This action cannot be undone!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, reset the database!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/application_api/settings/index.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                action: 'reset_database'
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire(
+                                    'Reset Complete!',
+                                    'The database has been reset to its initial state.',
+                                    'success'
+                                ).then(() => {
+                                    location.href = '/'; // Redirect to the home page
+                                });
+                            } else {
+                                Swal.fire(
+                                    'Error!',
+                                    'Failed to reset database: ' + data.message,
+                                    'error'
+                                );
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                            Swal.fire(
+                                'Error!',
+                                'An unexpected error occurred while resetting the database',
+                                'error'
+                            );
+                        });
+                }
+            });
+        });
+
     });
 </script>
 
