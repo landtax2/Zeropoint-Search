@@ -1,11 +1,17 @@
 <?PHP
+//start the session
+session_start();
+
+//include the common and router classes
 require_once($_SERVER['DOCUMENT_ROOT'] . '/classes/common.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/classes/router.php');
-session_start();
-$env = parse_ini_file('.env');
-//instantiate the common class
 
+//parse the .env file
+$env = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/.env');
+
+//instantiate the common class
 try {
+    //env is passed to the common class to be loaded into the class
     $common = new common($env);
 } catch (Exception $e) {
     echo json_encode(array('success' => false, 'message' => 'Database connection failed: ' . $e->getMessage()));
@@ -20,31 +26,12 @@ if (!$common->does_table_exist('config')) {
 //local only after setup
 $common->local_only();
 
-
-//print_r($common->get_all_config_values());
-
-//Sample Query to multi-dimensional array
-//$queryText = "SELECT * FROM config WHERE setting = :setting";
-//$queryParams = array(':setting' => 'db_version');
-//$result = $common->query_to_md_array($queryText, $queryParams);
-//print_r($result);
-//die($result[0]['value']);
-
-
-//Sample query to single array
-//$queryText = "SELECT * FROM config WHERE setting = :setting";
-//$queryParams = array(':setting' => 'db_version');
-//$result = $common->query_to_sd_array($queryText, $queryParams);
-//print_r($result);
-//die($result['value']);
-
-
-
-//instantiate the router class - determines the page to load
+//instantiate the router class - determines the content to load
 $router = new router();
 
 ($common->get_env_value('DEBUGGING') == '1') ? ini_set('display_errors', 1) : ini_set('log_errors', 0); //turns off error logging if not debugging
 
+/*standard headers to prevent caching*/
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
@@ -129,6 +116,9 @@ if (!isset($_SESSION['user_id'])) {
 
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/90add283c4.js" crossorigin="anonymous"></script>
+
+    <!-- Chat JS -->
+    <script src="/scripts/js/chat.js"></script>
 </head>
 
 <body>
@@ -294,6 +284,47 @@ if (!isset($_SESSION['user_id'])) {
             <div class="ms-auto">Powered by&nbsp;<a href="https://coreui.io/">CoreUI</a></div>
         </footer>
     </div>
+    <!-- Chat modal -->
+    <div class="modal fade" id="ai_chat_modal" tabindex="-1" aria-labelledby="ai_chat_modal_label" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title h4" id="ai_chat_modal_label">AI Chat</h5>
+                    <button class="btn-close btn-close-white" type="button" data-coreui-dismiss="modal" aria-label="Close" onclick="resetAIChatModal()"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3" <?php echo (isset($env['CHAT_API_SOURCE']) && $env['CHAT_API_SOURCE'] === "OLLAMA") ? 'style="display:none;"' : ''; ?>>
+                        <label for="system_prompt" class="form-label fw-bold">System Prompt</label>
+                        <textarea class="form-control" id="system_prompt" rows="2" placeholder="Enter system prompt..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="user_prompt" class="form-label fw-bold" id="user_prompt_label">User Prompt</label>
+                        <textarea class="form-control" id="user_prompt" rows="6" placeholder="Enter user prompt..."></textarea>
+                    </div>
+                    <div id="user_data_div" class="mb-3">
+                        <label for="user_data" class="form-label fw-bold" id="user_data_label">User Data</label>
+                        <textarea class="form-control" id="user_data" rows="6" placeholder="Enter user data..."></textarea>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 ">
+                        <button type="button" onclick="send_chat()" class="btn btn-primary">Send Chat</button>
+                        <button type="button" onclick="rechat()" id="rechat_button" class="btn btn-outline-secondary d-none">Rechat</button>
+                    </div>
+                    <div class="mb-3">
+                        <label for="chat_result" class="form-label fw-bold">Chat Result</label>
+                        <textarea class="form-control" id="chat_result" rows="10" readonly></textarea>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" onclick="copyTextFromChatResult()" class="btn btn-outline-primary">
+                            <i class="cil-copy mr-2"></i> Copy Chat Result
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <!-- CoreUI and necessary plugins-->
     <script src="/coreui/vendors/@coreui/coreui/js/coreui.bundle.min.js"></script>
     <script src="/coreui/vendors/simplebar/js/simplebar.min.js"></script>
@@ -305,13 +336,6 @@ if (!isset($_SESSION['user_id'])) {
                 header.classList.toggle('shadow-sm', document.documentElement.scrollTop > 0);
             }
         });
-    </script>
-    <!-- Plugins and scripts required by this view-->
-    <!--<script src="/coreui/vendors/chart.js/js/chart.umd.js"></script>
-    <script src="/coreui/vendors/@coreui/chartjs/js/coreui-chartjs.js"></script>
-    <script src="/coreui/vendors/@coreui/utils/js/index.js"></script>
-    <script src="/coreui/js/main.js"></script>-->
-    <script>
     </script>
 
 </body>

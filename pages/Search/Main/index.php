@@ -21,11 +21,11 @@ $where = array();
 $select = '';
 $params = array();
 if (strlen($name) > 1) {
-    $where[] = "name LIKE :name";
+    $where[] = "LOWER(name) LIKE LOWER(:name)";
     $params[':name'] = $name;
 }
 if (strlen($path) > 1) {
-    $where[] = "path LIKE :path";
+    $where[] = "LOWER(path) LIKE LOWER(:path)";
     $params[':path'] = $path;
 }
 if (strlen($ai_contact_information) > 1) {
@@ -35,24 +35,49 @@ if (strlen($ai_contact_information) > 1) {
 if (strlen($ai_title) > 1) {
     //$where[] = "ai_title ILIKE :ai_title";
     $where[] = "to_tsvector('english', ai_title) @@ to_tsquery('english', :ai_title)";
+    $ai_title = preg_replace('/\s+/', ' ', trim($ai_title));
+    $ai_title = str_replace(' ', ' <-> ', $ai_title);
     $params[':ai_title'] = $ai_title;
 }
 if (strlen($ai_summary) > 1) {
     $where[] = "to_tsvector('english', ai_summary) @@ to_tsquery('english', :ai_summary)";
+    // Replace multiple whitespace characters with a single space
+    $ai_summary = preg_replace('/\s+/', ' ', trim($ai_summary));
+    $ai_summary = str_replace(' ', ' <-> ', $ai_summary);
     $params[':ai_summary'] = $ai_summary;
 }
 if (strlen($ai_title_near_words) > 1) {
-    // Implement NEAR functionality for PostgreSQL if needed
+    $where[] = "to_tsvector('english', ai_title) @@ to_tsquery('english', :ai_title)";
+    $ai_title_near_words = preg_replace('/\s+/', ' ', trim($ai_title_near_words));
+    $ai_title_near_words = str_replace(' ', ' < ### > ', $ai_title_near_words);
+    $statements = array();
+    for ($i = 1; $i <= $ai_title_near_int; $i++) {
+        $statements[] = str_replace(' ### ',  $i, $ai_title_near_words);
+    }
+    $ai_title_near_words = implode(' | ', $statements);
+    $params[':ai_title'] = $ai_title_near_words;
 }
 if (strlen($ai_summary_near_words) > 1) {
-    // Implement NEAR functionality for PostgreSQL if needed
+    $where[] = "to_tsvector('english', ai_summary) @@ to_tsquery('english', :ai_summary)";
+    $ai_summary_near_words = preg_replace('/\s+/', ' ', trim($ai_summary_near_words));
+    $ai_summary_near_words = str_replace(' ', ' < ### > ', $ai_summary_near_words);
+    $statements = array();
+    for ($i = 1; $i <= $ai_summary_near_int; $i++) {
+        $statements[] = str_replace(' ### ',  $i, $ai_summary_near_words);
+    }
+    $ai_summary_near_words = implode(' | ', $statements);
+    $params[':ai_summary'] = $ai_summary_near_words;
 }
 if (strlen($ai_tags) > 1) {
-    $ai_tags_array = explode(',', $ai_tags);
-    foreach ($ai_tags_array as $index => $tag) {
-        $where[] = "ai_tags ILIKE :ai_tag_$index";
-        $params[':ai_tag_' . $index] = $tag;
+    $where[] = "to_tsvector('english', ai_tags) @@ to_tsquery('english', :ai_tags)";
+    $ai_tags = preg_replace('/\s+/', ' ', trim($ai_tags));
+    $ai_tags = str_replace(' ', ' < ### > ', $ai_tags);
+    $statements = array();
+    for ($i = 1; $i <= 10; $i++) {
+        $statements[] = str_replace(' ### ',  $i, $ai_tags);
     }
+    $ai_tags = implode(' | ', $statements);
+    $params[':ai_tags'] = $ai_tags;
 }
 
 $where_s = implode(" AND ", $where);
@@ -67,7 +92,15 @@ if (count($where) > 0) {
     ORDER BY date_modified DESC
     LIMIT 200";
     $files = $common->query_to_md_array($queryText, $params);
+    //$files = array();
 }
+
+//replaces the parameter in the query text with the actual value and adds the single quotes
+$queryText = str_replace(array_keys($params), array_map(function ($value) {
+    return "'" . $value . "'";
+}, array_values($params)), $queryText);
+
+
 $common->print_template_card('Network File Search', 'start');
 ?>
 <script type="text/javascript">
@@ -139,7 +172,7 @@ $common->print_template_card('Network File Search', 'start');
     <div class="col-md-3">
         <div class="form-group">
             <label for="ai_title_near_words">AI Title Nearness</label>
-            <input class="form-control" placeholder="Words separated by commas" type="text" value="<?= isset($_GET['ai_title_near_words']) ? $_GET['ai_title_near_words'] : ''; ?>" id="ai_title_near_words" onkeypress="if(event.keyCode==13){search(); }">
+            <input class="form-control" placeholder="Words separated by spaces" type="text" value="<?= isset($_GET['ai_title_near_words']) ? $_GET['ai_title_near_words'] : ''; ?>" id="ai_title_near_words" onkeypress="if(event.keyCode==13){search(); }">
         </div>
     </div>
     <div class="col-md-3">
@@ -151,7 +184,7 @@ $common->print_template_card('Network File Search', 'start');
     <div class="col-md-3">
         <div class="form-group">
             <label for="ai_summary_near_words">AI Summary Nearness</label>
-            <input class="form-control" placeholder="Words separated by commas" type="text" value="<?= isset($_GET['ai_summary_near_words']) ? $_GET['ai_summary_near_words'] : ''; ?>" id="ai_summary_near_words" onkeypress="if(event.keyCode==13){search(); }">
+            <input class="form-control" placeholder="Words separated by spaces" type="text" value="<?= isset($_GET['ai_summary_near_words']) ? $_GET['ai_summary_near_words'] : ''; ?>" id="ai_summary_near_words" onkeypress="if(event.keyCode==13){search(); }">
         </div>
     </div>
     <div class="col-md-3">
@@ -233,7 +266,7 @@ $common->print_template_card('Network File Search', 'start');
             $d['ai_summary'] = nl2br("\n\n" . $d['ai_summary']);
             echo "<tr>
                         <td>
-                            <a target=\"_BLANK\" href=\"/?page=utilities&sub=network_file_detail&id=$d[id]\">$d[name]</a>
+                            <a target=\"_BLANK\" href=\"/?s1=File&s2=Detail&id=$d[id]\">$d[name]</a>
                         </td>
                         <td>$d[ai_title]</td>
                         <td>$d[path]</td>

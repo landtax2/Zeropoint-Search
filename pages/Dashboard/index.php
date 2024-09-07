@@ -38,6 +38,18 @@ if ($admin_password['value'] == 'notsecure') {
 
 $document_count = $common->query_to_sd_array("SELECT COUNT(*) as count FROM network_file WHERE ai_summary is not null", null)['count'];
 
+//get the date of the most recently processed file
+$most_recently_processed_file_date = $common->query_to_sd_array("SELECT last_found FROM network_file ORDER BY last_found DESC LIMIT 1", null)['last_found'];
+if (empty($most_recently_processed_file_date)) {
+    $most_recently_processed_file_date = 'N/A';
+}
+
+//get the number of files containing ssn
+$ssn_files_count = $common->query_to_sd_array("SELECT COUNT(*) as count FROM network_file WHERE ai_pii_ssn = '1'", null)['count'];
+if (empty($ssn_files_count)) {
+    $ssn_files_count = 0;
+}
+
 $queryText = "SELECT * FROM network_file WHERE ai_summary is not null LIMIT 50";
 $queryParams = null;
 $files = $common->query_to_md_array($queryText, $queryParams);
@@ -108,6 +120,28 @@ if ($display_db_version_warning) {
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Most Recently Processed File</h5>
+                                <p class="card-text h3">
+                                    <?= $common->sql2date_military_time($most_recently_processed_file_date) ?>
+                                </p>
+                                <p class="card-text text-muted">The date the most recently processed file was analyzed</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">SSN Files</h5>
+                                <p class="card-text h3">
+                                    <?= number_format($ssn_files_count) ?>
+                                </p>
+                                <p class="card-text text-muted">Total files containing SSN Matched by Regex</p>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-md-6">
                         <!-- Additional dashboard widget can be added here -->
                     </div>
@@ -141,7 +175,7 @@ if ($display_db_version_warning) {
             $d['ai_summary'] = nl2br("\n\n" . $d['ai_summary']);
             echo "<tr>
                         <td>
-                            <a target=\"_BLANK\" href=\"/?page=utilities&sub=network_file_detail&id=$d[id]\">$d[name]</a>
+                            <a target=\"_BLANK\" href=\"/?s1=File&s2=Detail&id=$d[id]\">$d[name]</a>
                         </td>
                         <td>$d[ai_title]</td>
                         <td>$d[path]</td>

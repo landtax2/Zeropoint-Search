@@ -6,6 +6,7 @@ class common
     private $db_connection;
     private $env;
     public $db_version = '104';
+    public $boolean = array('0' => 'False', '1' => 'True');
 
     public function __construct($env)
     {
@@ -206,6 +207,26 @@ class common
         } else {
             return date('m/d/Y', strtotime($date));
         }
+    }
+
+    public function sql2date_military_time($date)
+    {
+        if (empty($date)) {
+            return 'null';
+        } else {
+            return date('m/d/Y H:i:s', strtotime($date));
+        }
+    }
+
+    public function humanFileSize($size, $unit = "")
+    {
+        if ((!$unit && $size >= 1 << 30) || $unit == "GB")
+            return number_format($size / (1 << 30), 2) . "GB";
+        if ((!$unit && $size >= 1 << 20) || $unit == "MB")
+            return number_format($size / (1 << 20), 2) . "MB";
+        if ((!$unit && $size >= 1 << 10) || $unit == "KB")
+            return number_format($size / (1 << 10), 2) . "KB";
+        return number_format($size) . " bytes";
     }
 
     public function print_template_card($title, $type = 'start')

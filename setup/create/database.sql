@@ -80,7 +80,7 @@ INSERT INTO public.config (setting,value,editable,description) VALUES
 	 ('CHAT_MAX_LENGTH','20000','1','This is used for GUI interactive chats.'),
 	 ('FILE_CLASSIFICATION_MAX_LENGTH','6000','1','This is used for the file classisification API.'),
 	 ('FILE_CLASSIFICATION_PROCESS_CONTACT_INFORMATION','0','1','Determines if the file classification API process the extracted text for contact information.'),
-	 ('FILE_CLASSIFICATION_PROCESS_TAGS','0','1','Determines if the file classification API process the extracted text for tags.');
+	 ('FILE_CLASSIFICATION_PROCESS_TAGS','1','1','Determines if the file classification API process the extracted text for tags.');
 INSERT INTO public.config (setting,value,editable,description) VALUES
 	 ('DOCTOR_API','','1','The API endpoint used for text extraction of documents. Example http://example.com:5050'),
 	 ('OCR_THRESHOLD','50','1','The threshold of characters used to determine if the document needs to have an OCR capture preformed.  Set to 0 to skip OCR.'),

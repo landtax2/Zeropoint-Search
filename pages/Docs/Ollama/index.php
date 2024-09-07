@@ -1,7 +1,14 @@
 <?PHP
 $common->print_template_card('Ollama API Endpoint', 'start');
-
 ?>
+
+<style>
+    /* Not needed for this page */
+    #user_data_div {
+        display: none;
+    }
+</style>
+
 
 <h2>Setting up Ollama on Windows</h2>
 <h3>Understanding the Ollama API Endpoint</h3>
@@ -49,7 +56,7 @@ $common->print_template_card('Ollama API Endpoint', 'start');
 <ol>
     <li>Open a new command prompt or PowerShell window.</li>
     <li>Type the following command and press Enter:
-        <pre><code>ollama run llama3.1</code></pre>
+        <pre><code class="language-powershell">ollama run llama3.1</code></pre>
     </li>
     <li>If Ollama is installed correctly, it will download the Llama 3.1 model (if not already present) and start a chat session.</li>
 </ol>
@@ -79,8 +86,12 @@ $common->print_template_card('Ollama API Endpoint', 'start');
     <li>Open the Windows Start menu and search for "Environment Variables". Click on "Edit the system environment variables".</li>
     <li>In the System Properties window, click the "Environment Variables" button.</li>
     <li>In the "System variables" section, click "New...".</li>
-    <li>For "Variable name", enter: <code>OLLAMA_HOST</code></li>
-    <li>For "Variable value", enter: <code>0.0.0.0</code></li>
+    <li>For "Variable name", enter:
+        <pre><code class="language-plaintext">OLLAMA_HOST</code></pre>
+    </li>
+    <li>For "Variable value", enter:
+        <pre><code class="language-plaintext">0.0.0.0</code></pre>
+    </li>
     <li>Click "OK" to close each window.</li>
     <li>Restart your computer for the changes to take effect.</li>
     <li>After restarting, login and OLLAMA should be running on port 11434</li>
@@ -90,10 +101,10 @@ $common->print_template_card('Ollama API Endpoint', 'start');
 <p>By default, Ollama will not allow you to use the uncensored model. You need to setup a new model file to allow it.</p>
 <ol>
     <li>Download the Abiltered llama 3.1 model from <a href="https://huggingface.co/mlabonne/Meta-Llama-3.1-8B-Instruct-abliterated-GGUF/tree/main" target="_blank">here</a></li>
-    <li>Recommened is the Q4_K_M model</li>
+    <li>The recommended model is the Q4_K_M model</li>
     <li>Create a model card for the model with the name "uncensored" in the same folder as the model</li>
     <li>Add the following to the model card file</li>
-    <pre><code>
+    <pre><code class="language-plaintext">
        
 FROM C:\AI\ollama\models\llama3_1_abilterated\meta-llama-3.1-8b-instruct-abliterated.Q8_0.gguf
 TEMPLATE """{{- if or .System .Tools }}<|start_header_id|>system<|end_header_id|>
@@ -148,23 +159,33 @@ PARAMETER stop <|eot_id|>
     </code></pre>
     <li>Save the file and close it</li>
     <li>Run the following command in the same folder as the model and model card</li>
-    <pre><code>ollama create uncensored -f uncensored</code></pre>
+    <pre><code class="language-powershell">ollama create uncensored -f uncensored</code></pre>
     <li>You should see the following output</li>
-    <pre><code>Model "uncensored" has been added</code></pre>
+    <pre><code class="language-powershell">Model "uncensored" has been added</code></pre>
     <li>You can now use the uncensored model in the chat</li>
-    <li>Test this by running the following command: <code>ollama run uncensored</code></li>
+    <li>Test this by running the following command:
+        <pre><code class="language-powershell">ollama run uncensored</code></pre>
+    </li>
 </ol>
 
 <h3>Step 8: Test the API</h3>
 <p>You can now test the API by running the following command in PowerShell:</p>
-<pre><code>Invoke-RestMethod -Uri "http://localhost:11434/api/generate" -Method Post -Body '{"model": "uncensored", "prompt": "Why is the sky blue?", "stream":false}' -ContentType 'application/json'</code></pre>
+<pre><code class="language-powershell">Invoke-RestMethod -Uri "http://localhost:11434/api/generate" -Method Post -Body '{"model": "uncensored", "prompt": "Why is the sky blue?", "stream":false}' -ContentType 'application/json'</code></pre>
 <p>To ensure this API is working over the network, run the above command from a different machine on your network. Replace localhost with the IP address or name of the machine running Ollama.</p>
 
 <h3>Step 9: Configure this application to use the Ollama API</h3>
 <p><a href="?s1=Settings&s2=Configuration&s3=Detail&id=6">Click here</a> to configure this application to use the Ollama API. Fill out the endpoint information with the appropriate information. Eg. http://machine_name:11434/api/generate </p>
 
 <h3>Step 10: Test the API</h3>
-<p>Test the API in this application by opening a chat interface and sending a message. If the API is working, you should see the response in the chat interface.</p>
+<p>Test the API by using the bellow button. If the API is working, you should see the response in the chat interface.</p>
+<div class="row">
+    <div class="col-md-2">
+        <button class="btn btn-primary w-100" data-coreui-toggle="modal" data-coreui-target="#ai_chat_modal" onclick="open_chat('Is this thing working?', '')">Test Ollama API</button>
+    </div>
+</div>
+<br />
+
+
 
 
 <h3>Troubleshooting</h3>
@@ -182,7 +203,7 @@ PARAMETER stop <|eot_id|>
 <p>To increase the timeouts:</p>
 <ol>
     <li>If you're using a reverse proxy like Nginx, adjust the proxy timeout settings in your Nginx configuration. For example:</li>
-    <pre><code>proxy_read_timeout 3600s;
+    <pre><code class="language-plaintext">proxy_read_timeout 3600s;
 proxy_connect_timeout 3600s;
 proxy_send_timeout 3600s;</code></pre>
     <li>If you're using a different proxy solution, consult its documentation for instructions on increasing timeout settings.</li>
@@ -192,7 +213,7 @@ proxy_send_timeout 3600s;</code></pre>
 
 <h3>Note on Running Ollama Behind a Nginx Proxy Manager</h3>
 <p>Edit the proxy host. Go to settings -> Advanced. Place the following in the field marked "Custom Nginx Configuration".</p>
-<pre><code>proxy_read_timeout 3600s;
+<pre><code class="language-plaintext">proxy_read_timeout 3600s;
 proxy_connect_timeout 3600s;
 proxy_send_timeout 3600s;</code></pre>
 
