@@ -227,9 +227,15 @@ $action = $_GET['action'] ?? '';
 switch ($action) {
     case 'extract':
         //die('extract disabled for testing');
+        $common->write_to_log('file_classification', 'Extract action called');
+        $common->write_to_log('file_classification', 'POST Data', $_POST);
+        $common->write_to_log('file_classification', 'GET Data', $_GET);
         handle_extract_action($common, $client_id);
         break;
     case 'check_file_id':
+        $common->write_to_log('file_classification', 'Check file id action called');
+        $common->write_to_log('file_classification', 'POST Data', $_POST);
+        $common->write_to_log('file_classification', 'GET Data', $_GET);
         handle_check_file_id_action($common, $client_id);
         break;
     default:

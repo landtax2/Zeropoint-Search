@@ -46,6 +46,11 @@ if (!isset($_SESSION['user_id'])) {
     die();
 }
 
+//log access to the front-end
+$common->write_to_log('access', 'index.php IP', $common->get_ip());
+$common->write_to_log('access', 'index.php User ID', $_SESSION['user_id']);
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -73,6 +73,7 @@ class common
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             return $result;
         } catch (Exception $e) {
+            $this->write_to_log('database', 'Database query failed: ' . $e->getMessage() . ' in ' . $queryText . ' with params ' . json_encode($queryParams));
             throw new Exception("Database query failed: " . $e->getMessage() . " in " . $queryText . " with params " . json_encode($queryParams), 1);
         }
     }
@@ -90,6 +91,7 @@ class common
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $result;
         } catch (Exception $e) {
+            $this->write_to_log('database', 'Database query failed: ' . $e->getMessage() . ' in ' . $queryText . ' with params ' . json_encode($queryParams));
             throw new Exception("Database query failed: " . $e->getMessage() . " in " . $queryText . " with params " . json_encode($queryParams), 1);
         }
     }
@@ -129,8 +131,19 @@ class common
         }
 
         if (!$this->is_privateIP($ip) && !in_array($ip, $allowed_ips)) {
+            $this->write_to_log('security', 'IP denied access to front-end.', $ip);
             die('Non_local_address: ' . $ip);
         }
+    }
+
+    public function get_ip()
+    {
+        if (isset($_SERVER['HTTP_X_REAL_IP'])) {
+            $ip = $_SERVER['HTTP_X_REAL_IP'];
+        } else {
+            $ip = $_SERVER['REMOTE_HOST'];
+        }
+        return $ip;
     }
 
     //checks if the ip is in the CIDR private ip range
@@ -167,6 +180,7 @@ class common
     public function security_check()
     {
         if (!isset($_SESSION['user_id'])) {
+            $this->write_to_log('security', 'No Login', $_SERVER);
             die("No Login");
         }
     }
@@ -177,6 +191,7 @@ class common
         if ($data) {
             return true;
         } else {
+            $this->write_to_log('security', 'Invalid API Key', $api_key);
             return false;
         }
     }
