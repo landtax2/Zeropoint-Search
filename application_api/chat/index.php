@@ -26,6 +26,14 @@ try {
 //performs security to ensure this can only be called by a logged in user
 $common->security_check();
 
+//log access to the api
+$access = [
+    'IP' => $common->get_ip(),
+    'User ID' => $_SESSION['user_id'],
+    '$_POST' => $_POST
+];
+$common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
+
 // Handle chat request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'chat') {
     // Sanitize input from errors

@@ -23,6 +23,13 @@ if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
     exit;
 }
 
+//log access to the api
+$access = [
+    'IP' => $common->get_ip(),
+    'Data' => $data
+];
+$common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
+
 switch ($data['action']) {
     case 'login':
         if ($common->get_config_value('LOGIN_PASSWORD') == $data['password']) {

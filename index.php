@@ -47,9 +47,12 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 //log access to the front-end
-$common->write_to_log('access', 'index.php IP', $common->get_ip());
-$common->write_to_log('access', 'index.php User ID', $_SESSION['user_id']);
-$common->write_to_log('access', 'Arugments', $_GET);
+$access = [
+    'IP' => $common->get_ip(),
+    'User ID' => $_SESSION['user_id'],
+    'Arguments' => $_GET
+];
+$common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
 
 
 ?>

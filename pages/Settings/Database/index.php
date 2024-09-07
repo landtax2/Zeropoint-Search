@@ -42,6 +42,14 @@ $common->print_template_card('Database Settings', 'start');
                     <h5 class="card-title mb-0">Database Management</h5>
                 </div>
                 <div class="card-body">
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading">Warning!</h4>
+                        <p>The actions below are irreversible and will permanently delete data. Please proceed with caution.</p>
+                        <hr>
+                        <p class="mb-0">Make sure you have a backup of your database before performing any of these operations.</p>
+                    </div>
+                </div>
+                <div class="card-body">
                     <button id="emptyNetworkFilesBtn" class="btn btn-danger">Empty Network Files Table</button>
                 </div>
                 <div class="card-body">

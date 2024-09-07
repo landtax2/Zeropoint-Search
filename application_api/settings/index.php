@@ -26,6 +26,15 @@ if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
     exit;
 }
 
+
+//log access to the api
+$access = [
+    'IP' => $common->get_ip(),
+    'User ID' => $_SESSION['user_id'],
+    'Data' => $data
+];
+$common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
+
 switch ($data['action']) {
     case 'update_config':
         $queryText = "UPDATE config SET value = :value WHERE id = :id";
