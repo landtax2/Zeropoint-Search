@@ -91,7 +91,8 @@ if ($display_doctor_api_warning) {
     echo "<div class=\"alert alert-warning\" role=\"alert\">Doctor API endpoint is not defined. <a href=\"?s1=Settings&s2=Configuration&s3=Detail&id=11\">Please configure Doctor API for this application to function properly.</a> <a href=\"/?s1=Docs&s2=Doctor\">Click here for information on how to set up this API endpoint.</a></div>";
 }
 if ($display_db_version_warning) {
-    echo "<div class=\"alert alert-warning\" role=\"alert\">Database structure is out of date.  This application may not function properly. <a href=\"/setup/update/index.php\">Click here to update the database.</a></div>";
+    echo "<div class=\"alert alert-warning\" role=\"alert\">Database structure is out of date.  Automatically updating in 5 seconds.</div>";
+    echo '<meta http-equiv="refresh" content="5; url=/setup/update/index.php" />';
 }
 if ($display_debug_warning) {
     echo "<div class=\"alert alert-warning\" role=\"alert\">Debugging is enabled. This may log sensitive information and cause the application to behave unpredictably. Disable debugging in the .env file to remove this warning.</div>";

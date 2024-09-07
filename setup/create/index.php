@@ -24,7 +24,7 @@ if ($result['exist'] == 1) {
 } else {
     echo 'Creating database structures.<br/>';
 }
-
+$common->write_to_log('setup', 'Create', 'Creating database structures.');
 //Runs the database.sql file
 // Read the contents of the database.sql file
 $sql = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/setup/create/database.sql');
@@ -39,6 +39,7 @@ foreach ($queries as $query) {
         try {
             $common->get_db_connection()->exec($query);
         } catch (PDOException $e) {
+            $common->write_to_log('setup', 'Create', 'Error executing query: ' . $e->getMessage() . ' for query: ' . $query);
             echo "Error executing query: " . $e->getMessage() . "<br/>";
             echo "Query: " . $query . "<br/>";
         }
@@ -50,23 +51,28 @@ if (isset($env['DOCTOR_API'])) {
     echo "Setting DOCTOR_API to " . $env['DOCTOR_API'] . "<br/>";
     $queryText = "UPDATE public.config SET value = '" . $env['DOCTOR_API'] . "' WHERE setting = 'DOCTOR_API';";
     $common->get_db_connection()->exec($queryText);
+    $common->write_to_log('setup', 'Create', 'Setting DOCTOR_API to ' . $env['DOCTOR_API']);
 }
 if (isset($env['CHAT_API_OLLAMA'])) {
     echo "Setting CHAT_API_OLLAMA to " . $env['CHAT_API_OLLAMA'] . "<br/>";
     $queryText = "UPDATE public.config SET value = '" . $env['CHAT_API_OLLAMA'] . "' WHERE setting = 'CHAT_API_OLLAMA';";
     $common->get_db_connection()->exec($queryText);
+    $common->write_to_log('setup', 'Create', 'Setting CHAT_API_OLLAMA to ' . $env['CHAT_API_OLLAMA']);
 }
 if (isset($env['LOGIN_PASSWORD'])) {
     echo "Setting LOGIN_PASSWORD to the one defined in the .env file. <br/>";
     $queryText = "UPDATE public.config SET value = '" . $env['LOGIN_PASSWORD'] . "' WHERE setting = 'LOGIN_PASSWORD';";
     $common->get_db_connection()->exec($queryText);
+    $common->write_to_log('setup', 'Create', 'Setting LOGIN_PASSWORD');
 }
 if (isset($env['DEFAULT_CLIENT_API_KEY'])) {
     echo "Setting DEFAULT_CLIENT_API_KEY to " . $env['DEFAULT_CLIENT_API_KEY'] . "<br/>";
     $queryText = "UPDATE public.client SET api_key = '" . $env['DEFAULT_CLIENT_API_KEY'] . "' WHERE id = 1;";
     $common->get_db_connection()->exec($queryText);
+    $common->write_to_log('setup', 'Create', 'Setting DEFAULT_CLIENT_API_KEY');
 }
 
+$common->write_to_log('setup', 'Create', 'Tables and default config values created successfully.');
 echo "Tables and default config values created successfully.<br/>";
 echo "Setup complete.<br/>";
 echo "Redirecting to login page in 5 seconds.<br/>";

@@ -13,25 +13,32 @@ try {
 $common->security_check();
 $common->local_only();
 
+$common->write_to_log('setup', 'Update', 'Starting database update.');
+
 
 //get the current database version
 $queryText = "SELECT value FROM config WHERE setting = 'DB_VERSION'";
 $result = $common->query_to_sd_array($queryText, null);
 $current_version = $result['value'];
+$common->write_to_log('setup', 'Update', 'Current database version: ' . $current_version);
 
 if ($current_version == $common->db_version) {
-    die("Database is at the latest version");
+    $common->write_to_log('setup', 'Update', 'Database is at the latest version.');
+    echo '<meta http-equiv="refresh" content="5; url=/" />';
+    die("Database is at the latest version.  Redirecting to the index in 5 seconds.");
 }
 
 echo "Updating database to version $common->db_version.  Current version is $current_version. <br/>";
 //for loop to run all the update scripts
 for ($i = $current_version + 1; $i <= $common->db_version; $i++) {
     echo "Running update script for version $i.<br/>";
+    $common->write_to_log('setup', 'Update', 'Running update script for version ' . $i);
 
     // Read the contents of the database.sql file
     try {
         $sql = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/setup/update/sql/' . $i . '.sql');
     } catch (Exception $e) {
+        $common->write_to_log('setup', 'Update', 'Error reading update script for version ' . $i . ': ' . $e->getMessage());
         die("Error reading update script for version $i: " . $e->getMessage());
     }
 
@@ -47,13 +54,17 @@ for ($i = $current_version + 1; $i <= $common->db_version; $i++) {
             } catch (PDOException $e) {
                 echo "Error executing query: " . $e->getMessage() . "<br/>";
                 echo "Query: " . $query . "<br/>";
+                $common->write_to_log('setup', 'Update', 'Error executing query: ' . $e->getMessage() . ' for query: ' . $query);
             }
         }
     }
 
     echo "Update script for version $i completed.<br/>";
+    $common->write_to_log('setup', 'Update', 'Update script for version ' . $i . ' completed.');
 }
 echo "Database updated to version $common->db_version.  Redirecting to index in 5 seconds.<br/>";
+$common->write_to_log('setup', 'Update', 'Database updated to version ' . $common->db_version);
+
 
 ?>
 <meta http-equiv="refresh" content="5; url=/" />
