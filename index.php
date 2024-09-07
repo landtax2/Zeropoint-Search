@@ -182,6 +182,19 @@ $common->write_to_log('access', 'Arugments', $_GET);
                     </li>
                 </ul>
             </li>
+            <li class="nav-group">
+                <a class="nav-link nav-group-toggle" href="#">
+                    <svg class="nav-icon">
+                        <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-book"></use>
+                    </svg> Reports
+                </a>
+                <ul class="nav-group-items">
+                    <li class="nav-item"><a class="nav-link" href="/?s1=Reports&s2=Pii">
+                            <span class="nav-icon"></span><i class="fa fa-file-alt"></i> &nbsp; PII Reports
+                        </a>
+                    </li>
+                </ul>
+            </li>
             <li class="nav-item mt-auto"><a class="nav-link" href="/?s1=Docs" target="_blank">
                     <svg class="nav-icon">
                         <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-description"></use>

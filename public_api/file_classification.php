@@ -102,7 +102,9 @@ function handle_extract_action($common, $client_id)
         'contains_first_and_last_name' => 0,
         'contains_medical_information' => 0,
         'contains_email_address' => 0,
-        'contains_credit_card' => 0
+        'contains_credit_card' => 0,
+        'contains_bank' => 0,
+        'contains_credentials' => 0
     );
 
     if (isset($piiAnalysis['pii_analysis']) && is_array($piiAnalysis['pii_analysis'])) {

@@ -237,8 +237,10 @@ $common->print_template_card('File Detail', 'start');
         <dd class="col-sm-10"><?= $file_data['ai_medical']; ?></dd>
         <dt class="col-sm-2">AI Email</dt>
         <dd class="col-sm-10"><?= $file_data['ai_email']; ?></dd>
-        <dt class="col-sm-2">AI Credit Card</dt>
-        <dd class="col-sm-10"><?= $file_data['ai_credit_card']; ?></dd>
+        <dt class="col-sm-2">AI Credentials</dt>
+        <dd class="col-sm-10"><?= $file_data['ai_credentials']; ?></dd>
+        <dt class="col-sm-2">AI Bank</dt>
+        <dd class="col-sm-10"><?= $file_data['ai_bank']; ?></dd>
         <dt class="col-sm-2">&nbsp;</dt>
         <dd class="col-sm-10"></dd>
 

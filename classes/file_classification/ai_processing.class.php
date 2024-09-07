@@ -26,10 +26,12 @@ class ai_processing
               \"contains_phone_number\": \"yes or no\",
               \"contains_street_address\": \"yes or no\",
               \"contains_first_and_last_name\": \"yes or no\",
-              \"contains_medical_information\":\"yes or no\",
+              \"contains_personal_medical_information\":\"yes or no\",
+              \"contains_username_and_password\":\"yes or no\",
               \"contains_email_address\":\"yes or no\",
               \"contains_credit_card\":\"yes or no\",
-              \"severity_of_pii\":\"1 to 10\"
+              \"contains_banking_information\":\"yes or no\",
+              \"severity_of_personal_information\":\"1 to 10\"
             \}
             
             Only respond with valid json. Do not escape quotes.
@@ -50,10 +52,12 @@ class ai_processing
             'contains_phone_number' => $this->extract_pii($piiAnalysis, 'contains_phone_number'),
             'contains_street_address' => $this->extract_pii($piiAnalysis, 'contains_street_address'),
             'contains_first_and_last_name' => $this->extract_pii($piiAnalysis, 'contains_first_and_last_name'),
-            'contains_medical_information' => $this->extract_pii($piiAnalysis, 'contains_medical_information'),
+            'contains_medical_information' => $this->extract_pii($piiAnalysis, 'contains_personal_medical_information'),
+            'contains_credentials' => $this->extract_pii($piiAnalysis, 'contains_username_and_password'),
             'contains_email_address' => $this->extract_pii($piiAnalysis, 'contains_email_address'),
             'contains_credit_card' => $this->extract_pii($piiAnalysis, 'contains_credit_card'),
-            'severity_of_pii' => $this->extract_pii_severity($piiAnalysis, 'severity_of_pii')
+            'contains_bank' => $this->extract_pii($piiAnalysis, 'contains_banking_information'),
+            'severity_of_pii' => $this->extract_pii_severity($piiAnalysis, 'severity_of_personal_information')
         ];
 
         //return $pii_analysis_r;
@@ -147,7 +151,7 @@ class ai_processing
         $this->chat->contextWindow = $context_window;
 
         $summary_length = $this->common->get_config_value('AI_PROCESSING_SUMMARY_LENGTH');
-        $prompt = "Your task is to review the provided text and create a summary of the content in less than $summary_length words. Respond with just the summary without any additional text. This summary will be used in a search index so include any relevant details that a user might search for. Summarize the text delimited by #### The text to analyze is:\n";
+        $prompt = "Your task is to review the provided text and create a summary of the content in less than $summary_length words. Respond with just the summary without any additional text or introduction. This summary will be used in a search index so include any relevant details that a user might search for. Summarize the text delimited by #### The text to analyze is:\n";
         $prompt .= "#### " . $extracted_text . ' ####';
 
         try {
