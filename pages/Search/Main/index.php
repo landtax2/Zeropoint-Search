@@ -69,16 +69,13 @@ if (strlen($ai_summary_near_words) > 1) {
     $params[':ai_summary'] = $ai_summary_near_words;
 }
 if (strlen($ai_tags) > 1) {
+
     $where[] = "to_tsvector('english', ai_tags) @@ to_tsquery('english', :ai_tags)";
     $ai_tags = preg_replace('/\s+/', ' ', trim($ai_tags));
-    $ai_tags = str_replace(' ', ' < ### > ', $ai_tags);
-    $statements = array();
-    for ($i = 1; $i <= 50; $i++) {
-        $statements[] = str_replace(' ### ',  $i, $ai_tags);
-    }
-    $ai_tags = implode(' | ', $statements);
+    $ai_tags = str_replace(' ', ' & ', trim($ai_tags));
     $params[':ai_tags'] = $ai_tags;
 }
+
 
 $where_s = implode(" AND ", $where);
 $files = array();
