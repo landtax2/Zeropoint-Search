@@ -36,6 +36,8 @@ if ($admin_password['value'] == 'notsecure') {
     $display_password_warning = true;
 }
 
+$document_count = $common->query_to_sd_array("SELECT COUNT(*) as count FROM network_file WHERE ai_summary is not null", null)['count'];
+
 $queryText = "SELECT * FROM network_file WHERE ai_summary is not null LIMIT 50";
 $queryParams = null;
 $files = $common->query_to_md_array($queryText, $queryParams);
@@ -60,14 +62,18 @@ $common->print_template_card('Dashboard', 'start');
 </script>
 
 <?PHP
+
+if ($document_count == 0) {
+    echo "<div class=\"alert alert-danger\" role=\"alert\">Please read the <a href=\"/?s1=Docs\">documents</a> on how to setup the Doctor and Ollama API endpoints.  This application wont be of any use without this being properly configured. This message will go away after the first document has been successfully analyzed.</div>";
+}
 if ($display_password_warning) {
     echo "<div class=\"alert alert-danger\" role=\"alert\">The default password for the admin user is still in use.  <a href=\"/?s1=Settings&s2=Configuration&s3=Detail&id=14\">Click here to update the password.</a></div>";
 }
 if ($display_ollama_warning) {
-    echo "<div class=\"alert alert-warning\" role=\"alert\">Ollama is not configured. <a href=\"?s1=Settings&s2=Configuration&s3=Detail&id=4\">Please configure Ollama for this application to function properly.</a></div>";
+    echo "<div class=\"alert alert-warning\" role=\"alert\">Ollama API endpoint is not defined. <a href=\"?s1=Settings&s2=Configuration&s3=Detail&id=4\">Please configure Ollama for this application to function properly.</a> <a href=\"/?s1=Docs&s2=Ollama\">Click here for information on how to set up this API endpoint.</a></div>";
 }
 if ($display_doctor_api_warning) {
-    echo "<div class=\"alert alert-warning\" role=\"alert\">Doctor API is not configured. <a href=\"?s1=Settings&s2=Configuration&s3=Detail&id=11\">Please configure Doctor API for this application to function properly.</a> <a href=\"/?s1=Docs&s2=Doctor\">Click here for information on how to set up this API endpoint.</a></div>";
+    echo "<div class=\"alert alert-warning\" role=\"alert\">Doctor API endpoint is not defined. <a href=\"?s1=Settings&s2=Configuration&s3=Detail&id=11\">Please configure Doctor API for this application to function properly.</a> <a href=\"/?s1=Docs&s2=Doctor\">Click here for information on how to set up this API endpoint.</a></div>";
 }
 if ($display_db_version_warning) {
     echo "<div class=\"alert alert-warning\" role=\"alert\">Database structure is out of date.  This application may not function properly. <a href=\"/setup/update/index.php\">Click here to update the database.</a></div>";
@@ -96,7 +102,7 @@ if ($display_db_version_warning) {
                             <div class="card-body">
                                 <h5 class="card-title">Document Count</h5>
                                 <p class="card-text h3">
-                                    <?= number_format($common->query_to_sd_array("SELECT COUNT(*) as count FROM network_file WHERE ai_summary is not null", null)['count']) ?>
+                                    <?= number_format($document_count) ?>
                                 </p>
                                 <p class="card-text text-muted">Total documents in database</p>
                             </div>
