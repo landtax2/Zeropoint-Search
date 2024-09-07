@@ -142,7 +142,9 @@ if (!isset($_SESSION['user_id'])) {
             <li class="nav-title">Core Functions</li>
             <li class="nav-group">
                 <a class="nav-link nav-group-toggle" href="#">
-                    <i class="fa fa-search"></i> &nbsp;Searches
+                    <svg class="nav-icon">
+                        <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-search"></use>
+                    </svg> Searches
                 </a>
                 <ul class="nav-group-items">
                     <li class="nav-item"><a class="nav-link" href="/?s1=Search&s2=Main"><span class="nav-icon"></span><i class="fa fa-fire"></i> &nbsp; Main Search</a></li>
@@ -150,7 +152,9 @@ if (!isset($_SESSION['user_id'])) {
             </li>
             <li class="nav-group">
                 <a class="nav-link nav-group-toggle" href="#">
-                    <i class="fa fa-gear"></i> &nbsp;Settings
+                    <svg class="nav-icon">
+                        <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-settings"></use>
+                    </svg> Settings
                 </a>
                 <ul class="nav-group-items">
                     <li class="nav-item">

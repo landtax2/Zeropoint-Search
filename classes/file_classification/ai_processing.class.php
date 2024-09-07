@@ -38,12 +38,53 @@ class ai_processing
 
         try {
             $piiAnalysis = $this->chat->sendRequest($prompt);
-            return array('pii_analysis' => json_decode($piiAnalysis, true));
         } catch (Exception $e) {
             echo "Error occured with the AI endpoint: $e";
             //Throws an exception
             throw new Exception('An error occurred while analyzing the text for PII.');
         }
+
+        //this should deal with poorly formatted json
+        $pii_analysis_r = [
+            'contains_social_security_number' => $this->extract_pii($piiAnalysis, 'contains_social_security_number'),
+            'contains_phone_number' => $this->extract_pii($piiAnalysis, 'contains_phone_number'),
+            'contains_street_address' => $this->extract_pii($piiAnalysis, 'contains_street_address'),
+            'contains_first_and_last_name' => $this->extract_pii($piiAnalysis, 'contains_first_and_last_name'),
+            'contains_medical_information' => $this->extract_pii($piiAnalysis, 'contains_medical_information'),
+            'contains_email_address' => $this->extract_pii($piiAnalysis, 'contains_email_address'),
+            'contains_credit_card' => $this->extract_pii($piiAnalysis, 'contains_credit_card'),
+            'severity_of_pii' => $this->extract_pii_severity($piiAnalysis, 'severity_of_pii')
+        ];
+
+        //return $pii_analysis_r;
+        //return array('pii_analysis' => json_decode($piiAnalysis, true));
+        return array('pii_analysis' => $pii_analysis_r);
+    }
+
+    public function extract_pii($pii, $key)
+    {
+        $pii = explode("\n", $pii);
+        foreach ($pii as $p) {
+            if (strpos($p, $key) !== false) {
+                if (strpos($p, 'yes') !== false) {
+                    return 'yes';
+                }
+            }
+        }
+        return 'no';
+    }
+
+    public function extract_pii_severity($pii, $key)
+    {
+        $pii = explode("\n", $pii);
+        foreach ($pii as $p) {
+            if (strpos($p, $key) !== false) {
+                //remove all non-numeric characters
+                $severity = preg_replace('/[^0-9]/', '', $p);
+                return $severity;
+            }
+        }
+        return '0';
     }
 
     public function contact_information($extracted_text)
