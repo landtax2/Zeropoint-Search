@@ -12,6 +12,14 @@ try {
 $common->local_only();
 ($common->get_env_value('DEBUGGING') == '1') ? ini_set('display_errors', 1) : ini_set('log_errors', 0); //turns off error logging if not debugging
 
+//log access to the front-end
+$access = [
+    'IP' => $common->get_ip(),
+    'User ID' => $_SESSION['user_id'],
+    'Arguments' => $_GET,
+    'User Agent' => $_SERVER['HTTP_USER_AGENT']
+];
+$common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
 
 ?>
 <!DOCTYPE html>

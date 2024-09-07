@@ -50,7 +50,8 @@ if (!isset($_SESSION['user_id'])) {
 $access = [
     'IP' => $common->get_ip(),
     'User ID' => $_SESSION['user_id'],
-    'Arguments' => $_GET
+    'Arguments' => $_GET,
+    'User Agent' => $_SERVER['HTTP_USER_AGENT']
 ];
 $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
 

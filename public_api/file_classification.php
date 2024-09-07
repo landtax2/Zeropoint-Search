@@ -200,7 +200,7 @@ function handle_extract_action($common, $client_id)
     ];
 
     $dataFunctions->updateNetworkFile($updateData);
-    respond_with_json([
+    $analysis_detials = [
         'title' => $title,
         'name' => $_POST['name'],
         'execution_times' => $execution_times,
@@ -208,7 +208,9 @@ function handle_extract_action($common, $client_id)
         'extracted_text_total_length_after' => $extracted_text_total_length_after,
         'context_window' => $common->get_config_value('AI_PROCESSING_CONTEXT_WINDOW'),
         'summary_length' => $common->get_config_value('AI_PROCESSING_SUMMARY_LENGTH')
-    ]);
+    ];
+    $common->write_to_log('file_classification_performance', 'Analysis details', $analysis_detials);
+    respond_with_json($analysis_detials);
 }
 
 //validates api key is sent
@@ -218,8 +220,25 @@ if (!isset($_POST['api_key'])) {
 
 //validates api key is valid
 if (!$common->validate_api_key($_POST['api_key'])) {
+    $log = [
+        'POST' => $_POST,
+        'IP' => $common->get_ip(),
+        'User Agent' => $_SERVER['HTTP_USER_AGENT'],
+        'GET' => $_GET
+    ];
+    $common->write_to_log('security', 'Invalid API key', $log);
     respond_with_error('Invalid API key');
+    die();
 }
+
+//log access to the api
+$log = [
+    'POST' => $_POST,
+    'IP' => $common->get_ip(),
+    'User Agent' => $_SERVER['HTTP_USER_AGENT'],
+    'GET' => $_GET
+];
+$common->write_to_log('access', $_SERVER['REQUEST_URI'], $log);
 
 //gets client id from api key
 $client_id = $common->api_key_to_client_id($_POST['api_key']);
@@ -228,16 +247,19 @@ $client_id = $common->api_key_to_client_id($_POST['api_key']);
 $action = $_GET['action'] ?? '';
 switch ($action) {
     case 'extract':
-        //die('extract disabled for testing');
-        $common->write_to_log('file_classification', 'Extract action called');
-        $common->write_to_log('file_classification', 'POST Data', $_POST);
-        $common->write_to_log('file_classification', 'GET Data', $_GET);
+        $log = [
+            'GET' => $_GET,
+            'POST' => $_POST
+        ];
+        $common->write_to_log('file_classification', 'Extract action called', $log);
         handle_extract_action($common, $client_id);
         break;
     case 'check_file_id':
-        $common->write_to_log('file_classification', 'Check file id action called');
-        $common->write_to_log('file_classification', 'POST Data', $_POST);
-        $common->write_to_log('file_classification', 'GET Data', $_GET);
+        $log = [
+            'GET' => $_GET,
+            'POST' => $_POST
+        ];
+        $common->write_to_log('file_classification', 'Check file id action called', $log);
         handle_check_file_id_action($common, $client_id);
         break;
     default:
