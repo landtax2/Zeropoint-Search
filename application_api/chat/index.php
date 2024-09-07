@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'chat') {
         echo $response;
     } catch (Exception $e) {
         http_response_code(500);
-        echo json_encode(['error' => 'An error occurred while processing your request.']);
+        echo json_encode(['error' => 'An error occurred while processing your request.', 'error_message' => $e->getMessage()]);
     }
 } else {
     http_response_code(400);

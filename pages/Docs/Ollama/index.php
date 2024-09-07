@@ -174,7 +174,7 @@ PARAMETER stop <|eot_id|>
 <p>To ensure this API is working over the network, run the above command from a different machine on your network. Replace localhost with the IP address or name of the machine running Ollama.</p>
 
 <h3>Step 9: Configure this application to use the Ollama API</h3>
-<p><a href="?s1=Settings&s2=Configuration&s3=Detail&id=6">Click here</a> to configure this application to use the Ollama API. Fill out the endpoint information with the appropriate information. Eg. http://machine_name:11434/api/generate </p>
+<p><a href="?s1=Settings&s2=Configuration&s3=Detail&id=4">Click here</a> to configure this application to use the Ollama API. Fill out the endpoint information with the appropriate information. Eg. http://machine_name:11434/api/generate </p>
 
 <h3>Step 10: Test the API</h3>
 <p>Test the API by using the bellow button. If the API is working, you should see the response in the chat interface.</p>

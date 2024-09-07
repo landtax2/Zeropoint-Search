@@ -39,10 +39,8 @@ if ($admin_password['value'] == 'notsecure') {
 $document_count = $common->query_to_sd_array("SELECT COUNT(*) as count FROM network_file WHERE ai_summary is not null", null)['count'];
 
 //get the date of the most recently processed file
-$most_recently_processed_file_date = $common->query_to_sd_array("SELECT last_found FROM network_file ORDER BY last_found DESC LIMIT 1", null)['last_found'];
-if (empty($most_recently_processed_file_date)) {
-    $most_recently_processed_file_date = 'N/A';
-}
+$most_recently_processed_file_date = $common->query_to_sd_array("SELECT last_found FROM network_file WHERE ai_summary is not null ORDER BY last_found DESC LIMIT 1", null)['last_found'] ?? null;
+
 
 //get the number of files containing ssn
 $ssn_files_count = $common->query_to_sd_array("SELECT COUNT(*) as count FROM network_file WHERE ai_pii_ssn = '1'", null)['count'];
@@ -125,7 +123,7 @@ if ($display_db_version_warning) {
                             <div class="card-body">
                                 <h5 class="card-title">Most Recently Processed File</h5>
                                 <p class="card-text h3">
-                                    <?= $common->sql2date_military_time($most_recently_processed_file_date) ?>
+                                    <?= $common->sql2date_military_time($most_recently_processed_file_date) ?? 'N/A' ?>
                                 </p>
                                 <p class="card-text text-muted">The date the most recently processed file was analyzed</p>
                             </div>

@@ -142,9 +142,13 @@ class ai_processing
 
     public function summarizeText($extracted_text)
     {
+        $context_window = $this->common->get_config_value('AI_PROCESSING_CONTEXT_WINDOW');
         $this->initializeChat(0.7);
+        $this->chat->contextWindow = $context_window;
 
-        $prompt = "Your task is to review the provided text and create a summary of the content in less than 500 words. Respond with just the summary. Summarize the text delimieted by #### The text to analyze is:\n ####" . $extracted_text . '####';
+        $summary_length = $this->common->get_config_value('AI_PROCESSING_SUMMARY_LENGTH');
+        $prompt = "Your task is to review the provided text and create a summary of the content in less than $summary_length words. Respond with just the summary without any additional text. This summary will be used in a search index so include any relevant details that a user might search for. Summarize the text delimited by #### The text to analyze is:\n";
+        $prompt .= "#### " . $extracted_text . ' ####';
 
         try {
             $summary = $this->chat->sendRequest($prompt);

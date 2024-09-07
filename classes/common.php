@@ -5,7 +5,7 @@ class common
 
     private $db_connection;
     private $env;
-    public $db_version = '104';
+    public $db_version = '106';
     public $boolean = array('0' => 'False', '1' => 'True');
 
     public function __construct($env)
@@ -211,8 +211,8 @@ class common
 
     public function sql2date_military_time($date)
     {
-        if (empty($date)) {
-            return 'null';
+        if (empty($date) || strlen($date) === 0 || $date == '0') {
+            return null;
         } else {
             return date('m/d/Y H:i:s', strtotime($date));
         }

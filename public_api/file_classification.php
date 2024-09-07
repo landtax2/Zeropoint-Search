@@ -1,4 +1,8 @@
 <?php
+//set the max execution time ini to 10 minutes
+ini_set('max_execution_time', 600);
+
+
 $env = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/.env');
 
 // Start session and include necessary files

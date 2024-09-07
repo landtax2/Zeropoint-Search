@@ -167,6 +167,9 @@ if (!isset($_SESSION['user_id'])) {
                         <a class="nav-link" href="/?s1=Settings&s2=Changelog">
                             <span class="nav-icon"></span><i class="fa fa-history"></i> &nbsp; Changelog
                         </a>
+                        <a class="nav-link" href="/?s1=Settings&s2=Database">
+                            <span class="nav-icon"></span><i class="fa fa-database"></i> &nbsp; Database
+                        </a>
                     </li>
                 </ul>
             </li>

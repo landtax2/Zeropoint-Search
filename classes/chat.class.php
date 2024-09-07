@@ -41,6 +41,7 @@ class Chat_ollama
         // Encode the data as JSON
         $payload = json_encode($data);
         //print_r($data);
+        //die('test');
         //echo $payload;
 
         // Initialize cURL session

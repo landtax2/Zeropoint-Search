@@ -250,10 +250,10 @@ $common->print_template_card('Network File Search', 'start');
         $ai_contact = '####';
         foreach ($files as $d) {
             //prevents summaries from being too long
-            if (strlen($ai_summary) < $common->get_config_value('CHAT_MAX_LENGTH')) {
+            if (strlen($ai_summary) < $common->get_config_value('AI_PROCESSING_CHAT_MAX_LENGTH')) {
                 $ai_summary .= $d['ai_summary'] . "\n\n";
             }
-            if (strlen($ai_contact) < $common->get_config_value('CHAT_MAX_LENGTH')) {
+            if (strlen($ai_contact) < $common->get_config_value('AI_PROCESSING_CHAT_MAX_LENGTH')) {
                 $ai_contact .= $d['ai_contact_information'] . "\n\n";
             }
 

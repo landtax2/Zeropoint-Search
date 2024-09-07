@@ -4,3 +4,8 @@ DB_NAME="zps"
 DB_USER="zps_user"
 DB_PASS="test"
 DB_PORT="5432"
+
+;Optional - Loads into database when first created.  Makes for easier testing and deployment.
+DOCTOR_API="http://docker:5050";
+OLLAMA_API="https://ai.example.com/api/generate";
+LOGIN_PASSWORD="stillnotsecure";

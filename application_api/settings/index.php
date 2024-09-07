@@ -33,6 +33,13 @@ switch ($data['action']) {
         $common->query_to_sd_array($queryText, $queryParams);
         echo json_encode(array('success' => true, 'message' => 'Configuration updated successfully'));
         break;
+    case 'empty_network_files':
+        $queryText = "TRUNCATE TABLE network_file";
+        $common->query_to_sd_array($queryText, []);
+        $queryText = "VACUUM network_file;";
+        $common->query_to_sd_array($queryText, []);
+        echo json_encode(array('success' => true, 'message' => 'Network files table emptied successfully'));
+        break;
     default:
         echo json_encode(array('success' => false, 'message' => 'Unknown action'));
         break;
