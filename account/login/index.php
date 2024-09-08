@@ -15,7 +15,6 @@ $common->local_only();
 //log access to the front-end
 $access = [
     'IP' => $common->get_ip(),
-    'User ID' => $_SESSION['user_id'],
     'Arguments' => $_GET,
     'User Agent' => $_SERVER['HTTP_USER_AGENT']
 ];

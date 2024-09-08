@@ -135,12 +135,19 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
     <div class="sidebar sidebar-dark sidebar-fixed border-end" id="sidebar">
         <div class="sidebar-header border-bottom">
             <div class="sidebar-brand">
-                <svg class="sidebar-brand-full" width="88" height="32" alt="CoreUI Logo">
+                <!--<svg class="sidebar-brand-full" width="88" height="32" alt="CoreUI Logo">
                     <use xlink:href="/assets/brand/coreui.svg#full"></use>
                 </svg>
                 <svg class="sidebar-brand-narrow" width="32" height="32" alt="CoreUI Logo">
                     <use xlink:href="/assets/brand/coreui.svg#signet"></use>
-                </svg>
+                </svg>-->
+                <div class="sidebar-brand-full">
+                    <i class="fa-brands fa-galactic-republic fa-2x"></i>
+                    <span class="ms-2">Zero Point Search</span>
+                </div>
+                <div class="sidebar-brand-narrow">
+                    <i class="fa-brands fa-galactic-republic fa-2x"></i>
+                </div>
             </div>
             <button class="btn-close d-lg-none" type="button" data-coreui-dismiss="offcanvas" data-coreui-theme="dark" aria-label="Close" onclick="coreui.Sidebar.getInstance(document.querySelector(&quot;#sidebar&quot;)).toggle()"></button>
         </div>
@@ -157,7 +164,11 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
                     </svg> Searches
                 </a>
                 <ul class="nav-group-items">
-                    <li class="nav-item"><a class="nav-link" href="/?s1=Search&s2=Main"><span class="nav-icon"></span><i class="fa fa-fire"></i> &nbsp; Main Search</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/?s1=Search&s2=Main">
+                            <span class="nav-icon"></span><i class="fa fa-search"></i> &nbsp; Main Search
+                        </a>
+                    </li>
                 </ul>
                 <ul class="nav-group-items">
                     <li class="nav-item"><a class="nav-link" href="/?s1=Search&s2=Tag"><span class="nav-icon"></span><i class="fa fa-tag"></i> &nbsp; Tag Search</a></li>
@@ -263,19 +274,19 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link py-0 pe-0" data-coreui-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                            <div class="avatar avatar-md"><img class="avatar-img" src="/coreui/assets/img/avatars/8.jpg" alt="user@email.com"></div>
+                            <div class="avatar avatar-md"><img class="avatar-img" src="/assets/avatar/zp1.png" alt="user@email.com"></div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end pt-0">
                             <div class="dropdown-header bg-body-tertiary text-body-secondary fw-semibold my-2">
                                 <div class="fw-semibold">Settings</div>
-                            </div><a class="dropdown-item" href="#">
+                            </div><a class="dropdown-item" href="/?s1=Settings&s2=Clients">
                                 <svg class="icon me-2">
                                     <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-user"></use>
-                                </svg> Profile</a><a class="dropdown-item" href="#">
+                                </svg> Clients</a><a class="dropdown-item" href="/?s1=Settings&s2=Configuration">
                                 <svg class="icon me-2">
                                     <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-settings"></use>
                                 </svg> Settings</a><a class="dropdown-item" href="#">
-                                <div class="dropdown-divider"></div><a class="dropdown-item" href="#">
+                                <div class="dropdown-divider"></div><a id="logout-button" class="dropdown-item" href="#">
                                     <svg class="icon me-2">
                                         <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-account-logout"></use>
                                     </svg> Logout</a>
@@ -368,6 +379,59 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
         document.addEventListener('scroll', () => {
             if (header) {
                 header.classList.toggle('shadow-sm', document.documentElement.scrollTop > 0);
+            }
+        });
+
+        function logout() {
+            // Send a POST request to logout
+            fetch('/application_api/account/index.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'logout'
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Logout Successful',
+                            text: 'Redirecting to login page...',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '/';
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Logout Failed',
+                            text: data.message || 'An error occurred during logout',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during logout:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Logout Error',
+                        text: 'An unexpected error occurred during logout',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                });
+        }
+
+        // Add event listener to the logout button
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutButton = document.querySelector('#logout-button');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', logout);
             }
         });
     </script>
