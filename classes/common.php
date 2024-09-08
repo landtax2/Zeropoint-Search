@@ -124,11 +124,7 @@ class common
         $allowed_ips = explode(',', $this->get_config_value('ALLOWED_IP'));
 
         //get the ip address of the user - handles proxy or real ip
-        if (isset($_SERVER['HTTP_X_REAL_IP'])) {
-            $ip = $_SERVER['HTTP_X_REAL_IP'];
-        } else {
-            $ip = $_SERVER['REMOTE_HOST'];
-        }
+        $ip = $this->get_ip();
 
         if (!$this->is_privateIP($ip) && !in_array($ip, $allowed_ips)) {
             $this->write_to_log('security', 'IP denied access to front-end.', $ip);
