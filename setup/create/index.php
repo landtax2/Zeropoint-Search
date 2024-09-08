@@ -79,7 +79,7 @@ if (isset($env['TIME_ZONE'])) {
     $common->get_db_connection()->exec($queryText);
     $queryText = "UPDATE public.config SET value = '" . $env['TIME_ZONE'] . "' WHERE setting = 'TIME_ZONE';";
     $common->get_db_connection()->exec($queryText);
-    $common->write_to_log('setup', 'Create', 'Setting timezone to ' . $env['TIMEZONE']);
+    $common->write_to_log('setup', 'Create', 'Setting timezone to ' . $env['TIME_ZONE']);
 }
 
 $common->write_to_log('setup', 'Create', 'Tables and default config values created successfully.');

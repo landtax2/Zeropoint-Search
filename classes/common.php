@@ -17,7 +17,7 @@ class common
         try {
             date_default_timezone_set($this->get_config_value('TIME_ZONE'));
         } catch (Exception $e) {
-            echo 'Unable to set timezone.  Defaulting to UTC.<br/>';
+            //echo 'Unable to set timezone.  Defaulting to UTC.<br/>';
         }
     }
 
