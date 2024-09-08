@@ -197,12 +197,13 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
                         <a class="nav-link" href="/?s1=Settings&s2=Database">
                             <span class="nav-icon"></span><i class="fa fa-database"></i> &nbsp; Database
                         </a>
-                        <a class="nav-link" href="/?s1=Settings&s2=Logs">
-                            <span class="nav-icon"></span><i class="fa fa-file-alt"></i> &nbsp; Logs
-                        </a>
+
                         <?php
                         if ($common->get_env_value('DEBUGGING') == "1") {
                         ?>
+                            <a class="nav-link" href="/?s1=Settings&s2=Logs">
+                                <span class="nav-icon"></span><i class="fa fa-file-alt"></i> &nbsp; Logs
+                            </a>
                             <a class="nav-link" href="/?s1=Settings&s2=PHP">
                                 <span class="nav-icon"></span><i class="fa-brands fa-php"></i> &nbsp; PHP
                             </a>
