@@ -9,6 +9,22 @@ class DataFunctions
         $this->common = $common;
     }
 
+    public function create_tag($file_id, $tags)
+    {
+        //gets the network_file_id from the file_id
+        $queryText = "SELECT id FROM network_file WHERE file_id = :file_id";
+        $params = [':file_id' => $file_id];
+        $network_file_id = $this->common->query_to_sd_array($queryText, $params)['id'];
+
+        //inserts the tags into the tag table
+        $tags = explode(',', $tags);
+        foreach ($tags as $tag) {
+            $queryText = "INSERT INTO tag (network_file_id, tag) VALUES (:network_file_id, :tag)";
+            $params = [':network_file_id' => $network_file_id, ':tag' => $tag];
+            $this->common->query_to_sd_array($queryText, $params);
+        }
+    }
+
     public function updateNetworkFile($updateData)
     {
         $updateQuery = "UPDATE network_file

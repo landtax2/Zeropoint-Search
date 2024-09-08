@@ -200,6 +200,8 @@ function handle_extract_action($common, $client_id)
     ];
 
     $dataFunctions->updateNetworkFile($updateData);
+    $dataFunctions->create_tag($_POST['file_id'], $tags);
+
     $analysis_detials = [
         'title' => $title,
         'name' => $_POST['name'],

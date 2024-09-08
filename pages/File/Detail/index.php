@@ -40,12 +40,16 @@ $common->print_template_card('File Detail', 'start');
             cancelButtonText: "Cancel"
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch('/pages/utilities/network_file_search/handlers/main.php', {
+                fetch('/application_api/file/index.php', {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Content-Type': 'application/json',
                         },
-                        body: `id=${id}&action=set_file_remediated`
+                        body: JSON.stringify({
+                            id: id,
+                            action: 'update_remediation',
+                            value: 1
+                        })
                     })
                     .then(response => response.json())
                     .then(data => {
@@ -90,12 +94,16 @@ $common->print_template_card('File Detail', 'start');
             cancelButtonText: "Cancel",
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch('/pages/utilities/network_file_search/handlers/main.php', {
+                fetch('/application_api/file/index.php', {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Content-Type': 'application/json',
                         },
-                        body: `id=${id}&action=unset_file_remediated`
+                        body: JSON.stringify({
+                            id: id,
+                            action: 'update_remediation',
+                            value: 0
+                        })
                     })
                     .then(response => response.json())
                     .then(data => {
@@ -139,12 +147,16 @@ $common->print_template_card('File Detail', 'start');
             confirmButtonText: "Confirm",
             cancelButtonText: "Cancel",
             preConfirm: (text) => {
-                return fetch('/pages/utilities/network_file_search/handlers/main.php', {
+                return fetch('/application_api/file/index.php', {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Content-Type': 'application/json',
                         },
-                        body: `id=${id}&action=set_file_comment&comment=${text}`
+                        body: JSON.stringify({
+                            id: id,
+                            action: 'update_comment',
+                            value: text
+                        })
                     })
                     .then(response => response.json())
                     .then(data => {
@@ -170,6 +182,55 @@ $common->print_template_card('File Detail', 'start');
                     });
             },
             allowOutsideClick: () => !Swal.isLoading()
+        });
+    }
+
+    function deleteFile() {
+        Swal.fire({
+            title: "Delete File",
+            text: "Are you sure you want to delete this file from the database? This action cannot be undone.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#dc3545",
+            confirmButtonText: "Delete",
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch('/application_api/file/index.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            id: id,
+                            action: 'delete_file'
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                title: "Success",
+                                text: "File has been deleted from the database.",
+                                icon: "success",
+                                showCancelButton: false,
+                                confirmButtonColor: "#00d049",
+                                confirmButtonText: "OK"
+                            }).then(() => {
+                                window.location.href = '/?page=files'; // Redirect to files page
+                            });
+                        } else {
+                            throw new Error(data.message || 'Problem deleting file.');
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: `Failed to delete file: ${error.message}`,
+                        });
+                    });
+            }
         });
     }
 </script>
@@ -264,12 +325,17 @@ $common->print_template_card('File Detail', 'start');
         <dt class="col-sm-2">Comment </dt>
         <dd class="col-sm-10"><?= $file_data['comment']; ?></dd>
         <dt class="col-sm-2">&nbsp;</dt>
-        <dd class="col-sm-10"></dd
-            </dl>
-        <br />
+        <dd class="col-sm-10"></dd>
+    </dl>
+    <br />
 
 
 </div>
+<div class="mt-3">
+    <button class="btn btn-danger btn-sm" onclick="deleteFile()">Delete File</button>
+</div>
+
+
 <?PHP
 $common->print_template_card(null, 'end');
 
