@@ -53,7 +53,7 @@ if (empty($ssn_files_count)) {
     $ssn_files_count = 0;
 }
 
-$queryText = "SELECT * FROM network_file WHERE ai_summary is not null LIMIT 50";
+$queryText = "SELECT * FROM network_file WHERE ai_summary is not null ORDER BY id DESC LIMIT 50";
 $queryParams = null;
 $files = $common->query_to_md_array($queryText, $queryParams);
 
@@ -69,7 +69,7 @@ $common->print_template_card('Dashboard', 'start');
             "searching": true,
             "responsive": true,
             "order": [
-                [5, "desc"]
+                [3, "desc"]
             ],
             "sScrollX": "100%",
         })
@@ -164,10 +164,11 @@ if ($display_debug_warning) {
         <tr>
             <th>File Name</th>
             <th>AI Title</th>
-            <th>File Path</th>
-            <th>Last Found</th>
-            <th>Date Created</th>
-            <th>Date Modified</th>
+            <th>Record Created</th>
+            <th class="none">File Path</th>
+            <th class="none">Last Found</th>
+            <th class="none">Date Created</th>
+            <th class="none">Date Modified</th>
             <th class="none">AI Summary</th>
             <th class="none">AI Tags</th>
         </tr>
@@ -179,12 +180,14 @@ if ($display_debug_warning) {
             $d['last_found'] = $common->sql2date($d['last_found']);
             $d['date_created'] = $common->sql2date($d['date_created']);
             $d['date_modified'] = $common->sql2date($d['date_modified']);
+            $d['record_created'] = $common->sql2date_military_time($d['record_created']);
             $d['ai_summary'] = nl2br("\n\n" . $d['ai_summary']);
             echo "<tr>
                         <td>
                             <a target=\"_BLANK\" href=\"/?s1=File&s2=Detail&id=$d[id]\">$d[name]</a>
                         </td>
                         <td>$d[ai_title]</td>
+                        <td data-sort=\"" . strtotime($d['record_created']) . "\">$d[record_created]</td>
                         <td>$d[path]</td>
                         
                         <td data-sort=\"" . strtotime($d['last_found']) . "\">$d[last_found]</td>

@@ -9,84 +9,46 @@ foreach ($_GET as $key => $value) {
 
 $name = isset($_GET['name']) ? str_replace('*', '%', $_GET['name']) : '';
 $path = isset($_GET['path']) ? str_replace('*', '%', $_GET['path']) : '';
-$ai_title = isset($_GET['ai_title']) ? $_GET['ai_title'] : '';
-$ai_summary = isset($_GET['ai_summary']) ? $_GET['ai_summary'] : '';
-$ai_title_near_words = isset($_GET['ai_title_near_words']) ? $_GET['ai_title_near_words'] : '';
-$ai_title_near_int = isset($_GET['ai_title_near_int']) ? $_GET['ai_title_near_int'] : '';
-$ai_summary_near_words = isset($_GET['ai_summary_near_words']) ? $_GET['ai_summary_near_words'] : '';
-$ai_summary_near_int = isset($_GET['ai_summary_near_int']) ? $_GET['ai_summary_near_int'] : '';
 $ai_tags = isset($_GET['ai_tags']) ? $_GET['ai_tags'] : '';
-$ai_contact_information = isset($_GET['ai_contact_information']) ? $_GET['ai_contact_information'] : '';
+
 $where = array();
+$joins = array();
 $select = '';
 $params = array();
 if (strlen($name) > 1) {
-    $where[] = "LOWER(name) LIKE LOWER(:name)";
+    $where[] = "AND t1.name ILIKE :name";
     $params[':name'] = $name;
 }
 if (strlen($path) > 1) {
-    $where[] = "LOWER(path) LIKE LOWER(:path)";
+    $where[] = "AND t1.path ILIKE :path";
+    $path = str_replace('\\', '\\\\', $path);
     $params[':path'] = $path;
 }
-if (strlen($ai_contact_information) > 1) {
-    $where[] = "to_tsvector('english', ai_contact_information) @@ to_tsquery('english', :ai_contact_information)";
-    $params[':ai_contact_information'] = $ai_contact_information;
-}
-if (strlen($ai_title) > 1) {
-    //$where[] = "ai_title ILIKE :ai_title";
-    $where[] = "to_tsvector('english', ai_title) @@ to_tsquery('english', :ai_title)";
-    $ai_title = preg_replace('/\s+/', ' ', trim($ai_title));
-    $ai_title = str_replace(' ', ' <-> ', $ai_title);
-    $params[':ai_title'] = $ai_title;
-}
-if (strlen($ai_summary) > 1) {
-    $where[] = "to_tsvector('english', ai_summary) @@ to_tsquery('english', :ai_summary)";
-    // Replace multiple whitespace characters with a single space
-    $ai_summary = preg_replace('/\s+/', ' ', trim($ai_summary));
-    $ai_summary = str_replace(' ', ' <-> ', $ai_summary);
-    $params[':ai_summary'] = $ai_summary;
-}
-if (strlen($ai_title_near_words) > 1) {
-    $where[] = "to_tsvector('english', ai_title) @@ to_tsquery('english', :ai_title)";
-    $ai_title_near_words = preg_replace('/\s+/', ' ', trim($ai_title_near_words));
-    $ai_title_near_words = str_replace(' ', ' < ### > ', $ai_title_near_words);
-    $statements = array();
-    for ($i = 1; $i <= $ai_title_near_int; $i++) {
-        $statements[] = str_replace(' ### ',  $i, $ai_title_near_words);
-    }
-    $ai_title_near_words = implode(' | ', $statements);
-    $params[':ai_title'] = $ai_title_near_words;
-}
-if (strlen($ai_summary_near_words) > 1) {
-    $where[] = "to_tsvector('english', ai_summary) @@ to_tsquery('english', :ai_summary)";
-    $ai_summary_near_words = preg_replace('/\s+/', ' ', trim($ai_summary_near_words));
-    $ai_summary_near_words = str_replace(' ', ' < ### > ', $ai_summary_near_words);
-    $statements = array();
-    for ($i = 1; $i <= $ai_summary_near_int; $i++) {
-        $statements[] = str_replace(' ### ',  $i, $ai_summary_near_words);
-    }
-    $ai_summary_near_words = implode(' | ', $statements);
-    $params[':ai_summary'] = $ai_summary_near_words;
-}
 if (strlen($ai_tags) > 1) {
-
-    $where[] = "to_tsvector('english', ai_tags) @@ to_tsquery('english', :ai_tags)";
-    $ai_tags = preg_replace('/\s+/', ' ', trim($ai_tags));
-    $ai_tags = str_replace(' ', ' & ', trim($ai_tags));
-    $params[':ai_tags'] = $ai_tags;
+    $tags = explode(',', $ai_tags);
+    $count = 2;
+    foreach ($tags as $tag) {
+        $tag = trim($tag);
+        //$where[] = "t1.tag ILIKE :tag" . $count;
+        $joins[] = "INNER JOIN tag t" . $count . " ON t1.id = t" . $count . ".network_file_id AND t" . $count . ".tag ILIKE :tag" . $count;
+        $params[':tag' . $count] = $tag;
+        $count++;
+    }
 }
 
 
-$where_s = implode(" AND ", $where);
+$where_s = implode("\n    ", $where);
+$join_s = implode("\n    ", $joins);
 $files = array();
 $queryText = '';
-if (count($where) > 0) {
+if (count($joins) > 0) {
     $queryText = "
-    SELECT id, name, path, ai_title, ai_summary, last_found, date_created, date_modified, ai_tags, ai_contact_information
-    FROM network_file
-    WHERE $where_s
-    AND found_last = 1
-    ORDER BY date_modified DESC
+    SELECT t1.id, t1.name, t1.path, t1.ai_title, t1.ai_summary, t1.last_found, t1.date_created, t1.date_modified, t1.ai_tags, t1.ai_contact_information
+    FROM network_file t1
+    $join_s
+    WHERE t1.found_last = 1
+    $where_s
+    ORDER BY t1.date_modified DESC
     LIMIT 200";
     $files = $common->query_to_md_array($queryText, $params);
     //$files = array();
@@ -98,7 +60,7 @@ $queryText = str_replace(array_keys($params), array_map(function ($value) {
 }, array_values($params)), $queryText);
 
 
-$common->print_template_card('Network File Search', 'start');
+$common->print_template_card('Network File Search - Tags', 'start');
 ?>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -119,17 +81,10 @@ $common->print_template_card('Network File Search', 'start');
         const params = new URLSearchParams({
             name: document.getElementById('name').value,
             path: document.getElementById('path').value,
-            ai_title: document.getElementById('ai_title').value,
-            ai_summary: document.getElementById('ai_summary').value,
-            ai_title_near_words: document.getElementById('ai_title_near_words').value,
-            ai_title_near_int: document.getElementById('ai_title_near_int').value,
-            ai_summary_near_words: document.getElementById('ai_summary_near_words').value,
-            ai_summary_near_int: document.getElementById('ai_summary_near_int').value,
             ai_tags: document.getElementById('ai_tags').value,
-            ai_contact_information: document.getElementById('ai_contact_information').value
         });
 
-        window.location.href = `?s1=Search&s2=Main&${params.toString()}`;
+        window.location.href = `?s1=Search&s2=Tag&${params.toString()}`;
     }
 
     function open_chat(prompt, user_template) {
@@ -150,58 +105,13 @@ $common->print_template_card('Network File Search', 'start');
 
     }
 </script>
-<p>Description: Used to lookup Network Files.</p>
-<div class="row mb-3">
-    <div class="col-md-6">
-        <div class="form-group">
-            <label for="ai_title">AI Title:</label>
-            <input class="form-control" placeholder="The AI generated title of the file" type="text" value="<?= isset($_GET['ai_title']) ? $_GET['ai_title'] : ''; ?>" id="ai_title" onkeypress="if(event.keyCode==13){search(); }">
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="form-group">
-            <label for="ai_summary">AI Summary:</label>
-            <input class="form-control" placeholder="The AI generated summary of the file" type="text" value="<?= isset($_GET['ai_summary']) ? $_GET['ai_summary'] : ''; ?>" id="ai_summary" onkeypress="if(event.keyCode==13){search(); }">
-        </div>
-    </div>
-</div>
-<div class="row mb-3">
-    <div class="col-md-3">
-        <div class="form-group">
-            <label for="ai_title_near_words">AI Title Nearness</label>
-            <input class="form-control" placeholder="Words separated by spaces" type="text" value="<?= isset($_GET['ai_title_near_words']) ? $_GET['ai_title_near_words'] : ''; ?>" id="ai_title_near_words" onkeypress="if(event.keyCode==13){search(); }">
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="form-group">
-            <label for="ai_title_near_int">AI Title Nearness</label>
-            <input class="form-control" placeholder="Nearness Integer" type="number" min="0" step="1" value="<?= isset($_GET['ai_title_near_int']) ? intval($_GET['ai_title_near_int']) : 2; ?>" id="ai_title_near_int" onkeypress="if(event.keyCode==13){search(); }">
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="form-group">
-            <label for="ai_summary_near_words">AI Summary Nearness</label>
-            <input class="form-control" placeholder="Words separated by spaces" type="text" value="<?= isset($_GET['ai_summary_near_words']) ? $_GET['ai_summary_near_words'] : ''; ?>" id="ai_summary_near_words" onkeypress="if(event.keyCode==13){search(); }">
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="form-group">
-            <label for="ai_summary_near_int">AI Summary Nearness</label>
-            <input class="form-control" placeholder="Nearness Integer" type="number" min="0" step="1" value="<?= isset($_GET['ai_summary_near_int']) ? intval($_GET['ai_summary_near_int']) : 2; ?>" id="ai_summary_near_int" onkeypress="if(event.keyCode==13){search(); }">
-        </div>
-    </div>
-</div>
+<p>Description: Used to lookup Network Files based on the tag data.</p>
+
 <div class="row mb-3">
     <div class="col-md-6">
         <div class="form-group">
             <label for="ai_tags">AI Tags:</label>
             <input class="form-control" placeholder="The AI generated tags of the file" type="text" value="<?= isset($_GET['ai_tags']) ? $_GET['ai_tags'] : ''; ?>" id="ai_tags" onkeypress="if(event.keyCode==13){search(); }">
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="form-group">
-            <label for="ai_contact_information">AI Contact Information:</label>
-            <input class="form-control" placeholder="The AI generated contact information of the file" type="text" value="<?= isset($_GET['ai_contact_information']) ? $_GET['ai_contact_information'] : ''; ?>" id="ai_contact_information" onkeypress="if(event.keyCode==13){search(); }">
         </div>
     </div>
 </div>
@@ -236,10 +146,11 @@ $common->print_template_card('Network File Search', 'start');
         <tr>
             <th>File Name</th>
             <th>AI Title</th>
-            <th>File Path</th>
+
             <th>Last Found</th>
             <th>Date Created</th>
             <th>Date Modified</th>
+            <th class="none">File Path</th>
             <th class="none">AI Summary</th>
             <th class="none">AI Tags</th>
         </tr>
@@ -268,11 +179,12 @@ $common->print_template_card('Network File Search', 'start');
                             <a target=\"_BLANK\" href=\"/?s1=File&s2=Detail&id=$d[id]\">$d[name]</a>
                         </td>
                         <td>$d[ai_title]</td>
-                        <td>$d[path]</td>
+                        
                         
                         <td data-sort=\"" . strtotime($d['last_found']) . "\">$d[last_found]</td>
                         <td data-sort=\"" . strtotime($d['date_created']) . "\">$d[date_created]</td>
                         <td data-sort=\"" . strtotime($d['date_modified']) . "\">$d[date_modified]</td>
+                        <td>$d[path]</td>
                         <td>$d[ai_summary]</td>
                         <td>$d[ai_tags]</td>
                     </tr>";

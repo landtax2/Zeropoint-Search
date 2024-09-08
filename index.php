@@ -159,6 +159,9 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
                 <ul class="nav-group-items">
                     <li class="nav-item"><a class="nav-link" href="/?s1=Search&s2=Main"><span class="nav-icon"></span><i class="fa fa-fire"></i> &nbsp; Main Search</a></li>
                 </ul>
+                <ul class="nav-group-items">
+                    <li class="nav-item"><a class="nav-link" href="/?s1=Search&s2=Tag"><span class="nav-icon"></span><i class="fa fa-tag"></i> &nbsp; Tag Search</a></li>
+                </ul>
             </li>
             <li class="nav-group">
                 <a class="nav-link nav-group-toggle" href="#">

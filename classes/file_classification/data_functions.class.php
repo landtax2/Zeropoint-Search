@@ -19,6 +19,7 @@ class DataFunctions
         //inserts the tags into the tag table
         $tags = explode(',', $tags);
         foreach ($tags as $tag) {
+            $tag = trim($tag);
             $queryText = "INSERT INTO tag (network_file_id, tag) VALUES (:network_file_id, :tag)";
             $params = [':network_file_id' => $network_file_id, ':tag' => $tag];
             $this->common->query_to_sd_array($queryText, $params);
