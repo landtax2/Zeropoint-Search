@@ -19,19 +19,31 @@ $common->print_template_card($report_name, 'start');
             "buttons": [{
                     extend: 'pdf',
                     orientation: 'landscape',
-                    title: title
+                    title: title,
+                    exportOptions: {
+                        columns: ':not(.notexport)'
+                    }
                 },
                 {
                     extend: 'excel',
-                    title: title
+                    title: title,
+                    exportOptions: {
+                        columns: ':not(.notexport)'
+                    }
                 },
                 {
                     extend: 'csv',
-                    title: title
+                    title: title,
+                    exportOptions: {
+                        columns: ':not(.notexport)'
+                    }
                 },
                 {
                     extend: 'print',
-                    title: title
+                    title: title,
+                    exportOptions: {
+                        columns: ':not(.notexport)'
+                    }
                 },
                 'copy',
             ],
@@ -130,8 +142,8 @@ $queryText = str_replace(array_keys($params), array_map(function ($value) {
             <th>Last Found</th>
             <th>Date Created</th>
             <th>Date Modified</th>
-            <th class="none">AI Summary</th>
-            <th class="none">AI Tags</th>
+            <th class="none notexport">AI Summary</th>
+            <th class="none notexport">AI Tags</th>
             <th class="none">File Path</th>
         </tr>
     </thead>
