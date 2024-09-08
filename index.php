@@ -129,6 +129,9 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
 
     <!-- Chat JS -->
     <script src="/scripts/js/chat.js"></script>
+
+    <!-- CSS Overrides -->
+    <link rel="stylesheet" href="/scripts/css/main.css">
 </head>
 
 <body>
@@ -314,11 +317,11 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
                     // Check if the exception message contains "not found"
                     if (stripos($e->getMessage(), "not found") !== false) {
                         // If "not found" is in the message, include the 404 page
-                        include($_SERVER['DOCUMENT_ROOT'] . '/pages/ERROR/404.html');
+                        include($_SERVER['DOCUMENT_ROOT'] . '/pages/ERROR/404.php');
                     } else {
                         // If it's a different error, you might want to show a generic error page
                         // or rethrow the exception for further handling
-                        include($_SERVER['DOCUMENT_ROOT'] . '/pages/ERROR/500.html');
+                        include($_SERVER['DOCUMENT_ROOT'] . '/pages/ERROR/500.php');
                     }
                 }
                 ?>
@@ -433,6 +436,13 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
             if (logoutButton) {
                 logoutButton.addEventListener('click', logout);
             }
+
+            // Check if the theme is set to dark
+            const isDarkTheme = localStorage.getItem('coreui-free-bootstrap-admin-template-theme') === 'dark';
+            if (isDarkTheme) {
+                document.documentElement.classList.add('dark');
+            }
+
         });
     </script>
 

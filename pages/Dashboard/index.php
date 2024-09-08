@@ -41,6 +41,13 @@ if ($admin_password['value'] == 'notsecure') {
     $display_password_warning = true;
 }
 
+//Code to get the version
+try {
+    $app_version = $common->get_config_value('APP_VERSION');
+} catch (Exception $e) {
+    $app_version = '1.0.0';
+}
+
 $document_count = $common->query_to_sd_array("SELECT COUNT(*) as count FROM network_file WHERE ai_summary is not null", null)['count'];
 
 //get the date of the most recently processed file
@@ -110,7 +117,7 @@ if ($display_debug_warning) {
                             <div class="card-body">
                                 <h5 class="card-title">Application Version</h5>
                                 <p class="card-text h3">
-                                    <?= $common->get_config_value('APP_VERSION') ?>
+                                    <?= $app_version ?>
                                 </p>
                                 <p class="card-text text-muted">The version of the application</p>
                             </div>

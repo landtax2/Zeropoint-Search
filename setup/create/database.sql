@@ -95,3 +95,4 @@ INSERT INTO public.config (setting, value, description, editable) VALUES ('AI_PR
 INSERT INTO public.client
 (id, client_name, api_key)
 VALUES(nextval('client_id_seq'::regclass), 'DEFAULT', gen_random_uuid());
+
