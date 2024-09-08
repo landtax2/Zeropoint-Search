@@ -1,5 +1,5 @@
 <?PHP
-
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
 $queryText = "SELECT *
   FROM client t1
   WHERE t1.id = :id";
@@ -85,7 +85,7 @@ function Invoke-FileClassification {
 				file_id = $file_id
 				api_key = $api_key
 			}
-			$Uri = "<?PHP echo 'https://' . $_SERVER['HTTP_HOST'] . '/public_api/file_classification.php?action=check_file_id'; ?>"
+			$Uri = "<?PHP echo $common->get_protocol() . '://' . $_SERVER['HTTP_HOST'] . '/public_api/file_classification.php?action=check_file_id'; ?>"
             $result = Invoke-WebRequest -Uri $Uri -Method Post -Form $Form -SkipHttpErrorCheck
             Write-Host $result
             $resultObject = ConvertFrom-JSON -InputObject $result
@@ -108,7 +108,7 @@ function Invoke-FileClassification {
                     date_modified = $date_modified
                     api_key = $api_key
                 }
-                $Uri = "<?PHP echo 'https://' . $_SERVER['HTTP_HOST'] . '/public_api/file_classification.php?action=extract'; ?>" 
+                $Uri = "<?PHP echo $common->get_protocol() . '://' . $_SERVER['HTTP_HOST'] . '/public_api/file_classification.php?action=extract'; ?>" 
                 $result = Invoke-WebRequest -Uri $Uri -Method Post -Form $Form -SkipHttpErrorCheck
                 Write-Host $result
             }

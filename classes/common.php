@@ -263,6 +263,21 @@ class common
         }
     }
 
+    public function get_protocol()
+    {
+        $secure = false;
+        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
+            $secure = true;
+        }
+        if ((!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ||
+            (!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on')
+        ) {
+            $secure = true;
+        }
+        $protocol = $secure ? 'https' : 'http';
+        return $protocol;
+    }
+
     public function print_template_card($title, $type = 'start')
     {
         if ($type == 'start_no_title') {
