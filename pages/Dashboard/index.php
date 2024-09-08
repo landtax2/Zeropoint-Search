@@ -76,7 +76,7 @@ $common->print_template_card('Dashboard', 'start');
             "searching": true,
             "responsive": true,
             "order": [
-                [3, "desc"]
+                [2, "desc"]
             ],
             "sScrollX": "100%",
         })
