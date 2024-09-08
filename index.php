@@ -146,7 +146,7 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
                 </svg>-->
                 <div class="sidebar-brand-full">
                     <i class="fa-brands fa-galactic-republic fa-2x"></i>
-                    <span class="ms-2">Zero Point Search</span>
+                    <span class="ms-2"><?= $common->get_config_value('APPLICATION_NAME') ?></span>
                 </div>
                 <div class="sidebar-brand-narrow">
                     <i class="fa-brands fa-galactic-republic fa-2x"></i>
