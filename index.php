@@ -1,4 +1,10 @@
 <?PHP
+/*standard headers to prevent caching*/
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+header("Expires: -1"); //for the above - prevents browsers from caching dynamic page.
+
 //start the session
 session_start();
 
@@ -33,12 +39,6 @@ $common->local_only();
 $router = new router();
 
 ($common->get_env_value('DEBUGGING') == '1') ? ini_set('display_errors', 1) : ini_set('log_errors', 0); //turns off error logging if not debugging
-
-/*standard headers to prevent caching*/
-header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
-header("Expires: -1"); //for the above - prevents browsers from caching dynamic page.
 
 //allows only local access or otherwise defined from .env file
 $common->local_only();
