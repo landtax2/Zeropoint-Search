@@ -9,7 +9,7 @@ $params = [':file_id' => $_GET['id']];
 
 $file_data = $common->query_to_sd_array($queryText, $params);
 
-if (isset($file_data['comment']) && strlen($file_data['comment']) == 0) {
+if (!isset($file_data['comment']) || strlen($file_data['comment']) == 0) {
     $file_data['comment'] = '<span style="color: var(--cui-link-color); cursor:pointer" onclick="set_comment(\'\')">' . 'Set Comment' . '</span>';
 } else {
     if (isset($file_data['comment'])) {
