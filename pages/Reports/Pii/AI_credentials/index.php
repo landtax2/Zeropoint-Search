@@ -1,7 +1,6 @@
 <?php
 $report_name = 'Security Report - Documents Containing an AI Match for Credentials';
 $common->print_template_card($report_name, 'start');
-
 ?>
 <script type="text/javascript">
     var title = '<?PHP echo $report_name; ?>';
