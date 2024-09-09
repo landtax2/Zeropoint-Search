@@ -198,6 +198,9 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
                         <a class="nav-link" href="/?s1=Settings&s2=Database">
                             <span class="nav-icon"></span><i class="fa fa-database"></i> &nbsp; Database
                         </a>
+                        <a class="nav-link" href="/?s1=Settings&s2=Integrations">
+                            <span class="nav-icon"></span><i class="fa fa-plug"></i> &nbsp; Integrations
+                        </a>
 
                         <?php
                         if ($common->get_env_value('DEBUGGING') == "1") {

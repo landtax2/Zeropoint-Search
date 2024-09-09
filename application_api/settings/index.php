@@ -36,6 +36,43 @@ $access = [
 $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
 
 switch ($data['action']) {
+    case 'integration_doctor_test':
+        // Include the extract_document_text class
+        require_once($_SERVER['DOCUMENT_ROOT'] . '/classes/file_classification/extract_document_text.class.php');
+
+        try {
+            // Instantiate the ExtractDocumentText class
+            $extractor = new extract_document_text($common);
+
+            // Define the path to the test file
+            $testFilePath = $_SERVER['DOCUMENT_ROOT'] . '/assets/misc/test_file.pdf';
+
+            // Prepare the file array
+            $testFile = [
+                'tmp_name' => $testFilePath,
+                'type' => 'application/pdf',
+                'name' => 'test_file.pdf',
+                'error' => UPLOAD_ERR_OK
+            ];
+
+            // Extract text from the test file
+            $extractedText = $extractor->extract($testFile);
+
+            // Return the result
+            echo json_encode([
+                'success' => true,
+                'message' => 'Doctor integration test successful',
+                'data' => [
+                    'extracted_text' => $extractedText
+                ]
+            ]);
+        } catch (Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Doctor integration test failed: ' . $e->getMessage()
+            ]);
+        }
+        break;
     case 'update_config':
         $data['value'] = trim($data['value']);
         //this needs to update the database timezone

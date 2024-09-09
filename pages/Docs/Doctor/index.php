@@ -6,7 +6,8 @@ $common->print_template_card('Doctor API Endpoint', 'start');
 <p>The FreeLawProject/Doctor container is a crucial component of our application, serving as a specialized API for processing and analyzing documents. It provides the necessary text extraction for PDFs and word documents.</p>
 
 <p>This guide will walk you through the process of setting up the Doctor API endpoint using the FreeLawProject/Doctor Docker container.</p>
-<p>Hopefully this shouldnt be needed once this is part of a docker-compose file.</p>
+<p>This is part of the docker compose file and manual setup should no longer be necessary.</p>
+<p>To test this API, go to the <a href="?s1=Settings&s2=Integrations">integrations page</a> and click the "Test Doctor Integration" button.</p>
 
 <h3>Prerequisites</h3>
 <ul>

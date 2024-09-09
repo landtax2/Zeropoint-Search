@@ -177,7 +177,7 @@ PARAMETER stop <|eot_id|>
 <p><a href="?s1=Settings&s2=Configuration&s3=Detail&id=4">Click here</a> to configure this application to use the Ollama API. Fill out the endpoint information with the appropriate information. Eg. http://machine_name:11434/api/generate </p>
 
 <h3>Step 10: Test the API</h3>
-<p>Test the API by using the bellow button. If the API is working, you should see the response in the chat interface.</p>
+<p>Test the API by using the bellow button. If the API is working, you should see the response in the chat interface. The test can also be run from the <a href="?s1=Settings&s2=Integrations">integrations page</a>.</p>
 <div class="row">
     <div class="col-md-2">
         <button class="btn btn-primary w-100" data-coreui-toggle="modal" data-coreui-target="#ai_chat_modal" onclick="open_chat('Is this thing working?', '')">Test Ollama API</button>
