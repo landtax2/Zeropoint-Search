@@ -184,7 +184,7 @@ if ($display_debug_warning) {
                     <div class="col-md-3 mb-3">
                         <div class="card h-100">
                             <div class="card-body d-flex flex-column">
-                                <h5 class="card-title"><a href="/?s1=Reports&s2=Pii&s3=Ai_Severity">Personal Information Files</a></h5>
+                                <h5 class="card-title"><a href="/?s1=Reports&s2=Pii&s3=Ai_severity">Personal Information Files</a></h5>
                                 <p class="card-text h3 mb-2"><?= number_format($ai_personal_information_count) ?></p>
                                 <p class="card-text text-muted mt-auto">Personal Information (AI Match)</p>
                             </div>
