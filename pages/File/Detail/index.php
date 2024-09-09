@@ -12,7 +12,11 @@ $file_data = $common->query_to_sd_array($queryText, $params);
 if (isset($file_data['comment']) && strlen($file_data['comment']) == 0) {
     $file_data['comment'] = '<span style="color: var(--cui-link-color); cursor:pointer" onclick="set_comment(\'\')">' . 'Set Comment' . '</span>';
 } else {
-    $file_data['comment_escaped'] = str_replace("'", "\\'", $file_data['comment']);
+    if (isset($file_data['comment'])) {
+        $file_data['comment_escaped'] = str_replace("'", "\\'", $file_data['comment']);
+    } else {
+        $file_data['comment_escaped'] = '';
+    }
     $file_data['comment'] = '<span style="color: var(--cui-link-color); cursor:pointer;" onclick="set_comment(\'' . $file_data['comment_escaped'] . '\')">' . $file_data['comment'] . '</span>';
 }
 
