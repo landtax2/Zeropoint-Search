@@ -56,7 +56,7 @@ $most_recently_processed_file_date = $common->query_to_sd_array("SELECT last_fou
 
 
 //get the number of files containing ssn
-$ssn_files_count = $common->query_to_sd_array("SELECT COUNT(*) as count FROM network_file WHERE ai_pii_ssn = '1'", null)['count'];
+$ssn_files_count = $common->query_to_sd_array("SELECT COUNT(*) as count FROM network_file WHERE ssn_hard = '1'", null)['count'];
 if (empty($ssn_files_count)) {
     $ssn_files_count = 0;
 }
@@ -130,7 +130,7 @@ if ($display_debug_warning) {
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">Application Version</h5>
                                 <p class="card-text h3 mb-2"><?= $app_version ?></p>
-                                <p class="card-text text-muted mt-auto">The version of the application</p>
+                                <p class="card-text text-muted mt-auto"></p>
                             </div>
                         </div>
                     </div>
@@ -148,7 +148,7 @@ if ($display_debug_warning) {
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">Documents Processed (24h)</h5>
                                 <p class="card-text h3 mb-2"><?= number_format($document_count_24) ?></p>
-                                <p class="card-text text-muted mt-auto">Total documents processed in the last 24 hours</p>
+                                <p class="card-text text-muted mt-auto">Documents processed in the last 24 hours</p>
                             </div>
                         </div>
                     </div>
@@ -157,7 +157,7 @@ if ($display_debug_warning) {
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">Most Recently Processed File</h5>
                                 <p class="card-text h3 mb-2"><?= $common->sql2date_military_time($most_recently_processed_file_date) ?? 'N/A' ?></p>
-                                <p class="card-text text-muted mt-auto">Date of most recently analyzed file</p>
+                                <p class="card-text text-muted mt-auto"></p>
                             </div>
                         </div>
                     </div>
@@ -168,7 +168,7 @@ if ($display_debug_warning) {
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title"><a href="/?s1=Reports&s2=Pii&s3=Rgx_SSN">SSN Files</a></h5>
                                 <p class="card-text h3 mb-2"><?= number_format($ssn_files_count) ?></p>
-                                <p class="card-text text-muted mt-auto">Files containing SSN (Regex Match)</p>
+                                <p class="card-text text-muted mt-auto">SSN (Regex Match)</p>
                             </div>
                         </div>
                     </div>
@@ -177,7 +177,7 @@ if ($display_debug_warning) {
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title"><a href="/?s1=Reports&s2=Pii&s3=Ai_credentials">Credentials Files</a></h5>
                                 <p class="card-text h3 mb-2"><?= number_format($ai_credentials_count) ?></p>
-                                <p class="card-text text-muted mt-auto">Files containing Credentials (AI Match)</p>
+                                <p class="card-text text-muted mt-auto">Credentials (AI Match)</p>
                             </div>
                         </div>
                     </div>
@@ -186,7 +186,7 @@ if ($display_debug_warning) {
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title"><a href="/?s1=Reports&s2=Pii&s3=Ai_Severity">Personal Information Files</a></h5>
                                 <p class="card-text h3 mb-2"><?= number_format($ai_personal_information_count) ?></p>
-                                <p class="card-text text-muted mt-auto">Files containing Personal Information (AI Match)</p>
+                                <p class="card-text text-muted mt-auto">Personal Information (AI Match)</p>
                             </div>
                         </div>
                     </div>

@@ -132,7 +132,7 @@ function handle_extract_action($common, $client_id)
     $execution_times['summary'] = time() - $time;
 
     //AI processing for title
-    $title = $ai_processing->titleText($summary);
+    $title = $ai_processing->titleText($extracted_text);
     $execution_times['title'] = time() - $time;
 
     //AI processing for tags
