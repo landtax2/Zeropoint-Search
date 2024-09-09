@@ -29,3 +29,25 @@ echo "
          $phpinfo
      </div>
      ";
+?>
+<script>
+    // Add event listener to the logout button
+    document.addEventListener('DOMContentLoaded', function() {
+
+
+        // Check if the theme is set to dark
+        const isDarkTheme = localStorage.getItem('coreui-free-bootstrap-admin-template-theme') === 'dark';
+        if (isDarkTheme) {
+            document.getElementById('phpinfo').style = 'color: black;';
+            const h2Elements = document.querySelectorAll('#phpinfo h2');
+            h2Elements.forEach(h2 => {
+                h2.style.color = 'white';
+            });
+            const h1Elements = document.querySelectorAll('#phpinfo h1');
+            h1Elements.forEach(h1 => {
+                h1.style.color = 'white';
+            });
+        }
+
+    });
+</script>
