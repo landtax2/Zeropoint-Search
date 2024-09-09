@@ -10,6 +10,12 @@ try {
     exit;
 }
 
+/*standard headers to prevent caching*/
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+header("Expires: -1"); //for the above - prevents browsers from caching dynamic page.
+
 //Check to see if the config table exists
 $queryText = "SELECT EXISTS (
    SELECT FROM information_schema.tables 
@@ -20,7 +26,7 @@ $queryText = "SELECT EXISTS (
 $result = $common->query_to_sd_array($queryText, null);
 
 if ($result['exist'] == 1) {
-    die('Database already setup.');
+    die('Database already setup. Redirecting to login page in 5 seconds. <meta http-equiv="refresh" content="5; url=/account/login/index.php" />');
 } else {
     echo 'Creating database structures.<br/>';
 }

@@ -7,5 +7,5 @@ php_value allow_url_fopen Off
 php_value realpath_cache_size 16M
 php_value session.cache_limiter public
 php_value session.cache_expire 360
-#php_value zend_extension opcache
-#php_value opcache.enable 1
+php_value zend_extension opcache
+php_value opcache.enable 1
