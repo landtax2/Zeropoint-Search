@@ -1,10 +1,4 @@
 <?PHP
-/*standard headers to prevent caching*/
-header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
-header("Expires: -1"); //for the above - prevents browsers from caching dynamic page.
-
 //start the session
 session_start();
 
@@ -23,6 +17,9 @@ try {
     echo json_encode(array('success' => false, 'message' => 'Database connection failed: ' . $e->getMessage()));
     exit;
 }
+
+/*standard headers to prevent caching*/
+$common->anti_cache_headers();
 
 //check if the config table exists - if not, redirect to the setup page
 if (!$common->does_table_exist('config')) {

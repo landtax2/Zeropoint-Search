@@ -82,7 +82,7 @@ INSERT INTO public.config (setting,value,editable,description) VALUES
 	 ('FILE_CLASSIFICATION_PROCESS_CONTACT_INFORMATION','0','1','Determines if the file classification API process the extracted text for contact information.'),
 	 ('FILE_CLASSIFICATION_PROCESS_TAGS','1','1','Determines if the file classification API process the extracted text for tags.');
 INSERT INTO public.config (setting,value,editable,description) VALUES
-	 ('DOCTOR_API','','1','The API endpoint used for text extraction of documents. Example http://example.com:5050'),
+	 ('DOCTOR_API','http://zps_doctor:5050','1','The API endpoint used for text extraction of documents. Example http://example.com:5050'),
 	 ('OCR_THRESHOLD','50','1','The threshold of characters used to determine if the document needs to have an OCR capture preformed.  Set to 0 to skip OCR.'),
 	 ('TIME_ZONE','America/New_York','1','Time zone of the front end.'),
 	 ('LOGIN_PASSWORD','notsecure','1','The password used to log into the front end.'),

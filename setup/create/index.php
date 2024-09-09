@@ -11,10 +11,7 @@ try {
 }
 
 /*standard headers to prevent caching*/
-header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
-header("Expires: -1"); //for the above - prevents browsers from caching dynamic page.
+$common->anti_cache_headers();
 
 //Check to see if the config table exists
 $queryText = "SELECT EXISTS (
@@ -90,6 +87,45 @@ if (isset($env['TIME_ZONE'])) {
 
 $common->write_to_log('setup', 'Create', 'Tables and default config values created successfully.');
 echo "Tables and default config values created successfully.<br/>";
+echo "Running updates<br/>";
+
+
+//for loop to run all the update scripts
+$current_version = 100;
+for ($i = $current_version + 1; $i <= $common->db_version; $i++) {
+    echo "Running update script for version $i.<br/>";
+    $common->write_to_log('setup', 'Update', 'Running update script for version ' . $i);
+
+    // Read the contents of the database.sql file
+    try {
+        $sql = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/setup/update/sql/' . $i . '.sql');
+    } catch (Exception $e) {
+        $common->write_to_log('setup', 'Update', 'Error reading update script for version ' . $i . ': ' . $e->getMessage());
+        die("Error reading update script for version $i: " . $e->getMessage());
+    }
+
+    // Split the SQL file into individual queries
+    $queries = explode(';', $sql);
+
+    // Execute each query
+    foreach ($queries as $query) {
+        $query = trim($query);
+        if (!empty($query)) {
+            try {
+                $common->get_db_connection()->exec($query);
+            } catch (PDOException $e) {
+                echo "Error executing query: " . $e->getMessage() . "<br/>";
+                echo "Query: " . $query . "<br/>";
+                $common->write_to_log('setup', 'Update', 'Error executing query: ' . $e->getMessage() . ' for query: ' . $query);
+            }
+        }
+    }
+
+    echo "Update script for version $i completed.<br/>";
+    $common->write_to_log('setup', 'Update', 'Update script for version ' . $i . ' completed.');
+}
+
+
 echo "Setup complete.<br/>";
 echo "Redirecting to login page in 5 seconds.<br/>";
 
