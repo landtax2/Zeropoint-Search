@@ -1,9 +1,9 @@
 <?PHP
 $reports = [
     ['Name' => 'Rgx_SSN', 'Description' => 'Documents containing Social Security Numbers matched by Regex'],
-    ['Name' => 'Ai_Medical', 'Description' => 'Documents containing potential medical information identified by AI'],
+    ['Name' => 'Ai_medical', 'Description' => 'Documents containing potential medical information identified by AI'],
     ['Name' => 'Ai_credentials', 'Description' => 'Documents containing potential credentials identified by AI'],
-    ['Name' => 'Ai_Severity', 'Description' => 'Documents that AI has deemed to be sensitive'],
+    ['Name' => 'Ai_severity', 'Description' => 'Documents that AI has deemed to be sensitive'],
 ];
 $common->print_template_card('Dashboard', 'start');
 ?>
