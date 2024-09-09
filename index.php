@@ -21,13 +21,6 @@ try {
 /*standard headers to prevent caching*/
 $common->anti_cache_headers();
 
-//check if the config table exists - if not, redirect to the setup page
-if (!$common->does_table_exist('config')) {
-    header('Location: /setup/create/index.php');
-    exit;
-}
-
-
 
 //local only after setup
 $common->local_only();

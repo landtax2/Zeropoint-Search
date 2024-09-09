@@ -10,6 +10,13 @@ try {
     exit;
 }
 $common->anti_cache_headers();
+
+//check if the config table exists - if not, redirect to the setup page
+if (!$common->does_table_exist('config')) {
+    header('Location: /setup/create/index.php');
+    exit;
+}
+
 $common->local_only();
 ($common->get_env_value('DEBUGGING') == '1') ? ini_set('display_errors', 1) : ini_set('log_errors', 0); //turns off error logging if not debugging
 
