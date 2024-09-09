@@ -60,11 +60,11 @@ class common
         }
     }
 
-    public function query_to_sd_array($queryText, $queryParams)
+    public function query_to_sd_array($queryText, $queryParams = false)
     {
         try {
             $stmt = $this->db_connection->prepare($queryText);
-            if ($queryParams) {
+            if ($queryParams && is_array($queryParams)) {
                 foreach ($queryParams as $key => $value) {
                     $stmt->bindValue($key, $value);
                 }
@@ -73,8 +73,15 @@ class common
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             return $result;
         } catch (Exception $e) {
-            $this->write_to_log('database', 'Database query failed: ' . $e->getMessage() . ' in ' . $queryText . ' with params ' . json_encode($queryParams));
-            throw new Exception("Database query failed: " . $e->getMessage() . " in " . $queryText . " with params " . json_encode($queryParams), 1);
+            //unparameterizes the query for logging
+            if (is_array($queryParams)) {
+                $queryText = str_replace(array_keys($queryParams), array_map(function ($value) {
+                    return "'" . $value . "'";
+                }, array_values($queryParams)), $queryText);
+            }
+            $log = ['query' => $queryText, 'params' => $queryParams, 'error' => $e->getMessage()];
+            $this->write_to_log('database', 'Database query failed', $log);
+            throw new Exception("Database query failed: " . $e->getMessage() . "\n Query: $queryText", 1);
         }
     }
 
@@ -91,8 +98,15 @@ class common
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $result;
         } catch (Exception $e) {
-            $this->write_to_log('database', 'Database query failed: ' . $e->getMessage() . ' in ' . $queryText . ' with params ' . json_encode($queryParams));
-            throw new Exception("Database query failed: " . $e->getMessage() . " in " . $queryText . " with params " . json_encode($queryParams), 1);
+            //unparameterizes the query for logging
+            if (is_array($queryParams)) {
+                $queryText = str_replace(array_keys($queryParams), array_map(function ($value) {
+                    return "'" . $value . "'";
+                }, array_values($queryParams)), $queryText);
+            }
+            $log = ['query' => $queryText, 'params' => $queryParams, 'error' => $e->getMessage()];
+            $this->write_to_log('database', 'Database query failed', $log);
+            throw new Exception("Database query failed: " . $e->getMessage() . "\n Query: $queryText", 1);
         }
     }
 

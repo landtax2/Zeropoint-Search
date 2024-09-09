@@ -37,10 +37,21 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
 
 switch ($data['action']) {
     case 'update_config':
+        $data['value'] = trim($data['value']);
+        //this needs to update the database timezone
+        if ($data['setting'] == 'TIME_ZONE') {
+            //update the database timezone
+            //this fails when parameters are used
+            $time_zone = str_replace("'", "", $data['value']); //prevents SQL injection
+            $queryText = "ALTER database zps SET timezone = '$time_zone'";
+            $common->query_to_sd_array($queryText);
+            $common->write_to_log('setup', 'Config Update', 'Setting timezone to ' . $data['value']);
+        }
+        //update the databse
         $queryText = "UPDATE config SET value = :value WHERE id = :id";
         $queryParams = array(':value' => $data['value'], ':id' => $data['id']);
         $common->query_to_sd_array($queryText, $queryParams);
-        $common->write_to_log('config', 'Configuration updated', 'Config ID: ' . $data['id'] . ' has been set to ' . $data['value']);
+        $common->write_to_log('config', 'Configuration updated', $data);
         echo json_encode(array('success' => true, 'message' => 'Configuration updated successfully'));
         break;
     case 'empty_network_files':

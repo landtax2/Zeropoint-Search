@@ -18,6 +18,7 @@ if (!empty($config)) {
 
                 const id = <?php echo json_encode($_GET['id']); ?>;
                 const value = document.getElementById('value').value;
+                const setting = document.getElementById('setting').value;
 
                 fetch('/application_api/settings/index.php', {
                         method: 'POST',
@@ -27,7 +28,8 @@ if (!empty($config)) {
                         body: JSON.stringify({
                             id: id,
                             value: value,
-                            action: 'update_config'
+                            action: 'update_config',
+                            setting: setting
                         })
                     })
                     .then(response => response.json())
@@ -64,7 +66,7 @@ if (!empty($config)) {
                     <div class="mb-3 row">
                         <label for="setting" class="col-md-3 col-form-label">Setting Name</label>
                         <div class="col-md-9">
-                            <input type="text" readonly class="form-control-plaintext" id="setting" value="<?php echo htmlspecialchars($config['setting']); ?>">
+                            <input type="text" readonly class="form-control-plaintext" id="setting" value="<?php echo $config['setting']; ?>">
                         </div>
                     </div>
                     <div class="mb-3 row">
