@@ -60,6 +60,18 @@ if (empty($ssn_files_count)) {
     $ssn_files_count = 0;
 }
 
+//get the number of files credentials
+$ai_credentials_count = $common->query_to_sd_array("SELECT COUNT(*) as count FROM network_file WHERE ai_credentials = '1'", null)['count'];
+if (empty($ai_credentials_count)) {
+    $ai_credentials = 0;
+}
+
+//get the number of files containing personal information
+$ai_personal_information_count = $common->query_to_sd_array("SELECT COUNT(*) as count FROM network_file WHERE ai_severity > '6'", null)['count'];
+if (empty($ai_personal_information_count)) {
+    $ai_personal_information_count = 0;
+}
+
 $queryText = "SELECT * FROM network_file WHERE ai_summary is not null ORDER BY id DESC LIMIT 50";
 $queryParams = null;
 $files = $common->query_to_md_array($queryText, $queryParams);
@@ -111,53 +123,65 @@ if ($display_debug_warning) {
         <div class="card mb-4">
             <div class="card-body">
                 <h2 class="card-title mb-4">Welcome to Your Dashboard</h2>
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">Application Version</h5>
-                                <p class="card-text h3">
-                                    <?= $app_version ?>
-                                </p>
-                                <p class="card-text text-muted">The version of the application</p>
+                                <p class="card-text h3 mb-2"><?= $app_version ?></p>
+                                <p class="card-text text-muted mt-auto">The version of the application</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-body">
+                    <div class="col-md-3 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">Document Count</h5>
-                                <p class="card-text h3">
-                                    <?= number_format($document_count) ?>
-                                </p>
-                                <p class="card-text text-muted">Total documents in database</p>
+                                <p class="card-text h3 mb-2"><?= number_format($document_count) ?></p>
+                                <p class="card-text text-muted mt-auto">Total documents in database</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-body">
+                    <div class="col-md-3 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">Most Recently Processed File</h5>
-                                <p class="card-text h3">
-                                    <?= $common->sql2date_military_time($most_recently_processed_file_date) ?? 'N/A' ?>
-                                </p>
-                                <p class="card-text text-muted">The date the most recently processed file was analyzed</p>
+                                <p class="card-text h3 mb-2"><?= $common->sql2date_military_time($most_recently_processed_file_date) ?? 'N/A' ?></p>
+                                <p class="card-text text-muted mt-auto">Date of most recently analyzed file</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">SSN Files</h5>
-                                <p class="card-text h3">
-                                    <?= number_format($ssn_files_count) ?>
-                                </p>
-                                <p class="card-text text-muted">Total files containing SSN Matched by Regex</p>
+                    <div class="col-md-3 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title"><a href="/?s1=Reports&s2=Pii&s3=Rgx_SSN">SSN Files</a></h5>
+                                <p class="card-text h3 mb-2"><?= number_format($ssn_files_count) ?></p>
+                                <p class="card-text text-muted mt-auto">Files containing SSN (Regex Match)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title"><a href="/?s1=Reports&s2=Pii&s3=Ai_credentials">Credentials Files</a></h5>
+                                <p class="card-text h3 mb-2"><?= number_format($ai_credentials_count) ?></p>
+                                <p class="card-text text-muted mt-auto">Files containing Credentials (AI Match)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title"><a href="/?s1=Reports&s2=Pii&s3=Ai_Severity">Personal Information Files</a></h5>
+                                <p class="card-text h3 mb-2"><?= number_format($ai_personal_information_count) ?></p>
+                                <p class="card-text text-muted mt-auto">Files containing Personal Information (AI Match)</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <!-- Additional dashboard widget can be added here -->
+                        <!-- Space for additional dashboard widgets -->
                     </div>
                 </div>
             </div>
