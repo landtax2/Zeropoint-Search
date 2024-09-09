@@ -24,13 +24,7 @@ if (!$common->does_table_exist('config')) {
     exit;
 }
 
-//check for database updates
-$queryText = "SELECT * FROM config WHERE setting = 'DB_VERSION'";
-$db_version = $common->query_to_sd_array($queryText);
-if ($db_version['value'] < $common->db_version) {
-    header('Location: /setup/update/index.php');
-    exit;
-}
+
 
 //local only after setup
 $common->local_only();
@@ -52,7 +46,15 @@ $common->local_only();
 //checks if the user is logged in
 if (!isset($_SESSION['user_id'])) {
     header('Location: /account/login/index.php');
-    die();
+    exit;
+}
+
+//check for database updates
+$queryText = "SELECT * FROM config WHERE setting = 'DB_VERSION'";
+$db_version = $common->query_to_sd_array($queryText);
+if ($db_version['value'] < $common->db_version) {
+    header('Location: /setup/update/index.php');
+    exit;
 }
 
 //log access to the front-end
