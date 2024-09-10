@@ -11,7 +11,8 @@ $common->print_template_card('Powershell File Classification', 'start');
 ?>
 <div class="alert alert-warning" role="alert">
     <strong>Warning:</strong> This script must be run in PowerShell 7 or later. Earlier versions of PowerShell do not support all the features used in this script.
-    <br /><br /><a href="https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4" target="_blank">How to install PowerShell 7</a>
+    <br /><a href="https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4" target="_blank">How to install PowerShell 7</a>
+    <br />To use this script, copy the contents of the script to a new file ending with .ps1 and run it in PowerShell.
 </div>
 
 <table>
@@ -25,6 +26,16 @@ $common->print_template_card('Powershell File Classification', 'start');
     </tr>
 </table>
 <pre style="height: 1500px" class="line-numbers"><code class="language-powershell">
+<#
+File Classification Script
+This script is used to import files into the system.  Using network paths is recommended.
+The bottom of this script contains usage examples that will have to be modified for your environment.
+This script can be automated with a task scheduler or run directly from the command line.
+This script will only work in Powershell 7 or later.  Earlier versions of Powershell do not support all the features used in this script.
+API Endpoint - <?PHP echo $common->get_protocol() . '://' . $_SERVER['HTTP_HOST'] . '/public_api/file_classification.php?action=check_file_id' . "\n"; ?>
+Client Name - <?PHP echo $data['client_name'] . "\n"; ?>
+Client API Key - <?PHP echo $data['api_key'] . "\n"; ?>
+#>
 
 function Get-StringSHA256 {
     [CmdletBinding()]
