@@ -21,6 +21,11 @@ try {
 /*standard headers to prevent caching*/
 $common->anti_cache_headers();
 
+//checks if the user is logged in - needs to come before local_only to allow for database creation
+if (!isset($_SESSION['user_id'])) {
+    header('Location: /account/login/index.php');
+    exit;
+}
 
 //local only after setup
 $common->local_only();
@@ -30,14 +35,7 @@ $router = new router();
 
 ($common->get_env_value('DEBUGGING') == '1') ? ini_set('display_errors', 1) : ini_set('log_errors', 0); //turns off error logging if not debugging
 
-//allows only local access or otherwise defined from .env file
-$common->local_only();
 
-//checks if the user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header('Location: /account/login/index.php');
-    exit;
-}
 
 //check for database updates
 $queryText = "SELECT * FROM config WHERE setting = 'DB_VERSION'";
@@ -171,6 +169,11 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
                     <li class="nav-item">
                         <a class="nav-link" href="/?s1=Search&s2=Main">
                             <span class="nav-icon"></span><i class="fa fa-search"></i> &nbsp; Main Search
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/?s1=Search&s2=Summary&s3=Ranked">
+                            <span class="nav-icon"></span><i class="fa fa-ranking-star"></i> &nbsp; Ranked Summary
                         </a>
                     </li>
                 </ul>

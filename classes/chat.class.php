@@ -62,7 +62,7 @@ class Chat_ollama
             CURLOPT_VERBOSE => true,
             CURLOPT_STDERR => fopen('php://stderr', 'w'),
             CURLOPT_POSTFIELDS => $payload,
-            CURLOPT_TIMEOUT => 180,
+            CURLOPT_TIMEOUT => 360,
         ]);
 
         // Execute the cURL request
