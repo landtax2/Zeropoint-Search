@@ -92,7 +92,7 @@ switch ($data['action']) {
         echo json_encode(array('success' => true, 'message' => 'Configuration updated successfully'));
         break;
     case 'empty_network_files':
-        $queryText = "TRUNCATE TABLE network_file";
+        $queryText = "DELETE FROM network_file";
         $common->query_to_sd_array($queryText, []);
         $queryText = "VACUUM network_file;";
         $common->query_to_sd_array($queryText, []);

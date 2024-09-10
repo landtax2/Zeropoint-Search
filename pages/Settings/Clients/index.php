@@ -19,6 +19,13 @@ $common->print_template_card('Clients', 'start');
         })
     });
 </script>
+<div class="alert alert-info" role="alert">
+    <h4 class="alert-heading">Client API Keys</h4>
+    <p>Each client is assigned a unique API key. This key is essential for securely importing documents into the application.</p>
+    <hr>
+    <p class="mb-0">When integrating with our system or importing documents, clients must use their specific API key for authentication and to ensure proper data association.</p>
+    <p>For your convenience, API keys are automatically incorporated into the scripts generated from the clients page. This ensures seamless integration and eliminates the need for manual key insertion when setting up client-specific scripts.</p>
+</div>
 
 <table class="dataTable stripe w-100" id="table_1">
     <thead>
@@ -26,7 +33,6 @@ $common->print_template_card('Clients', 'start');
             <th>ID</th>
             <th>Name</th>
             <th>API Key</th>
-            <th>Alert Email</th>
         </tr>
     </thead>
     <tbody>
@@ -37,7 +43,6 @@ $common->print_template_card('Clients', 'start');
                         <td><a href=\"?s1=Settings&s2=Clients&s3=Detail&id=$d[id]\">$d[id]</a></td>
                         <td><a href=\"?s1=Settings&s2=Clients&s3=Detail&id=$d[id]\">$d[client_name]</a></td>
                         <td>$d[api_key]</td>
-                        <td>$d[alert_email]</td>
                     </tr>";
             $order++;
         }

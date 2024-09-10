@@ -9,47 +9,73 @@ $client_inactive = $data['days_till_client_inactive']  * -1;
 $common->print_template_card('Client Details', 'start');
 ?>
 
-<table>
-    <tr>
-        <td>Name &nbsp;&nbsp;&nbsp;</td>
-        <td><?PHP echo $data['client_name']; ?></td>
-    </tr>
-    <tr>
-        <td>API Key &nbsp;&nbsp;&nbsp;</td>
-        <td><?PHP echo $data['api_key']; ?></td>
-    </tr>
-    <tr>
-        <td>Alert Email &nbsp;&nbsp;&nbsp;</td>
-        <td><?PHP echo $data['alert_email']; ?></td>
-    </tr>
-    <tr>
-        <td>Days until endpoint inactive &nbsp;&nbsp;&nbsp;</td>
-        <td><?PHP echo $data['days_till_client_inactive']; ?></td>
-    </tr>
-    <tr>
-        <td>&nbsp;</td>
-        <td></td>
-    </tr>
-</table>
-<br />
+<div class="container-fluid">
+    <div class="col-md-5">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Client Information</h4>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <strong>Name:</strong>
+                    </div>
+                    <div class="col-sm-9">
+                        <?PHP echo htmlspecialchars($data['client_name']); ?>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <strong>API Key:</strong>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <input type="text" class="form-control" value="<?PHP echo htmlspecialchars($data['api_key']); ?>" readonly>
+                            <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard(this)">Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Scripts Information</h4>
+            </div>
+            <div class="card-body">
+                <p class="mb-3">
+                    The following scripts are used to import and process document data into this application. They provide automated methods for classifying files and facilitating efficient data ingestion from various sources.
+                </p>
+                <p class="mb-3">
+                    These scripts will automatically include the API Key shown above, ensuring secure and seamless integration this system.
+                </p>
+                <h5 class="mb-3">Available Scripts</h5>
+                <div class="list-group">
+                    <a href="/?s1=Settings&s2=Clients&s3=Scripts&s4=Powershell_file_classification&id=<?PHP echo htmlspecialchars($_GET['id']); ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Powershell File Classification</strong>
+                            <p class="mb-0 text-muted">Automates file classification using Powershell</p>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">1</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-
-
-
-<h4>Grids</h4>
-<ul>
-    <li>
-        <a href="/?page=clients&sub=grid_endpoints&id=<?PHP echo $_GET['id']; ?>">Sample</a>
-    </li>
-</ul>
-<br />
-
-<h4>Scripts</h4>
-<ul>
-    <li>
-        <a href="/?s1=Settings&s2=Clients&s3=Scripts&s4=Powershell_file_classification&id=<?PHP echo $_GET['id']; ?>">Powershell File Classification</a>
-    </li>
-</ul>
+<script>
+    function copyToClipboard(button) {
+        var input = button.previousElementSibling;
+        input.select();
+        document.execCommand("copy");
+        button.textContent = "Copied!";
+        setTimeout(function() {
+            button.textContent = "Copy";
+        }, 2000);
+    }
+</script>
 
 <?PHP
 $common->print_template_card(null, 'end');

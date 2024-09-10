@@ -37,6 +37,9 @@ class ai_processing
             Only respond with valid json. Do not escape quotes.
 
             Text to analyze:#### " . $extracted_text . "####";
+        if (strlen(trim($this->common->get_config_value('PROMPT_OVERRIDE_PII'))) > 10) {
+            $prompt = $this->common->get_config_value('PROMPT_OVERRIDE_PII') . " #### " . $extracted_text . "####";
+        }
 
         try {
             $piiAnalysis = $this->chat->sendRequest($prompt);
@@ -96,6 +99,9 @@ class ai_processing
         $this->initializeChat(0.7);
 
         $prompt = "Create a JSON dataset of contact information based on the below text. Respond only with the dataset without explanation. If there is no contact information, respond with an empty value. Only list contacts if there is an associated peace of information, such as a name, phone number, email address, or street address. Provide the results in a valid JSON format. The text is delimieted by #### . The text to analyze is:\n ####" . $extracted_text . '####';
+        if (strlen(trim($this->common->get_config_value('PROMPT_OVERRIDE_CONTACT_INFORMATION'))) > 10) {
+            $prompt = $this->common->get_config_value('PROMPT_OVERRIDE_CONTACT_INFORMATION') . " #### " . $extracted_text . "####";
+        }
 
         try {
             $contact_information = $this->chat->sendRequest($prompt);
@@ -124,6 +130,9 @@ class ai_processing
         $this->initializeChat(0.7);
 
         $prompt = "From the text provided, provide a comma separated list of relevant tags. Provide only the list without explanation.The text is delimieted by #### . The text to analyze is:\n ####" . $extracted_text . '####';
+        if (strlen(trim($this->common->get_config_value('PROMPT_OVERRIDE_TAGS'))) > 10) {
+            $prompt = $this->common->get_config_value('PROMPT_OVERRIDE_TAGS') . " #### " . $extracted_text . "####";
+        }
 
         try {
             $tags = $this->chat->sendRequest($prompt);
@@ -154,6 +163,10 @@ class ai_processing
         $prompt = "Your task is to review the provided text and create a summary of the content in less than $summary_length words. Respond with just the summary without any additional text or introduction. This summary will be used in a search index so include any relevant details that a user might search for. Summarize the text delimited by #### The text to analyze is:\n";
         $prompt .= "#### " . $extracted_text . ' ####';
 
+        if (strlen(trim($this->common->get_config_value('PROMPT_OVERRIDE_SUMMARY'))) > 10) {
+            $prompt = $this->common->get_config_value('PROMPT_OVERRIDE_SUMMARY') . " #### " . $extracted_text . "####";
+        }
+
         try {
             $summary = $this->chat->sendRequest($prompt);
             $summary = $this->format_summary($summary);
@@ -167,7 +180,8 @@ class ai_processing
 
     public function format_summary($summary)
     {
-        $summary = trim(str_replace("Here is a summary of the text in under 500 words:", "", $summary));
+        $summary_length = $this->common->get_config_value('AI_PROCESSING_SUMMARY_LENGTH');
+        $summary = trim(str_replace("Here is a summary of the text in under $summary_length words:", "", $summary));
         $summary = trim(str_replace("Here is a summary of the provided text:", "", $summary));
         $summary = trim(str_replace("Here is the summary:", "", $summary));
         $summary = trim(str_replace("It appears to be a", "", $summary));
@@ -181,14 +195,14 @@ class ai_processing
         $summary = trim(str_replace("Here is a summary of the provided text in under 500 words:", "", $summary));
         $summary = trim(str_replace("Here is the summary of the provided text:", "", $summary));
         $summary = trim(str_replace("She summarizes the provided text as follows:", "", $summary));
-        $summary = trim(str_replace("Here is a summary of the content in under 500 words:", "", $summary));
+        $summary = trim(str_replace("Here is a summary of the content in under $summary_length words:", "", $summary));
         $summary = trim(str_replace("Summary:", "", $summary));
         $summary = trim(str_replace("The document is a:", "", $summary));
         $summary = trim(str_replace("The document is a", "", $summary));
         $summary = trim(str_replace("####", "", $summary));
         $summary = trim(str_replace("Summary\n\n", "", $summary));
         $summary = trim(str_replace("Here is a summary of the content:", "", $summary));
-        $summary = trim(str_replace("Here is a summary of the provided text in less than 500 words.", "", $summary));
+        $summary = trim(str_replace("Here is a summary of the provided text in less than $summary_length words.", "", $summary));
 
         $summary = ucfirst($summary);
         $summary = substr($summary, 0, 6000);
@@ -200,6 +214,9 @@ class ai_processing
         $this->initializeChat(0.7);
 
         $prompt = "You are an AI specialized in generating document names. Your task is to review the provided text and create a clear, concise document name that captures the essence of the content. The text to name is delimieted by ####. The name should be 10 words or less. Only respond with the name. The text to analyze is:\n ####" . $extracted_text . "####";
+        if (strlen(trim($this->common->get_config_value('PROMPT_OVERRIDE_TITLE'))) > 10) {
+            $prompt = $this->common->get_config_value('PROMPT_OVERRIDE_TITLE') . " #### " . $extracted_text . "####";
+        }
 
         try {
             $title = $this->chat->sendRequest($prompt);

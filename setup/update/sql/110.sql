@@ -1,0 +1,9 @@
+UPDATE public.config SET value = '110' WHERE setting = 'DB_VERSION';
+UPDATE public.config SET value = '2024.09.09.1' WHERE setting = 'APP_VERSION';
+INSERT INTO public.changelog (database_version, application_version, change_summary, author, date_created) VALUES ('110', '2024.09.09.1', 'Added prompt overrides to the configuration.', 'landtax', CURRENT_TIMESTAMP);
+
+INSERT INTO public.config (setting, value, description) VALUES ('PROMPT_OVERRIDE_PII', '', 'Overrides the PII prompt for the AI processing. Leave this blank to use the default prompt. Text to analayze is delimited by ####');
+INSERT INTO public.config (setting, value, description) VALUES ('PROMPT_OVERRIDE_CONTACT_INFORMATION', '', 'Overrides the contact information prompt for the AI processing. Leave this blank to use the default prompt. Text to analayze is delimited by ####');
+INSERT INTO public.config (setting, value, description) VALUES ('PROMPT_OVERRIDE_TAGS', '', 'Overrides the tags prompt for the AI processing. Leave this blank to use the default prompt. Text to analayze is delimited by ####');
+INSERT INTO public.config (setting, value, description) VALUES ('PROMPT_OVERRIDE_SUMMARY', '', 'Overrides the summary prompt for the AI processing. Leave this blank to use the default prompt.  AI_PROCESSING_SUMMARY_LENGTH will be ignored if this is used.  Text to analayze is delimited by ####');
+INSERT INTO public.config (setting, value, description) VALUES ('PROMPT_OVERRIDE_TITLE', '', 'Overrides the title prompt for the AI processing. Leave this blank to use the default prompt.  Text to analayze is delimited by ####');

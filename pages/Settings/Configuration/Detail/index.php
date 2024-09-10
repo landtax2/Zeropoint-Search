@@ -59,6 +59,12 @@ if (!empty($config)) {
             });
         });
     </script>
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Warning!</h4>
+        <p>Changing configuration values can significantly impact the functionality and behavior of the application. Please exercise caution when modifying these settings.</p>
+        <hr>
+        <p class="mb-0">Only make changes if you fully understand their implications. Incorrect modifications may lead to system instability or unexpected behavior. If you're unsure about a setting, consult the documentation or seek assistance from the system administrator before making any changes.</p>
+    </div>
     <div class="container-fluid">
         <div class="row">
             <div class="col-6">
