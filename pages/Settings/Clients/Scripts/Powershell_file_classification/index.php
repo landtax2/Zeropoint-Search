@@ -83,7 +83,7 @@ function Invoke-FileClassification {
             $file_version = $file.VersionInfo.FileVersion
             $size = $file.Length
             $extension = $file.Extension.Replace('.', '')
-            $path = $file.FullName
+            $path = $file.FullName.ToLower()
             $hash = $hash_obj.Hash
             $date_created = $file.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")
             $date_modified = $file.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss")
