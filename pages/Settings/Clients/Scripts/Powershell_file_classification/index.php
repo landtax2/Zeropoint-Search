@@ -70,13 +70,12 @@ function Invoke-FileClassification {
     # Loop through each file
     foreach ($file in $files) {
         try {
-
+            # Run curl command for each file
             $filePath = $file.FullName
             $hash_obj = Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256 2>$null
             Write-Host "Working on $filePath" -ForegroundColor Cyan
-            # Run curl command for each file
+            
 
-            $filePath = $file.FullName
             $name = $file.Name
             $internal_name = $file.VersionInfo.InternalName
             $product_version = $file.VersionInfo.ProductVersion
@@ -87,7 +86,7 @@ function Invoke-FileClassification {
             $hash = $hash_obj.Hash
             $date_created = $file.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")
             $date_modified = $file.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss")
-            $file_id = Get-StringSHA256 -InputString ($file.FullName + $hash)
+            $file_id = Get-StringSHA256 -InputString ($path + $hash)
             $folder = $folder
 			
 			$Form = @{
