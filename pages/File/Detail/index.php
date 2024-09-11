@@ -241,9 +241,9 @@ $common->print_template_card('File Detail', 'start');
 <div class="left w-100">
     <dl class="row">
         <dt class="col-sm-2">Hash SHA256</dt>
-        <dd class="col-sm-10"><a href="/?page=detections&sub=detail&hash=<?= $file_data['hash']; ?>"><?= $file_data['hash']; ?></a></dd>
+        <dd class="col-sm-10"><a href="/?s1=File&s2=Similar&hash=<?= $file_data['hash']; ?>"><?= $file_data['hash']; ?></a></dd>
         <dt class="col-sm-2">Client Name </dt>
-        <dd class="col-sm-10"><a href="?page=clients&sub=detail&id=<?= $file_data['client_id']; ?>"><?= $file_data['client_name']; ?></a></dd>
+        <dd class="col-sm-10"><a href="/?s1=Settings&s2=Clients&s3=Detail&id=<?= $file_data['client_id']; ?>"><?= $file_data['client_name']; ?></a></dd>
 
         <dt class="col-sm-2">&nbsp;</dt>
         <dd class="col-sm-10"></dd>

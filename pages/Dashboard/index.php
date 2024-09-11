@@ -50,6 +50,11 @@ try {
 
 $document_count = $common->query_to_sd_array("SELECT COUNT(*) as count FROM network_file WHERE ai_summary is not null", null)['count'];
 $document_count_24 = $common->query_to_sd_array("SELECT COUNT(*) AS count FROM network_file WHERE record_created > NOW() - INTERVAL '24 hours' AND ai_summary IS NOT NULL;", null)['count'];
+if ($document_count_24 > 0) {
+    $documents_per_hour = $document_count_24 / 24;
+} else {
+    $documents_per_hour = 0;
+}
 
 //get the date of the most recently processed file
 $most_recently_processed_file_date = $common->query_to_sd_array("SELECT last_found FROM network_file WHERE ai_summary is not null ORDER BY last_found DESC LIMIT 1", null)['last_found'] ?? null;
@@ -147,7 +152,7 @@ if ($display_debug_warning) {
                         <div class="card h-100">
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">Documents Processed (24h)</h5>
-                                <p class="card-text h3 mb-2"><?= number_format($document_count_24) ?></p>
+                                <p class="card-text h3 mb-2"><?= number_format($document_count_24) ?> @ <?= number_format($documents_per_hour) ?> per hour</p>
                                 <p class="card-text text-muted mt-auto">Documents processed in the last 24 hours</p>
                             </div>
                         </div>

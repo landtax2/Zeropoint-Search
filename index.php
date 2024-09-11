@@ -129,6 +129,9 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
     <!-- Chat JS -->
     <script src="/scripts/js/chat.js"></script>
 
+    <!-- Common -->
+    <script src="/scripts/js/common.js"></script>
+
     <!-- CSS Overrides -->
     <link rel="stylesheet" href="/scripts/css/main.css">
 </head>
@@ -151,7 +154,7 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
                     <i class="fa-brands fa-galactic-republic fa-2x"></i>
                 </div>
             </div>
-            <button class="btn-close d-lg-none" type="button" data-coreui-dismiss="offcanvas" data-coreui-theme="dark" aria-label="Close" onclick="coreui.Sidebar.getInstance(document.querySelector(&quot;#sidebar&quot;)).toggle()"></button>
+            <button class="btn-close d-lg-none" type="button" data-coreui-dismiss="offcanvas" data-coreui-theme="dark" aria-label="Close" onclick="coreui.Sidebar.getInstance(document.querySelector('#sidebar')).toggle()"></button>
         </div>
         <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="">
             <li class="nav-item"><a class="nav-link" href="/">

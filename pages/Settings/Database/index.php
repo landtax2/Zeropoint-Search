@@ -4,35 +4,46 @@ $common->print_template_card('Database Settings', 'start');
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-6">
-            <div class="card">
+        <div class="col-md-3">
+            <div class="card h-100">
                 <div class="card-header">
                     <h5 class="card-title mb-0">Network Files Statistics</h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body d-flex flex-column justify-content-between">
                     <?php
                     $queryText = "SELECT COUNT(*) as total_records FROM network_file";
                     $result = $common->query_to_sd_array($queryText, []);
                     $totalRecords = $result['total_records'];
                     ?>
                     <h2 class="mb-0"><?php echo number_format($totalRecords); ?></h2>
-                    <p class="text-muted">Total records in network_files</p>
+                    <p class="text-muted mb-0">Total records in network_files</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card">
+        <div class="col-md-3">
+            <div class="card h-100">
                 <div class="card-header">
                     <h5 class="card-title mb-0">Database Size</h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body d-flex flex-column justify-content-between">
                     <?php
                     $queryText = "SELECT pg_size_pretty(pg_database_size(current_database())) as db_size";
                     $result = $common->query_to_sd_array($queryText, []);
                     $dbSize = $result['db_size'];
                     ?>
                     <h2 class="mb-0"><?php echo $dbSize; ?></h2>
-                    <p class="text-muted">Current size of the database</p>
+                    <p class="text-muted mb-0">Current size of the database</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Database Version</h5>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h2 class="mb-0"><?php echo $common->get_config_value('DB_VERSION'); ?></h2>
+                    <p class="text-muted mb-0">Current database version</p>
                 </div>
             </div>
         </div>
@@ -48,12 +59,24 @@ $common->print_template_card('Database Settings', 'start');
                         <hr>
                         <p class="mb-0">Make sure you have a backup of your database before performing any of these operations.</p>
                     </div>
-                </div>
-                <div class="card-body">
-                    <button id="emptyNetworkFilesBtn" class="btn btn-danger">Empty Network Files Table</button>
-                </div>
-                <div class="card-body">
-                    <button id="resetDatabaseBtn" class="btn btn-danger">Reset Database</button>
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="d-grid">
+                                <button id="emptyNetworkFilesBtn" class="btn btn-danger btn-lg">
+                                    <i class="cil-trash mr-2"></i>
+                                    Empty Network Files Table
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-grid">
+                                <button id="resetDatabaseBtn" class="btn btn-danger btn-lg">
+                                    <i class="cil-reload mr-2"></i>
+                                    Reset Database
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
