@@ -3,7 +3,7 @@ $common->print_template_card('Database Settings', 'start');
 ?>
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row mb-3">
         <div class="col-md-3">
             <div class="card h-100">
                 <div class="card-header">
@@ -47,6 +47,43 @@ $common->print_template_card('Database Settings', 'start');
                 </div>
             </div>
         </div>
+        <div class="col-md-3">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Database Time</h5>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h2 class="mb-0">
+                        <?php
+                        $queryText = "SELECT TO_CHAR(CURRENT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') AS current_time";
+                        $result = $common->query_to_sd_array($queryText, []);
+                        echo $result['current_time'];
+                        ?>
+                    </h2>
+                    <p class="text-muted mb-0">Current database time</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+
+        <div class="col-md-3">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">System Time</h5>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h2 class="mb-0">
+                        <?php
+                        echo date('Y-m-d H:i:s');
+                        ?>
+                    </h2>
+                    <p class="text-muted mb-0">Current database time</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-12 mt-4">
             <div class="card">
                 <div class="card-header">
