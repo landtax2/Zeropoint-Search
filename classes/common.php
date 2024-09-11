@@ -300,6 +300,20 @@ class common
         header("Expires: -1");
     }
 
+    public function get_network_root_path($path)
+    {
+        // Find the position of the last backslash
+        $lastBackslashPos = strrpos($path, '\\');
+
+        // If a backslash was found, truncate the string up to the last backslash
+        if ($lastBackslashPos !== false) {
+            return substr($path, 0, $lastBackslashPos);
+        } else {
+            // If no backslash was found, return the original string
+            return $path;
+        }
+    }
+
     public function print_template_card($title, $type = 'start')
     {
         if ($type == 'start_no_title') {

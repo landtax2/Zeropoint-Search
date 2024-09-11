@@ -257,7 +257,7 @@ $common->print_template_card('File Detail', 'start');
         <dt class="col-sm-2">Path </dt>
         <dd class="col-sm-10"><span id="path"><?= $file_data['path']; ?> <i onclick="copyToClipboard('#path'); this.style.color = 'green'" class="fa fa-copy" style="color: var(--cui-link-color); cursor:pointer"></i></span></dd>
         <dt class="col-sm-2">Network Folder</dt>
-        <dd class="col-sm-10"><span id="folder"><?= dirname($file_data['path']); ?> <i onclick="copyToClipboard('#folder'); this.style.color = 'green'" class="fa fa-copy" style="color: var(--cui-link-color); cursor:pointer"></i></span></dd>
+        <dd class="col-sm-10"><span id="folder"><?= $common->get_network_root_path($file_data['path']); ?> <i onclick="copyToClipboard('#folder'); this.style.color = 'green'" class="fa fa-copy" style="color: var(--cui-link-color); cursor:pointer"></i></span></dd>
         <dt class="col-sm-2">File Size</dt>
         <dd class="col-sm-10"><?= $common->humanFileSize($file_data['size']); ?></dd>
         <dt class="col-sm-2">File Created</dt>
