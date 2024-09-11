@@ -169,7 +169,7 @@ $common->print_template_card('Database Settings', 'start');
                                     'The database has been reset to its initial state.',
                                     'success'
                                 ).then(() => {
-                                    location.href = '/'; // Redirect to the home page
+                                    location.href = '/setup/create/index.php'; // Redirect to setup page
                                 });
                             } else {
                                 Swal.fire(
