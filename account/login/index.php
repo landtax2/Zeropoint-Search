@@ -22,8 +22,8 @@ if (!$common->does_table_exist('config')) {
 $timezone = false;
 if (isset($_SERVER['TZ']) &&  $common->get_config_value('TIME_ZONE') != $_SERVER['TZ']) {
     $timezone = $_SERVER['TZ'];
-} else if (isset($env['TIME_ZONE']) && $common->get_config_value('TIME_ZONE') != $env['TZ']) {
-    $timezone = $env['TIME_ZONE'];
+} else if (isset($env['TZ']) && $common->get_config_value('TIME_ZONE') != $env['TZ']) {
+    $timezone = $env['TZ'];
 }
 if ($timezone) {
     echo 'Updating timezone to ' . $timezone . '<br/>';
