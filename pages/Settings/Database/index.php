@@ -78,7 +78,7 @@ $common->print_template_card('Database Settings', 'start');
                         echo date('Y-m-d H:i:s');
                         ?>
                     </h2>
-                    <p class="text-muted mb-0">Current database time</p>
+                    <p class="text-muted mb-0">Current time as reported by PHP</p>
                 </div>
             </div>
         </div>
