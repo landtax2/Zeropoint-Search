@@ -160,7 +160,7 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
             <li class="nav-item"><a class="nav-link" href="/">
                     <svg class="nav-icon">
                         <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
-                    </svg> Dashboard<span class="badge badge-sm bg-info ms-auto">NEW</span></a></li>
+                    </svg> Dashboard<span class="badge badge-sm bg-info ms-auto">Home</span></a></li>
             <li class="nav-title">Core Functions</li>
             <li class="nav-group">
                 <a class="nav-link nav-group-toggle" href="#">

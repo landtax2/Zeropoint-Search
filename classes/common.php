@@ -148,6 +148,11 @@ class common
         //get the ip address of the user - handles proxy or real ip
         $ip = $this->get_ip();
 
+        //allows all IPs if 0.0.0.0 is in the array
+        if (in_array('0.0.0.0', $allowed_ips)) {
+            return false;
+        }
+
         if (!$this->is_privateIP($ip) && !in_array($ip, $allowed_ips)) {
             $this->write_to_log('security', 'IP denied access to front-end.', $ip);
             die('Non_local_address: ' . $ip);

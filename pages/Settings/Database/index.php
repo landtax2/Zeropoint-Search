@@ -82,6 +82,36 @@ $common->print_template_card('Database Settings', 'start');
                 </div>
             </div>
         </div>
+        <div class="col-md-3">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Container Time Zone</h5>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h2 class="mb-0">
+                        <?php
+                        echo $common->get_config_value('TZ');
+                        ?>
+                    </h2>
+                    <p class="text-muted mb-0">Timezone in the web container</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Container Time Zone</h5>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h2 class="mb-0">
+                        <?php
+                        echo $common->get_config_value('TIME_ZONE');
+                        ?>
+                    </h2>
+                    <p class="text-muted mb-0">Timezone defined in the database</p>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-12 mt-4">

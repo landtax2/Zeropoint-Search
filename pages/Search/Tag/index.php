@@ -116,6 +116,13 @@ $common->print_template_card('Network File Search - Tags', 'start');
     </div>
 </div>
 <div class="row mb-3">
+    <div class="col-md-12">
+        <hr class="my-4">
+        <h5 class="text-muted">Additional Filters</h5>
+    </div>
+</div>
+
+<div class="row mb-3">
     <div class="col-md-6">
         <div class="form-group">
             <label for="name">File Name:</label>
