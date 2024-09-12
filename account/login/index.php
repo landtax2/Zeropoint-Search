@@ -12,16 +12,34 @@ try {
 $common->anti_cache_headers();
 
 //check if the config table exists - if not, redirect to the setup page
+//this is crucial to initialize the database in a new install
 if (!$common->does_table_exist('config')) {
     header('Location: /setup/create/index.php');
     exit;
 }
 
+//fixes the timezone if it changed in the env
+$timezone = false;
+if (isset($_SERVER['TZ']) &&  $common->get_config_value('TIME_ZONE') != $_SERVER['TZ']) {
+    $timezone = $_SERVER['TZ'];
+} else if (isset($env['TIME_ZONE']) && $common->get_config_value('TIME_ZONE') != $env['TIME_ZONE']) {
+    $timezone = $env['TIME_ZONE'];
+}
+if ($timezone) {
+    echo 'Updating timezone to ' . $timezone . '<br/>';
+    $queryText = "ALTER database zps SET timezone ='$timezone';";
+    $common->get_db_connection()->exec($queryText);
+    $queryText = "UPDATE public.config SET value = '" . $_SERVER['TZ'] . "' WHERE setting = 'TIME_ZONE';";
+    $common->get_db_connection()->exec($queryText);
+    $common->write_to_log('setup', 'Create', 'Setting timezone to ' . $_SERVER['TZ']);
+}
+
+
 $common->local_only();
 ($common->get_env_value('DEBUGGING') == '1') ? ini_set('display_errors', 1) : ini_set('log_errors', 0); //turns off error logging if not debugging
 
 
-//log access to the front-end
+//log access to the front-end for debugging
 $access = [
     'IP' => $common->get_ip(),
     'Arguments' => $_GET,
