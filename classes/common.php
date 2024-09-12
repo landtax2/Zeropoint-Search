@@ -5,7 +5,7 @@ class common
 
     private $db_connection;
     private $env;
-    public $db_version = '110';
+    public $db_version = '111';
     public $boolean = array('0' => 'False', '1' => 'True');
 
     public function __construct($env)
@@ -14,10 +14,18 @@ class common
         $this->db_connect();
 
         //set the timezone
-        try {
-            date_default_timezone_set($this->get_config_value('TIME_ZONE'));
-        } catch (Exception $e) {
-            //echo 'Unable to set timezone.  Defaulting to UTC.<br/>';
+        date_default_timezone_set($this->get_timezone());
+    }
+
+    public function get_timezone()
+    {
+
+        if (isset($_SERVER['TZ'])) {
+            return $_SERVER['TZ'];
+        } else if (isset($_ENV['TZ'])) {
+            return $_ENV['TZ'];
+        } else {
+            return 'America/New_York';
         }
     }
 

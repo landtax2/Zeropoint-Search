@@ -75,15 +75,6 @@ switch ($data['action']) {
         break;
     case 'update_config':
         $data['value'] = trim($data['value']);
-        //this needs to update the database timezone
-        if ($data['setting'] == 'TIME_ZONE') {
-            //update the database timezone
-            //this fails when parameters are used
-            $time_zone = str_replace("'", "", $data['value']); //prevents SQL injection
-            $queryText = "ALTER database zps SET timezone = '$time_zone'";
-            $common->query_to_sd_array($queryText);
-            $common->write_to_log('setup', 'Config Update', 'Setting timezone to ' . $data['value']);
-        }
         //update the databse
         $queryText = "UPDATE config SET value = :value WHERE id = :id";
         $queryParams = array(':value' => $data['value'], ':id' => $data['id']);

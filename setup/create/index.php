@@ -75,22 +75,6 @@ if (isset($env['DEFAULT_CLIENT_API_KEY'])) {
     $common->write_to_log('setup', 'Create', 'Setting DEFAULT_CLIENT_API_KEY');
 }
 
-//set timezone
-if (isset($_SERVER['TZ'])) {
-    echo "Setting TIME_ZONE in config and database to " . $_SERVER['TZ'] . "<br/>";
-    $queryText = "ALTER database zps SET timezone ='$_SERVER[TZ]';";
-    $common->get_db_connection()->exec($queryText);
-    $queryText = "UPDATE public.config SET value = '" . $_SERVER['TZ'] . "' WHERE setting = 'TIME_ZONE';";
-    $common->get_db_connection()->exec($queryText);
-    $common->write_to_log('setup', 'Create', 'Setting timezone to ' . $_SERVER['TZ']);
-} else if (isset($env['TZ'])) {
-    echo "Setting TIME_ZONE in config and database to " . $env['TIME_ZONE'] . "<br/>";
-    $queryText = "ALTER database zps SET timezone ='$env[TIME_ZONE]';";
-    $common->get_db_connection()->exec($queryText);
-    $queryText = "UPDATE public.config SET value = '" . $env['TIME_ZONE'] . "' WHERE setting = 'TIME_ZONE';";
-    $common->get_db_connection()->exec($queryText);
-    $common->write_to_log('setup', 'Create', 'Setting timezone to ' . $env['TIME_ZONE']);
-}
 
 $common->write_to_log('setup', 'Create', 'Tables and default config values created successfully.');
 echo "Tables and default config values created successfully.<br/>";

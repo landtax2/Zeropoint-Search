@@ -18,22 +18,9 @@ if (!$common->does_table_exist('config')) {
     exit;
 }
 
-//fixes the timezone if it changed in the env
-$timezone = false;
-if (isset($_SERVER['TZ']) &&  $common->get_config_value('TIME_ZONE') != $_SERVER['TZ']) {
-    $timezone = $_SERVER['TZ'];
-} else if (isset($_ENV['TZ']) && $common->get_config_value('TIME_ZONE') != $_ENV['TZ']) {
-    $timezone = $_ENV['TZ'];
-}
-if ($timezone) {
-    echo 'Updating timezone to ' . $timezone . '<br/>';
-    $queryText = "ALTER database zps SET timezone ='$timezone';";
-    $common->get_db_connection()->exec($queryText);
-    $queryText = "UPDATE public.config SET value = '" . $timezone . "' WHERE setting = 'TIME_ZONE';";
-    $common->get_db_connection()->exec($queryText);
-    $common->write_to_log('setup', 'Create', 'Setting timezone to ' . $timezone);
-}
-
+//set the timezone for the database at login - this is necessary for the database to use the correct timezone for date/time functions
+$queryText = "ALTER database zps SET timezone ='" . $common->get_timezone() . "';";
+$common->get_db_connection()->exec($queryText);
 
 $common->local_only();
 ($common->get_env_value('DEBUGGING') == '1') ? ini_set('display_errors', 1) : ini_set('log_errors', 0); //turns off error logging if not debugging
