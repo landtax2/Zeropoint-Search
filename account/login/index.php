@@ -29,9 +29,9 @@ if ($timezone) {
     echo 'Updating timezone to ' . $timezone . '<br/>';
     $queryText = "ALTER database zps SET timezone ='$timezone';";
     $common->get_db_connection()->exec($queryText);
-    $queryText = "UPDATE public.config SET value = '" . $_SERVER['TZ'] . "' WHERE setting = 'TIME_ZONE';";
+    $queryText = "UPDATE public.config SET value = '" . $timezone . "' WHERE setting = 'TIME_ZONE';";
     $common->get_db_connection()->exec($queryText);
-    $common->write_to_log('setup', 'Create', 'Setting timezone to ' . $_SERVER['TZ']);
+    $common->write_to_log('setup', 'Create', 'Setting timezone to ' . $timezone);
 }
 
 
