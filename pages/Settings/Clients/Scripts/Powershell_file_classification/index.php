@@ -65,7 +65,9 @@ function Invoke-FileClassification {
     }
 
     # Get all pdf, doc, and docx files from the directory and subdirectories
-    $files = Get-ChildItem -Path $Path -Recurse -Include *.pdf, *.doc, *.docx
+    #$files = Get-ChildItem -Path $Path -Recurse -Include *.pdf, *.doc, *.docx
+    #more efficient way to get the files
+    $files = Get-ChildItem -Path $Path -Recurse | Where-Object { $_.Extension -in ".pdf", ".doc", ".docx", ".pptx" }
 
     # Loop through each file
     foreach ($file in $files) {

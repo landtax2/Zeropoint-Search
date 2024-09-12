@@ -7,6 +7,7 @@ web.config
 
 # Ignore any info.php files that might be leftover from development
 info.php
+test.php
 
 # Ignore vscode files
 .vscode/

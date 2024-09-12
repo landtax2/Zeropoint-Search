@@ -90,7 +90,7 @@ $common->print_template_card('Database Settings', 'start');
                 <div class="card-body d-flex flex-column justify-content-between">
                     <h2 class="mb-0">
                         <?php
-                        echo $common->get_config_value('TZ');
+                        echo $common->get_timezone();
                         ?>
                     </h2>
                     <p class="text-muted mb-0">Timezone in the web container</p>

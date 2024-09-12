@@ -14,6 +14,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/classes/file_classification/extract_d
 require_once $_SERVER['DOCUMENT_ROOT'] . '/classes/file_classification/pii_regex.class.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/classes/file_classification/ai_processing.class.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/classes/file_classification/data_functions.class.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/classes/file_classification/convert_to_pdf.class.php';
 
 //instantiate the common class
 try {
@@ -52,29 +53,63 @@ function sanitize_input($input, $fields)
     return $sanitized;
 }
 
+function convert_and_extract_file_text($common, $files)
+{
+    $extractor = new extract_document_text($common, false);
+    //converts the file to pdf and extracts the text
+    $convert_to_pdf = new convert_to_pdf($common);
+    $file_path = $convert_to_pdf->convert($files['file']['tmp_name']);
+    $file_r = [
+        'tmp_name' => $file_path,
+        'error' => UPLOAD_ERR_OK,
+        'type' => 'application/pdf',
+        'name' => 'converted_file.pdf'
+    ];
+    $extracted_text = $extractor->extract($file_r);
+
+    //removes the temporary file
+    unlink($file_path);
+
+    //returns the extracted text
+    return $extracted_text;
+}
+
+function extract_file_text($common, $files)
+{
+    $extractor = new extract_document_text($common, false);
+    try {
+        $extracted_text = $extractor->extract($files['file']);
+
+        if (strlen($extracted_text) < $common->get_config_value('OCR_THRESHOLD')) {
+            $extractor = new extract_document_text($common, true);
+            $extracted_text = $extractor->extract($files['file']);
+        }
+
+        if (strlen($extracted_text) == 0) {
+            die(json_encode(['error' => 'Extraction failed or returned no text']));
+        } else {
+            return $extracted_text;
+        }
+    } catch (Exception $e) {
+        die(json_encode(['error' => $e->getMessage()]));
+    }
+}
+
 function handle_extract_action($common, $client_id)
 {
-    //Extracts text from the file
+    //Extracts text from the file.  Converts files other than pdf, doc, docx to pdf and then extracts the text
     if (isset($_FILES['file'])) {
-        $extractor = new extract_document_text($common, false);
-        try {
-            $extracted_text = $extractor->extract($_FILES['file']);
-
-            if (strlen($extracted_text) < $common->get_config_value('OCR_THRESHOLD')) {
-                $extractor = new extract_document_text($common, true);
-                $extracted_text = $extractor->extract($_FILES['file']);
-            }
-
-            if (strlen($extracted_text) == 0) {
-                die(json_encode(['error' => 'Extraction failed or returned no text']));
-            }
-        } catch (Exception $e) {
-            die(json_encode(['error' => $e->getMessage()]));
+        $extension = $_POST['extension'];
+        if ($extension != 'pdf' && $extension != 'doc' && $extension != 'docx') {
+            $extracted_text = convert_and_extract_file_text($common, $_FILES);
+        } else {
+            $extracted_text = extract_file_text($common, $_FILES);
         }
     } else {
         die(json_encode(['error' => 'No file uploaded']));
     }
 
+    //truncates the text to the max length. helps with performance
     $extracted_text_total_length = strlen($extracted_text);
     $extracted_text = substr($extracted_text, 0, $common->get_config_value('AI_PROCESSING_CHAT_MAX_LENGTH'));
     $extracted_text_total_length_after = strlen($extracted_text);
