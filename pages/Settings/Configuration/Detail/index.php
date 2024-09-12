@@ -3,6 +3,17 @@ $queryText = "SELECT * FROM config WHERE id = :id";
 $queryParams = array(':id' => $_GET['id']);
 $config = $common->query_to_sd_array($queryText, $queryParams);
 $common->print_template_card('Configuration', 'start');
+
+
+$override_value = '';
+if (isset($_ENV[$config['setting']])) {
+    $override_value = $_ENV[$config['setting']];
+    $config['editable'] = 0;
+} else if (isset($_SERVER[$config['setting']])) {
+    $override_value = $_SERVER[$config['setting']];
+    $config['editable'] = 0;
+}
+
 ?>
 
 <?php
@@ -79,6 +90,12 @@ if (!empty($config)) {
                         <label for="value" class="col-md-3 col-form-label">Value</label>
                         <div class="col-md-9">
                             <textarea name="value" id="value" class="form-control" <?php echo $config['editable'] == 0 ? 'readonly' : ''; ?>><?php echo htmlspecialchars($config['value']); ?></textarea>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="override_value" class="col-md-3 col-form-label">Overridden Value</label>
+                        <div class="col-md-9">
+                            <?php echo $override_value; ?>
                         </div>
                     </div>
                     <div class="mb-3 row">

@@ -36,14 +36,22 @@ class common
 
     public function get_config_value($setting)
     {
-        try {
-            $stmt = $this->db_connection->prepare("SELECT value FROM config WHERE setting = :setting");
-            $stmt->bindParam(':setting', $setting);
-            $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $result['value'];
-        } catch (Exception $e) {
-            throw new Exception("Get config value failed: " . $e->getMessage(), 1);
+        //linux uses $_ENV, windows uses $_SERVER for environment variables
+        //get it from the environment variable first, then the server variable, then the database
+        if (isset($_ENV[$setting])) {
+            return $_ENV[$setting];
+        } else if (isset($_SERVER[$setting])) {
+            return $_SERVER[$setting];
+        } else {
+            try {
+                $stmt = $this->db_connection->prepare("SELECT value FROM config WHERE setting = :setting");
+                $stmt->bindParam(':setting', $setting);
+                $stmt->execute();
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                return $result['value'];
+            } catch (Exception $e) {
+                throw new Exception("Get config value failed: " . $e->getMessage(), 1);
+            }
         }
     }
 

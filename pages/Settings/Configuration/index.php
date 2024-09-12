@@ -9,6 +9,7 @@ $common->print_template_card('Configuration', 'start');
     $(document).ready(function() {
         $('#table_1').DataTable({
             "paging": true,
+            "responsive": true,
             "ordering": true,
             "info": false,
             "searching": true,
@@ -20,19 +21,37 @@ $common->print_template_card('Configuration', 'start');
     });
 </script>
 <div class="alert alert-warning" role="alert">
-    <h4 class="alert-heading">Warning!</h4>
-    <p>Changing configuration values can significantly impact the functionality and behavior of the application. Please exercise caution when modifying these settings.</p>
-    <hr>
-    <p class="mb-0">Only make changes if you fully understand their implications. Incorrect modifications may lead to system instability or unexpected behavior. If you're unsure about a setting, consult the documentation or seek assistance from the system administrator before making any changes.</p>
+    <h4 class="alert-heading"><i class="fas fa-exclamation-triangle"></i> Warning!</h4>
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Caution when modifying settings:</h5>
+            <ul>
+                <li>Changes can significantly impact application functionality</li>
+                <li>Only modify if you fully understand the implications</li>
+                <li>Incorrect changes may cause system instability</li>
+                <li>Consult documentation or an administrator if unsure</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h5>Environment Variable Overrides:</h5>
+            <ul>
+                <li>Docker environment variables take precedence over database values</li>
+                <li>Allows flexible configuration without direct database changes</li>
+                <li>"Override Value" column shows current environment variable overrides</li>
+                <li>Empty "Override Value" means the database value is in use</li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 <table class="dataTable stripe w-100" id="table_1">
     <thead>
         <tr>
             <th>Setting Name</th>
-            <th>Value</th>
+            <th>DB Value</th>
+            <th>Override Value</th>
             <th>Editable</th>
-            <th>Description</th>
+            <th class="none">Description</th>
         </tr>
     </thead>
     <tbody>
@@ -44,9 +63,21 @@ $common->print_template_card('Configuration', 'start');
             } else {
                 $editable = 'No';
             }
+
+            $override_value = '';
+            if (isset($_ENV[$d['setting']])) {
+                $override_value = $_ENV[$d['setting']];
+                $editable = 'No';
+            } else if (isset($_SERVER[$d['setting']])) {
+                $override_value = $_SERVER[$d['setting']];
+                $editable = 'No';
+            }
+
+
             echo "<tr>
                         <td><a href=\"?s1=Settings&s2=Configuration&s3=Detail&id=$d[id]\">$d[setting]</a></td>
                         <td>$d[value]</td>
+                        <td>$override_value</td>
                         <td>$editable</td>
                         <td>$d[description]</td>
                     </tr>";
