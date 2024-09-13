@@ -56,6 +56,59 @@ $common->print_template_card('Integrations', 'start');
                     });
             });
         }
+
+        const testStirlingButton = document.getElementById('test-stirling-button');
+        if (testStirlingButton) {
+            testStirlingButton.addEventListener('click', function() {
+                Swal.fire({
+                    title: 'Testing Stirling PDF Integration',
+                    text: 'Please wait...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                fetch('/application_api/settings/index.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            action: 'test_stirling_pdf'
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Display the test results
+                            const testResultsDiv = document.getElementById('stirling-test-results');
+                            const testOutputPdf = document.getElementById('stirling-test-pdf');
+                            testOutputPdf.src = 'data:application/pdf;base64,' + data.file_data;
+                            testResultsDiv.style.display = 'block';
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Stirling PDF integration test successful!'
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Stirling PDF integration test failed: ' + data.message
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while testing the Stirling PDF integration.'
+                        });
+                    });
+            });
+        }
     });
 </script>
 <div class="row mt-4">
@@ -122,6 +175,34 @@ $common->print_template_card('Integrations', 'start');
         </div>
     </div>
 </div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Stirling PDF Integration Test</h4>
+            </div>
+            <div class="card-body">
+                <p class="mb-3">This will test the <a href="?s1=Docs&s2=StirlingPDF">StirlingPDF</a> API used to convert documents such as PPTX to PDF.<br />The current StirlingPDF endpoint is <?PHP echo $common->get_config_value('STIRLING_PDF_API'); ?></p>
+                <button id="test-stirling-button" class="btn btn-primary">
+                    <i class="fa fa-file-pdf me-2"></i>Test Stirling Integration
+                </button>
+                <div id="stirling-test-results" class="mt-4" style="display: none;">
+                    <h5>Stirling PDF Test Results</h5>
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">PDF File</h6>
+                        </div>
+                        <div class="card-body">
+                            <embed type="application/pdf" id="stirling-test-pdf" width="100%" height="600px" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 <?php

@@ -55,6 +55,7 @@ function sanitize_input($input, $fields)
 
 function convert_and_extract_file_text($common, $files)
 {
+    echo "running document conversion\n";
     $extractor = new extract_document_text($common, false);
     //converts the file to pdf and extracts the text
     $convert_to_pdf = new convert_to_pdf($common);
@@ -70,8 +71,12 @@ function convert_and_extract_file_text($common, $files)
     //removes the temporary file
     unlink($file_path);
 
-    //returns the extracted text
-    return $extracted_text;
+    if (strlen($extracted_text) == 0) {
+        die(json_encode(['error' => 'Extraction failed or returned no text']));
+    } else {
+        //returns the extracted text
+        return $extracted_text;
+    }
 }
 
 function extract_file_text($common, $files)
@@ -108,6 +113,7 @@ function handle_extract_action($common, $client_id)
     } else {
         die(json_encode(['error' => 'No file uploaded']));
     }
+
 
     //truncates the text to the max length. helps with performance
     $extracted_text_total_length = strlen($extracted_text);

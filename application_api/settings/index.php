@@ -82,6 +82,14 @@ switch ($data['action']) {
         $common->write_to_log('config', 'Configuration updated', $data);
         echo json_encode(array('success' => true, 'message' => 'Configuration updated successfully'));
         break;
+    case 'test_stirling_pdf':
+        require_once $_SERVER['DOCUMENT_ROOT'] . '/classes/file_classification/convert_to_pdf.class.php';
+        $convertToPDF = new convert_to_pdf($common);
+        $file = $convertToPDF->convert($_SERVER['DOCUMENT_ROOT'] . '/assets/misc/test_file.pptx');
+        $file_contents = base64_encode(file_get_contents($file));
+        unlink($file);
+        echo json_encode(array('success' => true, 'message' => 'Stirling PDF test successful', 'file_data' => $file_contents));
+        break;
     case 'empty_network_files':
         $queryText = "DELETE FROM network_file";
         $common->query_to_sd_array($queryText, []);
