@@ -59,7 +59,7 @@ function convert_and_extract_file_text($common, $files)
         'files' => $files,
         'POST' => $_POST
     ];
-    $common->write_to_log('file_conversion', 'Converting file to PDF', $log);
+    $common->write_to_log('file_classification', 'Converting file to PDF', $log);
     $extractor = new extract_document_text($common, false);
     //converts the file to pdf and extracts the text
 
@@ -74,7 +74,7 @@ function convert_and_extract_file_text($common, $files)
         ];
         $extracted_text = $extractor->extract($file_r);
     } catch (Exception $e) {
-        $common->write_to_log('file_conversion', 'Error converting file to PDF', $log);
+        $common->write_to_log('file_classification', 'Error converting file to PDF', $log);
         die(json_encode(['error' => $e->getMessage()]));
     }
 
@@ -120,11 +120,11 @@ function handle_extract_action($common, $client_id)
 {
     //Extracts text from the file.  Converts files other than pdf, doc, docx to pdf and then extracts the text
     if (isset($_FILES['file'])) {
-        $extension = $_POST['extension'];
-        if ($extension != 'pdf' && $extension != 'doc' && $extension != 'docx') {
-            $extracted_text = convert_and_extract_file_text($common, $_FILES);
-        } else {
+        $extension = strtolower($_POST['extension']);
+        if ($extension == 'pdf' || $extension == 'doc' || $extension == 'docx') {
             $extracted_text = extract_file_text($common, $_FILES);
+        } else {
+            $extracted_text = convert_and_extract_file_text($common, $_FILES);
         }
     } else {
         die(json_encode(['error' => 'No file uploaded']));
