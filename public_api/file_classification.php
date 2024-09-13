@@ -55,18 +55,28 @@ function sanitize_input($input, $fields)
 
 function convert_and_extract_file_text($common, $files)
 {
-    echo "running document conversion\n";
+    $log = [
+        'files' => $files,
+        'POST' => $_POST
+    ];
+    $common->write_to_log('file_conversion', 'Converting file to PDF', $log);
     $extractor = new extract_document_text($common, false);
     //converts the file to pdf and extracts the text
-    $convert_to_pdf = new convert_to_pdf($common);
-    $file_path = $convert_to_pdf->convert($files['file']['tmp_name']);
-    $file_r = [
-        'tmp_name' => $file_path,
-        'error' => UPLOAD_ERR_OK,
-        'type' => 'application/pdf',
-        'name' => 'converted_file.pdf'
-    ];
-    $extracted_text = $extractor->extract($file_r);
+
+    try {
+        $convert_to_pdf = new convert_to_pdf($common);
+        $file_path = $convert_to_pdf->convert($files['file']['tmp_name']);
+        $file_r = [
+            'tmp_name' => $file_path,
+            'error' => UPLOAD_ERR_OK,
+            'type' => 'application/pdf',
+            'name' => 'converted_file.pdf'
+        ];
+        $extracted_text = $extractor->extract($file_r);
+    } catch (Exception $e) {
+        $common->write_to_log('file_conversion', 'Error converting file to PDF', $log);
+        die(json_encode(['error' => $e->getMessage()]));
+    }
 
     //removes the temporary file
     unlink($file_path);
@@ -81,6 +91,11 @@ function convert_and_extract_file_text($common, $files)
 
 function extract_file_text($common, $files)
 {
+    $log = [
+        'files' => $files,
+        'POST' => $_POST
+    ];
+    $common->write_to_log('file_classification', 'Extracting file text', $log);
     $extractor = new extract_document_text($common, false);
     try {
         $extracted_text = $extractor->extract($files['file']);
@@ -96,6 +111,7 @@ function extract_file_text($common, $files)
             return $extracted_text;
         }
     } catch (Exception $e) {
+        $common->write_to_log('file_classification', 'Error extracting file text', $log);
         die(json_encode(['error' => $e->getMessage()]));
     }
 }
