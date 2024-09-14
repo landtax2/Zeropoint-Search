@@ -34,7 +34,7 @@ class common
     {
         //this function will connect to the database
         try {
-            $pdo = new PDO("pgsql:host=" . $this->env['DB_HOST'] . ";dbname=" . $this->env['DB_NAME'] . ";port=" . $this->env['DB_PORT'], $this->env['DB_USER'], $this->env['DB_PASS']);
+            $pdo = new PDO("pgsql:host=" . $this->get_config_value('DB_HOST') . ";dbname=" . $this->get_config_value('DB_NAME') . ";port=" . $this->get_config_value('DB_PORT'), $this->get_config_value('DB_USER'), $this->get_config_value('DB_PASS'));
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->db_connection = $pdo;
         } catch (Exception $e) {
