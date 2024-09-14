@@ -64,6 +64,9 @@ services:
     container_name: zps_doctor
     restart: unless-stopped
 ``` 
+# Further documentation
+
+Documentation can be found in the the application.
 
 # Planned Features
 
