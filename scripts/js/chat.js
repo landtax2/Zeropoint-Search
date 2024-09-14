@@ -9,7 +9,7 @@ function send_chat() {
     // Calculate the context window size - not exact but a good guess
     const userPrompt = document.getElementById('user_prompt').value;
     const userData = document.getElementById('user_data').value;
-    const contextWindow = (userPrompt.split(/\s+/).length + userData.split(/\s+/).length) * 3;
+    const contextWindow = (userPrompt.split(/\s+/).length + userData.split(/\s+/).length) * 2;
 
     // Add the context window size to the data being sent
     toSend += '&context_window=' + encodeURIComponent(contextWindow);

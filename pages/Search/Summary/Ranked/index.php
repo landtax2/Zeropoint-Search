@@ -1,7 +1,4 @@
 <?PHP
-//gets the .env file
-$env = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/.env');
-
 // Loop over all GET parameters and set to '' if empty
 foreach ($_GET as $key => $value) {
     $_GET[$key] = empty($value) ? '' : $value;
@@ -11,7 +8,7 @@ $name = isset($_GET['name']) ? str_replace('*', '%', $_GET['name']) : '';
 $path = isset($_GET['path']) ? str_replace('*', '%', $_GET['path']) : '';
 $ai_title = isset($_GET['ai_title']) ? $_GET['ai_title'] : '';
 $ai_summary = isset($_GET['ai_summary']) ? $_GET['ai_summary'] : '';
-
+$search_type = isset($_GET['search_type']) ? $_GET['search_type'] : 'or';
 $where = array();
 $select = '';
 $params = array();
@@ -39,7 +36,12 @@ if (strlen($ai_summary) > 1) {
     //split words
     $ai_summary_words = explode(' ', $ai_summary);
 
-    $or = implode(" | ", $ai_summary_words);
+    if ($search_type == 'or') {
+        $or = implode(" | ", $ai_summary_words);
+    } else {
+        $or = implode(" & ", $ai_summary_words);
+    }
+
 
     $where[] = "ai_summary @@ to_tsquery('english', :ai_summary)";
 
@@ -91,6 +93,7 @@ $common->print_template_card('Ranked Summary Search', 'start');
             path: document.getElementById('path').value,
             ai_title: document.getElementById('ai_title').value,
             ai_summary: document.getElementById('ai_summary').value,
+            search_type: document.getElementById('search_type').value,
         });
 
         // Check if ai_summary has a value
@@ -137,7 +140,7 @@ $common->print_template_card('Ranked Summary Search', 'start');
 
     }
 </script>
-<p>Description: Used to lookup Summary based on a ranked "or" algorithm. Search limited to 200 results.</p>
+<p>Description: Used to lookup Summary based on a ranked algorithm. Search limited to 200 results.</p>
 <div class="row mb-3">
     <div class="col-md-6">
         <div class="form-group">
@@ -147,6 +150,21 @@ $common->print_template_card('Ranked Summary Search', 'start');
         </div>
     </div>
 </div>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="search_type">Search Type:</label>
+            <select class="form-select" id="search_type">
+                <option value="or" <?= ($search_type == 'or') ? 'selected' : ''; ?>>OR</option>
+                <option value="and" <?= ($search_type == 'and') ? 'selected' : ''; ?>>AND</option>
+            </select>
+            <small class="form-text text-muted">Choose 'OR' to match any word, 'AND' to match all words.</small>
+        </div>
+    </div>
+</div>
+
+
 <div class="row mb-3">
     <div class="col-md-12">
         <hr class="my-4">
