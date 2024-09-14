@@ -2,8 +2,12 @@
 //start the session
 session_start();
 
-//parse the .env file
-$env = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/.env');
+//parse the .env file if it exists
+if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/.env')) {
+    $env = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/.env');
+} else {
+    $env = [];
+}
 
 // Set maximum execution time to 5 minutes (300 seconds)
 ini_set('max_execution_time', 300);

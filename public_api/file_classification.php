@@ -3,7 +3,12 @@
 ini_set('max_execution_time', 600);
 
 
-$env = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/.env');
+//parse the .env file if it exists
+if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/.env')) {
+    $env = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/.env');
+} else {
+    $env = [];
+}
 
 // Start session and include necessary files
 //session_start();

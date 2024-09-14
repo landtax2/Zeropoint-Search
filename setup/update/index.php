@@ -1,7 +1,13 @@
 <?PHP
 session_start();
 require_once($_SERVER['DOCUMENT_ROOT'] . '/classes/common.php');
-$env = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/.env');
+
+//parse the .env file if it exists
+if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/.env')) {
+    $env = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/.env');
+} else {
+    $env = [];
+}
 
 try {
     $common = new common($env);
