@@ -46,7 +46,11 @@ class common
     {
         //linux uses $_ENV, windows uses $_SERVER for environment variables
         //get it from the environment variable first, then the server variable, then the database
-        if (isset($_ENV[$setting])) {
+        //ENV file takes presidence over server/environment variables
+        //Database is used if no other value is found
+        if (isset($this->env[$setting])) {
+            return $this->env[$setting];
+        } else if (isset($_ENV[$setting])) {
             return $_ENV[$setting];
         } else if (isset($_SERVER[$setting])) {
             return $_SERVER[$setting];
