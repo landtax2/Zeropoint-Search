@@ -2,6 +2,7 @@
 
 This application is a comprehensive document search and analysis system, designed to handle file classification with advanced AI-powered features. It integrates various components for file processing, including text extraction, PII (Personally Identifiable Information) detection, and AI-based summarization and tagging. The system provides a web-based interface for users to search, view, and interact with the processed documents, as well as manage settings and generate reports.
 
+With luck, this should be able to scale to handle a large number of documents. 
 
 # Installation
 
@@ -60,4 +61,12 @@ services:
     restart: unless-stopped
 ``` 
 
+# Planned Features
 
+- User Management
+- Multi-tenancy
+- More comprehensive tagging/categorization
+- More comprehensive search
+- More comprehensive analytics
+- More comprehensive reporting
+- More comprehensive security
