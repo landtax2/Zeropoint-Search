@@ -1,39 +1,52 @@
 # Zeropoint-Search
 
-Manual setup guide for the frontend. Hopefull this wont be needed once I have everything running in a docker stack.
 
-1. Setup postgres database.  Create a database called "zps" and a user called "zps_user". 
-You can use this docker compose to quickly do this, or do it the hard way by installing and configuring postgres manually:
+Default password:  notsecue
 
-version: '3.3'
+Password can be changed in the docker compose file by passing the `ZPS_ADMIN_PASSWORD` environment variable.
+
+### Docker Compose
+
+```yaml
+version: '3'
 
 services:
+  zeropoint:
+    image: landtax76/zeropoint_search:latest
+    container_name: zps_front_end
+    ports:
+      - 8092:80
+    volumes:
+      - ./env:/var/www/html/.env
+    environment:
+      - POSTGRES_PASSWORD=zps_database_password
+      - POSTGRES_USER=zps_user
+      - POSTGRES_DB=zps
+      - TZ=America/New_York  
+    restart: unless-stopped
   postgres:
     image: postgres:latest
-    ports:
-      - 5432:5432
+    container_name: zps_db
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=changeme
+      - POSTGRES_PASSWORD=zps_database_password
       - POSTGRES_USER=zps_user
       - POSTGRES_DB=zps
+      - TZ=America/New_York
+    restart: unless-stopped
+  stirling:
+    image: frooodle/s-pdf:latest
+    container_name: zps_stirling
+    environment:
+      - DOCKER_ENABLE_SECURITY=false
+      - INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false
+      - LANGS=en_GB
+    restart: unless-stopped
+  doctor:
+    image: freelawproject/doctor:latest
+    container_name: zps_doctor
+    restart: unless-stopped
+``` 
 
-
-2. Setup a webserver to run PHP v8.1 or later.  Enable CURL and PDO Postgres extensions in the PHP config.
-3. Clone this repository to your webserver.
-4. Setup a .env file in the root containing the following:
-
-DEBUGGING="1"
-DB_HOST="ip or name of postgres server"
-DB_NAME="zps"
-DB_USER="zps_user"
-DB_PASS="changme"
-DB_PORT="5434"
-
-5. Navigate to the root file in a browser.  The database and tables will be created automatically.
-
-6. Login with the password of "notsecure".   There is no need for a username.
-
-7. See instructions on the dashboard page on how to configure the rest of needed API endpoints.
 
