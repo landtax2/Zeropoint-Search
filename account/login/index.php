@@ -30,7 +30,7 @@ $queryText = "ALTER database zps SET timezone ='" . $common->get_timezone() . "'
 $common->get_db_connection()->exec($queryText);
 
 $common->local_only();
-($common->get_env_value('DEBUGGING') == '1') ? ini_set('display_errors', 1) : ini_set('log_errors', 0); //turns off error logging if not debugging
+($common->get_config_value('DEBUGGING') == '1') ? ini_set('display_errors', 1) : ini_set('log_errors', 0); //turns off error logging if not debugging
 
 
 //log access to the front-end for debugging

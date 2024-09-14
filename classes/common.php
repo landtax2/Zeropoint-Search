@@ -210,6 +210,7 @@ class common
         }
     }
 
+    //deprecated
     public function get_env_value($value)
     {
         try {
@@ -289,7 +290,7 @@ class common
     public function write_to_log($log_name, $title, $data = '')
     {
         //only write to logs if debugging is enabled
-        if ($this->get_env_value('DEBUGGING') == '0') {
+        if ($this->get_config_value('DEBUGGING') == '0') {
             return;
         }
 

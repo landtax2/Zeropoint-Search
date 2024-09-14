@@ -4,7 +4,7 @@ $common->print_template_card('Log Files', 'start');
 $display_debug_warning = false;
 
 //code to see if the debug config is set
-if ($common->get_env_value('DEBUGGING') == '1') {
+if ($common->get_config_value('DEBUGGING') == '1') {
     $display_debug_warning = true;
 }
 

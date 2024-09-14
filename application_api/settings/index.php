@@ -21,7 +21,7 @@ try {
 //security check - prevents access from non-logged in users
 $common->security_check();
 
-($common->get_env_value('DEBUGGING') == '1') ? ini_set('display_errors', 1) : ini_set('log_errors', 0); //turns off error logging if not debugging
+($common->get_config_value('DEBUGGING') == '1') ? ini_set('display_errors', 1) : ini_set('log_errors', 0); //turns off error logging if not debugging
 
 // Get JSON payload
 $json_payload = file_get_contents('php://input');

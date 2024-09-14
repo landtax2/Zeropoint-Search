@@ -40,7 +40,7 @@ $common->local_only();
 //instantiate the router class - determines the content to load
 $router = new router();
 
-($common->get_env_value('DEBUGGING') == '1') ? ini_set('display_errors', 1) : ini_set('log_errors', 0); //turns off error logging if not debugging
+($common->get_config_value('DEBUGGING') == '1') ? ini_set('display_errors', 1) : ini_set('log_errors', 0); //turns off error logging if not debugging
 
 
 
@@ -216,7 +216,7 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
                         </a>
 
                         <?php
-                        if ($common->get_env_value('DEBUGGING') == "1") {
+                        if ($common->get_config_value('DEBUGGING') == "1") {
                         ?>
                             <a class="nav-link" href="/?s1=Settings&s2=Logs">
                                 <span class="nav-icon"></span><i class="fa fa-file-alt"></i> &nbsp; Logs
@@ -355,7 +355,7 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
             </div>
         </div>
         <footer class="footer px-4">
-            <div><?= ($common->get_env_value('DEBUGGING') == '1') ? 'File Path: ' . $router->get_file_path() : ''; ?></div>
+            <div><?= ($common->get_config_value('DEBUGGING') == '1') ? 'File Path: ' . $router->get_file_path() : ''; ?></div>
             <div class="ms-auto">Powered by&nbsp;<a href="https://coreui.io/">CoreUI</a></div>
         </footer>
     </div>
