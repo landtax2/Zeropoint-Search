@@ -1,3 +1,7 @@
+# Status
+
+This is currently in the early stages of development and should not be used in a production environment.  Future updates may break prior installations.  This application should only be deployed in a LAN environment and not exposed to the public internet.
+
 # Zeropoint-Search
 
 This application is a comprehensive document search and analysis system, designed to handle file classification with advanced AI-powered features. It integrates various components for file processing, including text extraction, PII (Personally Identifiable Information) detection, and AI-based summarization and tagging. The system provides a web-based interface for users to search, view, and interact with the processed documents, as well as manage settings and generate reports.
@@ -70,3 +74,4 @@ services:
 - More comprehensive analytics
 - More comprehensive reporting
 - More comprehensive security
+- Remediation of PII
