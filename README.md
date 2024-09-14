@@ -19,7 +19,7 @@ The admin Password can be changed in the docker compose file by passing the `LOG
 
 Currently this is no user account management.  This will be added in the future.
 
-
+Warning: After first launch, the envirment variables for the postgres database will not be changed if they are changed in the compose. Changing the variables such as the password will require manually changing it in the postgres container.
 
 ### Docker Compose
 
