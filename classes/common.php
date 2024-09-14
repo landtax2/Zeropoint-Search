@@ -42,7 +42,7 @@ class common
             echo "Database Name: " . $this->get_config_value('DB_NAME') . "<br/>";
             echo "Database Port: " . $this->get_config_value('DB_PORT') . "<br/>";
             echo "Database User: " . $this->get_config_value('DB_USER') . "<br/>";
-            echo "Database Pass: " . $this->get_config_value('DB_PASS') . "<br/>";
+            echo "Database Password: Will not be displayed for security reasons. <br/>";
             throw new Exception("Database connection failed: " . $e->getMessage(), 1);
         }
     }

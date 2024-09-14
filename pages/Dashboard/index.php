@@ -34,10 +34,7 @@ if ($db_version['value'] < $common->db_version) {
 }
 
 //code to see if the password was changed from notsecure
-$queryText = "SELECT * FROM config WHERE setting = 'LOGIN_PASSWORD'";
-$queryParams = null;
-$admin_password = $common->query_to_sd_array($queryText, $queryParams);
-if ($admin_password['value'] == 'notsecure') {
+if ($common->get_config_value('LOGIN_PASSWORD') == 'notsecure') {
     $display_password_warning = true;
 }
 
