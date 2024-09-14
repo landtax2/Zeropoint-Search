@@ -38,6 +38,11 @@ class common
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->db_connection = $pdo;
         } catch (Exception $e) {
+            echo "Database Host: " . $this->get_config_value('DB_HOST') . "<br/>";
+            echo "Database Name: " . $this->get_config_value('DB_NAME') . "<br/>";
+            echo "Database Port: " . $this->get_config_value('DB_PORT') . "<br/>";
+            echo "Database User: " . $this->get_config_value('DB_USER') . "<br/>";
+            echo "Database Pass: " . $this->get_config_value('DB_PASS') . "<br/>";
             throw new Exception("Database connection failed: " . $e->getMessage(), 1);
         }
     }
