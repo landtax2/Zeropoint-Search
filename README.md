@@ -35,9 +35,12 @@ services:
     volumes:
       - ./env:/var/www/html/.env
     environment:
-      - POSTGRES_PASSWORD=zps_database_password
-      - POSTGRES_USER=zps_user
-      - POSTGRES_DB=zps
+      - DB_PASS=zps_database_password
+      - DB_USER=zps_user
+      - DB_HOST=zps_db
+      - DB_NAME=zps
+      - DB_PORT=5432
+      - DEBUGGING=1
       - TZ=America/New_York  
     restart: unless-stopped
   postgres:
