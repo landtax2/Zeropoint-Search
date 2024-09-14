@@ -1,9 +1,20 @@
 # Zeropoint-Search
 
+This application is a comprehensive document search and analysis system, designed to handle file classification with advanced AI-powered features. It integrates various components for file processing, including text extraction, PII (Personally Identifiable Information) detection, and AI-based summarization and tagging. The system provides a web-based interface for users to search, view, and interact with the processed documents, as well as manage settings and generate reports.
 
+
+# Installation
+
+Use the docker compose file to install the application.  Once installed the application will provide you with additional instructions on how to setup the Ollama API interface.
+
+Default username:  [not needed until user management is implemented]
 Default password:  notsecue
 
-Password can be changed in the docker compose file by passing the `ZPS_ADMIN_PASSWORD` environment variable.
+The admin Password can be changed in the docker compose file by passing the `LOGIN_PASSWORD` environment variable or by changing it under the Settings/Configuration page once the application is running.
+
+Currently this is no user account management.  This will be added in the future.
+
+
 
 ### Docker Compose
 
