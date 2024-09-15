@@ -4,7 +4,7 @@ class common
 {
 
     private $db_connection;
-    private $env;
+    public $env;
     public $db_version = '112';
     public $boolean = array('0' => 'False', '1' => 'True');
 
@@ -344,6 +344,19 @@ class common
             return $path;
         }
     }
+
+    public function respond_with_error($message)
+    {
+        $this->respond_with_json(['error' => $message], 400);
+    }
+
+    public function respond_with_json($data, $statusCode = 200)
+    {
+        http_response_code($statusCode);
+        echo json_encode($data);
+        exit;
+    }
+
 
     public function print_template_card($title, $type = 'start')
     {

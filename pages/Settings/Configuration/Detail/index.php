@@ -6,12 +6,20 @@ $common->print_template_card('Configuration', 'start');
 
 
 $override_value = '';
-if (isset($_ENV[$config['setting']])) {
+$override_type = '';
+
+if (isset($common->env[$config['setting']])) {
+    $override_value = $common->env[$config['setting']];
+    $config['editable'] = 0;
+    $override_type = 'ENV File';
+} else if (isset($_ENV[$config['setting']])) {
     $override_value = $_ENV[$config['setting']];
     $config['editable'] = 0;
+    $override_type = 'Container Environment Variable';
 } else if (isset($_SERVER[$config['setting']])) {
     $override_value = $_SERVER[$config['setting']];
     $config['editable'] = 0;
+    $override_type = 'Container Environment Variable';
 }
 
 ?>
@@ -102,7 +110,7 @@ if (!empty($config)) {
                                         </div>
                                     </div>
                                     <div class="mb-3 row">
-                                        <label for="value" class="col-sm-4 col-form-label">Value</label>
+                                        <label for="value" class="col-sm-4 col-form-label">Database Value</label>
                                         <div class="col-sm-8">
                                             <textarea name="value" id="value" class="form-control" rows="3" <?php echo $config['editable'] == 0 ? 'readonly' : ''; ?>><?php echo htmlspecialchars($config['value']); ?></textarea>
                                         </div>
@@ -111,6 +119,12 @@ if (!empty($config)) {
                                         <label for="override_value" class="col-sm-4 col-form-label">Overridden Value</label>
                                         <div class="col-sm-8">
                                             <p class="form-control-plaintext"><?php echo htmlspecialchars($override_value); ?></p>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="override_type" class="col-sm-4 col-form-label">Overridden Type</label>
+                                        <div class="col-sm-8">
+                                            <p class="form-control-plaintext"><?php echo htmlspecialchars($override_type); ?></p>
                                         </div>
                                     </div>
                                     <div class="mb-3 row">
