@@ -22,19 +22,22 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/.env')) {
     $env = [];
 }
 
-
 //instantiate the common class
 try {
     $common = new common($env);
 } catch (Exception $e) {
-    echo json_encode(array('success' => false, 'message' => 'Database connection failed: ' . $e->getMessage()));
-    exit;
+    $common->respond_with_error('Database connection failed: ' . $e->getMessage());
 }
-
-
 
 //validates api key is sent
 if (!isset($_POST['api_key'])) {
+    $log = [
+        'POST' => $_POST,
+        'IP' => $common->get_ip(),
+        'User Agent' => $_SERVER['HTTP_USER_AGENT'],
+        'GET' => $_GET
+    ];
+    $common->write_to_log('security', 'No API key provided', $log);
     $common->respond_with_error('No API key provided');
 }
 

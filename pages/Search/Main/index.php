@@ -25,6 +25,7 @@ if (strlen($name) > 1) {
     $params[':name'] = $name;
 }
 if (strlen($path) > 1) {
+    $path = str_replace("\\", "\\\\", $path);
     $where[] = "LOWER(path) LIKE LOWER(:path)";
     $params[':path'] = $path;
 }

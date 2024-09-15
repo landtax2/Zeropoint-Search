@@ -347,7 +347,7 @@ class common
 
     public function respond_with_error($message)
     {
-        $this->respond_with_json(['error' => $message], 400);
+        $this->respond_with_json(['error' => $message, 'success' => false], 400);
     }
 
     public function respond_with_json($data, $statusCode = 200)
