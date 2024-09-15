@@ -211,6 +211,9 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
                         <a class="nav-link" href="/?s1=Settings&s2=Integrations">
                             <span class="nav-icon"></span><i class="fa fa-plug"></i> &nbsp; Integrations
                         </a>
+                        <a class="nav-link" href="/?s1=Settings&s2=Classification Prompts">
+                            <span class="nav-icon"></span><i class="fa fa-file-alt"></i> &nbsp; Classification Prompts
+                        </a>
 
                         <?php
                         if ($common->get_config_value('DEBUGGING') == "1") {

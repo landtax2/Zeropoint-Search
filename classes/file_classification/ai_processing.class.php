@@ -16,10 +16,9 @@ class ai_processing
         $this->chat->seed = 42;
     }
 
-    public function analyzePII($extracted_text)
-    {
-        $this->initializeChat();
 
+    public function get_pii_prompt($extracted_text)
+    {
         $prompt = "Does the text below contain PII? PII stands for Personally Identifiable Information, which is any information that can be used to identify a person directly or indirectly. The text is delimited by ####. Answer using json following this format:\n
             \{
               \"contains_social_security_number\": \"yes or no\",
@@ -36,10 +35,19 @@ class ai_processing
             
             Only respond with valid json. Do not escape quotes.
 
-            Text to analyze:#### " . $extracted_text . "####";
+            Text to analyze:####" . $extracted_text . "####";
         if (strlen(trim($this->common->get_config_value('PROMPT_OVERRIDE_PII'))) > 10) {
             $prompt = $this->common->get_config_value('PROMPT_OVERRIDE_PII') . " #### " . $extracted_text . "####";
         }
+
+        return $prompt;
+    }
+
+    public function analyzePII($extracted_text)
+    {
+        $this->initializeChat();
+
+        $prompt = $this->get_pii_prompt($extracted_text);
 
         try {
             $piiAnalysis = $this->chat->sendRequest($prompt);
@@ -94,15 +102,20 @@ class ai_processing
         return '0';
     }
 
-    public function contact_information($extracted_text)
+    public function get_contact_information_prompt($extracted_text)
     {
-        $this->initializeChat(0.7);
-
         $prompt = "Create a JSON dataset of contact information based on the below text. Respond only with the dataset without explanation. If there is no contact information, respond with an empty value. Only list contacts if there is an associated peace of information, such as a name, phone number, email address, or street address. Provide the results in a valid JSON format. The text is delimieted by #### . The text to analyze is:\n ####" . $extracted_text . '####';
         if (strlen(trim($this->common->get_config_value('PROMPT_OVERRIDE_CONTACT_INFORMATION'))) > 10) {
             $prompt = $this->common->get_config_value('PROMPT_OVERRIDE_CONTACT_INFORMATION') . " #### " . $extracted_text . "####";
         }
+        return $prompt;
+    }
 
+    public function contact_information($extracted_text)
+    {
+        $this->initializeChat(0.7);
+
+        $prompt = $this->get_contact_information_prompt($extracted_text);
         try {
             $contact_information = $this->chat->sendRequest($prompt);
             $contact_information = $this->format_contact_information($contact_information);
@@ -125,14 +138,22 @@ class ai_processing
         $contact_information = substr($contact_information, 0, 1000);
         return $contact_information;
     }
-    public function ai_tags($extracted_text)
-    {
-        $this->initializeChat(0.7);
 
+
+    public function get_ai_tags_prompt($extracted_text)
+    {
         $prompt = "From the text provided, provide a comma separated list of relevant tags. Provide only the list without explanation.The text is delimieted by #### . The text to analyze is:\n ####" . $extracted_text . '####';
         if (strlen(trim($this->common->get_config_value('PROMPT_OVERRIDE_TAGS'))) > 10) {
             $prompt = $this->common->get_config_value('PROMPT_OVERRIDE_TAGS') . " #### " . $extracted_text . "####";
         }
+        return $prompt;
+    }
+
+    public function ai_tags($extracted_text)
+    {
+        $this->initializeChat(0.7);
+
+        $prompt = $this->get_ai_tags_prompt($extracted_text);
 
         try {
             $tags = $this->chat->sendRequest($prompt);
@@ -152,13 +173,8 @@ class ai_processing
         return $text;
     }
 
-
-    public function summarizeText($extracted_text)
+    public function get_summary_prompt($extracted_text)
     {
-        $context_window = $this->common->get_config_value('AI_PROCESSING_CONTEXT_WINDOW');
-        $this->initializeChat(0.7);
-        $this->chat->contextWindow = $context_window;
-
         $summary_length = $this->common->get_config_value('AI_PROCESSING_SUMMARY_LENGTH');
         $prompt = "Your task is to review the provided text and create a summary of the content in less than $summary_length words. Respond with just the summary without any additional text or introduction. This summary will be used in a search index so include any relevant details that a user might search for. Summarize the text delimited by #### The text to analyze is:\n";
         $prompt .= "#### " . $extracted_text . ' ####';
@@ -166,6 +182,16 @@ class ai_processing
         if (strlen(trim($this->common->get_config_value('PROMPT_OVERRIDE_SUMMARY'))) > 10) {
             $prompt = $this->common->get_config_value('PROMPT_OVERRIDE_SUMMARY') . " #### " . $extracted_text . "####";
         }
+        return $prompt;
+    }
+
+    public function summarizeText($extracted_text)
+    {
+        $context_window = $this->common->get_config_value('AI_PROCESSING_CONTEXT_WINDOW');
+        $this->initializeChat(0.7);
+        $this->chat->contextWindow = $context_window;
+
+        $prompt = $this->get_summary_prompt($extracted_text);
 
         try {
             $summary = $this->chat->sendRequest($prompt);
@@ -209,14 +235,20 @@ class ai_processing
         return $summary;
     }
 
-    public function titleText($extracted_text)
+    public function get_title_prompt($extracted_text)
     {
-        $this->initializeChat(0.7);
-
         $prompt = "You are an AI specialized in generating document names. Your task is to review the provided text and create a clear, concise document name that captures the essence of the content. The text to name is delimieted by ####. The name should be 10 words or less. Only respond with the name. The text to analyze is:\n ####" . $extracted_text . "####";
         if (strlen(trim($this->common->get_config_value('PROMPT_OVERRIDE_TITLE'))) > 10) {
             $prompt = $this->common->get_config_value('PROMPT_OVERRIDE_TITLE') . " #### " . $extracted_text . "####";
         }
+        return $prompt;
+    }
+
+    public function titleText($extracted_text)
+    {
+        $this->initializeChat(0.7);
+
+        $prompt = $this->get_title_prompt($extracted_text);
 
         try {
             $title = $this->chat->sendRequest($prompt);
@@ -245,11 +277,17 @@ class ai_processing
         return $title;
     }
 
+    public function get_sensitivity_prompt($extracted_text)
+    {
+        $prompt = "Evaluate the text below and determine whether the organization must notify an individual of a privacy breach if the document contains, could potentially contain, or is perceived by an individual to contain sensitive information, Personally Identifiable Information (PII), or any data an individual may consider private, even if the data is publicly available. Respond with 'true' if there is any possibility that notification is required, or 'false' if it is definitively not. Only respond with true or false. The text to analyze is:\n " . $extracted_text;
+        return $prompt;
+    }
+
     public function determineSensitivity($extracted_text)
     {
         $this->initializeChat(0.5);
 
-        $prompt = "Evaluate the text below and determine whether the organization must notify an individual of a privacy breach if the document contains, could potentially contain, or is perceived by an individual to contain sensitive information, Personally Identifiable Information (PII), or any data an individual may consider private, even if the data is publicly available. Respond with 'true' if there is any possibility that notification is required, or 'false' if it is definitively not. Only respond with true or false. The text to analyze is:\n " . $extracted_text;
+        $prompt = $this->get_sensitivity_prompt($extracted_text);
 
         try {
             $response = $this->chat->sendRequest($prompt);
