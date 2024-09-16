@@ -142,7 +142,7 @@ class ai_processing
 
     public function get_ai_tags_prompt($extracted_text)
     {
-        $prompt = "From the text provided, provide a comma separated list of relevant tags. Provide only the list without explanation.The text is delimieted by #### . The text to analyze is:\n ####" . $extracted_text . '####';
+        $prompt = "From the text provided, provide a comma separated list of relevant tags. Provide only the list without explanation. The text is delimited by #### . The text to analyze is:\n ####" . $extracted_text . '####';
         if (strlen(trim($this->common->get_config_value('PROMPT_OVERRIDE_TAGS'))) > 10) {
             $prompt = $this->common->get_config_value('PROMPT_OVERRIDE_TAGS') . " #### " . $extracted_text . "####";
         }
@@ -299,6 +299,45 @@ class ai_processing
             echo "Error occured with the AI endpoint: $e";
             //Throws an exception
             throw new Exception('An error occurred while analyzing the text for sensitive data.');
+        }
+    }
+
+    public function magic_search_prompt($extracted_text)
+    {
+        $prompt = "Return a list of words from the below text that could be used to find a matching document.  Return the list as comma separated words.  Return only a comma separated list without explanation.  Exclude any insignificant words or words that might not be contained in matching document summaries. The text to analyze is delimited by: #### \n ####" . $extracted_text . "####";
+        return $prompt;
+    }
+
+
+    public function magic_search($extracted_text)
+    {
+        $context_window = $this->common->get_config_value('AI_PROCESSING_CONTEXT_WINDOW');
+        $this->initializeChat(0.7);
+        $this->chat->contextWindow = $context_window;
+
+        $prompt = $this->magic_search_prompt($extracted_text);
+
+        try {
+            $response = $this->chat->sendRequest($prompt);
+            return $response;
+        } catch (Exception $e) {
+            echo "Error occured with the AI endpoint: $e";
+            //Throws an exception
+            throw new Exception('An error occurred while processing the magic search.');
+        }
+    }
+
+    public function answer_query($prompt)
+    {
+        $this->initializeChat(0.7);
+
+        try {
+            $answer = $this->chat->sendRequest($prompt);
+            return $answer;
+        } catch (Exception $e) {
+            echo "Error occured with the AI endpoint: $e";
+            //Throws an exception
+            throw new Exception('An error occurred while answering the query.');
         }
     }
 }

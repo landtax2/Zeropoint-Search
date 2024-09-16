@@ -183,9 +183,16 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
                             <span class="nav-icon"></span><i class="fa fa-ranking-star"></i> &nbsp; Ranked Summary
                         </a>
                     </li>
-                </ul>
-                <ul class="nav-group-items">
-                    <li class="nav-item"><a class="nav-link" href="/?s1=Search&s2=Tag"><span class="nav-icon"></span><i class="fa fa-tag"></i> &nbsp; Tag Search</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/?s1=Search&s2=Tag">
+                            <span class="nav-icon"></span><i class="fa fa-tag"></i> &nbsp; Tag Search
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/?s1=Search&s2=Magic">
+                            <span class="nav-icon"></span><i class="fa fa-magic"></i> &nbsp; Magic Search
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li class="nav-group">

@@ -1,6 +1,4 @@
 <?PHP
-//gets the .env file
-$env = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/.env');
 
 // Loop over all GET parameters and set to '' if empty
 foreach ($_GET as $key => $value) {
