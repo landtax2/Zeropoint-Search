@@ -68,7 +68,7 @@ switch ($data['action']) {
         ai_summary @@ to_tsquery('english', :ai_summary)
         AND found_last = 1
         ORDER BY rank DESC
-        LIMIT 10";
+        LIMIT 20";
         $params[':ai_summary'] = $or;
         $files = $common->query_to_md_array($queryText, $params);
         if (count($files) == 0) {
