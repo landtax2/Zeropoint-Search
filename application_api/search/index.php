@@ -55,6 +55,7 @@ switch ($data['action']) {
         $words = explode(',', $result);
         foreach ($words as &$word) {
             $word = trim($word);
+            $word = str_replace(' ', ' <-> ', $word);
         }
         $and = implode(' & ', $words);
         $or = implode(' | ', $words);
