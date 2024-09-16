@@ -50,6 +50,7 @@ $common->print_template_card('Configuration', 'start');
             <th>Setting Name</th>
             <th>DB Value</th>
             <th>Override Value</th>
+            <th>Override Type</th>
             <th>Editable</th>
             <th class="none">Description</th>
         </tr>
@@ -65,12 +66,20 @@ $common->print_template_card('Configuration', 'start');
             }
 
             $override_value = '';
-            if (isset($_ENV[$d['setting']])) {
+            $override_type = '';
+
+            if (isset($common->env[$d['setting']])) {
+                $override_value = $common->env[$d['setting']];
+                $editable = 'No';
+                $override_type = 'ENV File';
+            } else if (isset($_ENV[$d['setting']])) {
                 $override_value = $_ENV[$d['setting']];
                 $editable = 'No';
+                $override_type = 'Container Environment Variable';
             } else if (isset($_SERVER[$d['setting']])) {
                 $override_value = $_SERVER[$d['setting']];
                 $editable = 'No';
+                $override_type = 'Container Environment Variable';
             }
 
 
@@ -78,6 +87,7 @@ $common->print_template_card('Configuration', 'start');
                         <td><a href=\"?s1=Settings&s2=Configuration&s3=Detail&id=$d[id]\">$d[setting]</a></td>
                         <td>$d[value]</td>
                         <td>$override_value</td>
+                        <td>$override_type</td>
                         <td>$editable</td>
                         <td>$d[description]</td>
                     </tr>";

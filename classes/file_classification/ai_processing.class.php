@@ -20,7 +20,7 @@ class ai_processing
     public function get_pii_prompt($extracted_text)
     {
         $prompt = "Does the text below contain PII? PII stands for Personally Identifiable Information, which is any information that can be used to identify a person directly or indirectly. The text is delimited by ####. Answer using json following this format:\n
-            \{
+            {
               \"contains_social_security_number\": \"yes or no\",
               \"contains_phone_number\": \"yes or no\",
               \"contains_street_address\": \"yes or no\",
@@ -31,7 +31,7 @@ class ai_processing
               \"contains_credit_card\":\"yes or no\",
               \"contains_banking_information\":\"yes or no\",
               \"severity_of_personal_information\":\"1 to 10\"
-            \}
+            }
             
             Only respond with valid json. Do not escape quotes.
 
