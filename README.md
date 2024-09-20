@@ -12,8 +12,8 @@ With luck, this should be able to scale to handle a large number of documents.
 
 Use the docker compose file to install the application.  Once installed the application will provide you with additional instructions on how to setup the Ollama API interface.
 
-Default username:  [not needed until user management is implemented]
-Default password:  notsecue
+Default username:  [not needed until user management is implemented]  
+Default password:  notsecure  
 
 The admin Password can be changed in the docker compose file by passing the `LOGIN_PASSWORD` environment variable or by changing it under the Settings/Configuration page once the application is running.
 
