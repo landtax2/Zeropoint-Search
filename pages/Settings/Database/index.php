@@ -115,34 +115,39 @@ $common->print_template_card('Database Settings', 'start');
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12 mt-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Database Management</h5>
-                </div>
-                <div class="card-body">
-                    <div class="alert alert-danger" role="alert">
-                        <h4 class="alert-heading">Warning!</h4>
-                        <p>The actions below are irreversible and will permanently delete data. Please proceed with caution.</p>
-                        <hr>
-                        <p class="mb-0">Make sure you have a backup of your database before performing any of these operations.</p>
+
+    <?php
+    if ($common->get_config_value('DEBUGGING') == "1") {
+    ?>
+        <div class="row">
+            <div class="col-md-12 mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Database Management</h5>
                     </div>
-                    <div class="row mt-4">
-                        <div class="col-md-6">
-                            <div class="d-grid">
-                                <button id="emptyNetworkFilesBtn" class="btn btn-danger btn-lg">
-                                    <i class="cil-trash mr-2"></i>
-                                    Empty Network Files Table
-                                </button>
-                            </div>
+                    <div class="card-body">
+                        <div class="alert alert-danger" role="alert">
+                            <h4 class="alert-heading">Warning!</h4>
+                            <p>The actions below are irreversible and will permanently delete data. Please proceed with caution.</p>
+                            <hr>
+                            <p class="mb-0">Make sure you have a backup of your database before performing any of these operations.</p>
                         </div>
-                        <div class="col-md-6">
-                            <div class="d-grid">
-                                <button id="resetDatabaseBtn" class="btn btn-danger btn-lg">
-                                    <i class="cil-reload mr-2"></i>
-                                    Reset Database
-                                </button>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="d-grid">
+                                    <button id="emptyNetworkFilesBtn" class="btn btn-danger btn-lg">
+                                        <i class="cil-trash mr-2"></i>
+                                        Empty Network Files Table
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-grid">
+                                    <button id="resetDatabaseBtn" class="btn btn-danger btn-lg">
+                                        <i class="cil-reload mr-2"></i>
+                                        Reset Database
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -151,7 +156,9 @@ $common->print_template_card('Database Settings', 'start');
         </div>
 
 
-    </div>
+    <?php
+    }
+    ?>
 
 </div>
 <script>
