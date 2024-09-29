@@ -26,6 +26,19 @@ class DataFunctions
         }
     }
 
+    public function store_full_text($file_id, $full_text)
+    {
+        //gets the network_file_id from the file_id
+        $queryText = "SELECT id FROM network_file WHERE file_id = :file_id";
+        $params = [':file_id' => $file_id];
+        $network_file_id = $this->common->query_to_sd_array($queryText, $params)['id'];
+
+        $queryText = "INSERT INTO network_file_fulltext (network_file_id, full_text) VALUES (:network_file_id, :full_text)";
+        $params = [':network_file_id' => $network_file_id, ':full_text' => $full_text];
+
+        $this->common->query_to_sd_array($queryText, $params);
+    }
+
     public function updateNetworkFile($updateData)
     {
         $updateQuery = "UPDATE network_file

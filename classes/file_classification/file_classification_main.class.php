@@ -109,6 +109,7 @@ class file_classification_main
             die(json_encode(['error' => 'No file uploaded']));
         }
 
+        $extracted_text_full = $extracted_text; //store the full text for later use
 
         //truncates the text to the max length. helps with performance
         $extracted_text_total_length = strlen($extracted_text);
@@ -187,8 +188,6 @@ class file_classification_main
             $contact_information = '';
         }
 
-
-
         // Sanitize and assign variables
         $fields = [
             'name',
@@ -237,6 +236,13 @@ class file_classification_main
 
         $dataFunctions->updateNetworkFile($updateData);
         $dataFunctions->create_tag($this->post['file_id'], $tags);
+
+
+        //Store the full text if the config is set to store
+        if ($this->common->get_config_value('STORE_FULLTEXT') == '1') {
+            $dataFunctions->store_full_text($this->post['file_id'], $extracted_text_full);
+        }
+
 
         $analysis_detials = [
             'title' => $title,
