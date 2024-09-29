@@ -5,7 +5,7 @@ class common
 
     private $db_connection;
     public $env;
-    public $db_version = '112';
+    public $db_version = '113';
     public $boolean = array('0' => 'False', '1' => 'True');
 
     public function __construct($env)
