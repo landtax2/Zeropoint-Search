@@ -67,6 +67,28 @@ services:
     container_name: zps_doctor
     restart: unless-stopped
 ``` 
+
+### Dockerfile
+
+```Dockerfile
+FROM php:8.2.23-apache-bookworm
+
+# Update and install required packages
+RUN apt update && apt install -y --no-install-recommends libpq-dev git
+
+# Install necessary PHP extensions
+RUN docker-php-ext-install pdo_pgsql
+
+#clone the repo
+RUN git clone https://github.com/landtax2/Zeropoint-Search.git /var/www/html
+
+#Turns on the htaccess file
+RUN mv /var/www/html/htaccess /var/www/html/.htaccess
+
+# Change ownership of the html directory to the Apache user
+RUN chown -R www-data:www-data /var/www/html
+
+```
 # Further documentation
 
 Documentation can be found in the the application.
