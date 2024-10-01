@@ -127,6 +127,7 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
     <!-- Sweet Alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/90add283c4.js" crossorigin="anonymous"></script>
 
@@ -289,21 +290,21 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" style="--cui-dropdown-min-width: 8rem;">
                             <li>
-                                <button class="dropdown-item d-flex align-items-center" type="button" data-coreui-theme-value="light">
+                                <button id="light-theme" class="dropdown-item d-flex align-items-center" type="button" data-coreui-theme-value="light">
                                     <svg class="icon icon-lg me-3">
                                         <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-sun"></use>
                                     </svg>Light
                                 </button>
                             </li>
                             <li>
-                                <button class="dropdown-item d-flex align-items-center" type="button" data-coreui-theme-value="dark">
+                                <button id="dark-theme" class="dropdown-item d-flex align-items-center" type="button" data-coreui-theme-value="dark">
                                     <svg class="icon icon-lg me-3">
                                         <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-moon"></use>
                                     </svg>Dark
                                 </button>
                             </li>
                             <li>
-                                <button class="dropdown-item d-flex align-items-center active" type="button" data-coreui-theme-value="auto">
+                                <button id="auto-theme" class="dropdown-item d-flex align-items-center active" type="button" data-coreui-theme-value="auto">
                                     <svg class="icon icon-lg me-3">
                                         <use xlink:href="/coreui/vendors/@coreui/icons/svg/free.svg#cil-contrast"></use>
                                     </svg>Auto
@@ -469,6 +470,7 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
                 });
         }
 
+
         // Add event listener to the logout button
         document.addEventListener('DOMContentLoaded', function() {
             const logoutButton = document.querySelector('#logout-button');
@@ -476,10 +478,38 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
                 logoutButton.addEventListener('click', logout);
             }
 
+            // Add event listener to the light theme button
+            const lightTheme = document.querySelector('#light-theme');
+            if (lightTheme) {
+                lightTheme.addEventListener('click', () => {
+                    localStorage.setItem('coreui-free-bootstrap-admin-template-theme', 'light');
+                    window.location.reload();
+                });
+            }
+            //add event listener to the dark theme button
+            const darkTheme = document.querySelector('#dark-theme');
+            if (darkTheme) {
+                darkTheme.addEventListener('click', () => {
+                    localStorage.setItem('coreui-free-bootstrap-admin-template-theme', 'dark');
+                    window.location.reload();
+                });
+            }
+
+            //add event listener to the auto theme button
+            const autoTheme = document.querySelector('#auto-theme');
+            if (autoTheme) {
+                autoTheme.addEventListener('click', () => {
+                    window.location.reload();
+                });
+            }
+
             // Check if the theme is set to dark
             const isDarkTheme = localStorage.getItem('coreui-free-bootstrap-admin-template-theme') === 'dark';
             if (isDarkTheme) {
                 document.documentElement.classList.add('dark');
+                //add dark theme to sweetalert2
+                document.head.insertAdjacentHTML('beforeend', '<link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">');
+
             }
 
         });
