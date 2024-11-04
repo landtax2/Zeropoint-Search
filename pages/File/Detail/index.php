@@ -30,7 +30,7 @@ if ($file_data['remediated'] == 0) {
 //query to get the full text if it exists
 $queryText = "SELECT full_text FROM network_file_fulltext WHERE network_file_id = :network_file_id";
 $params = [':network_file_id' => $file_data['id']];
-$full_text = $common->query_to_sd_array($queryText, $params)['full_text'];
+$full_text = @$common->query_to_sd_array($queryText, $params)['full_text'];
 
 
 $common->print_template_card('File Detail', 'start');
