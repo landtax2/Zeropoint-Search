@@ -132,7 +132,7 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
     <script src="https://kit.fontawesome.com/90add283c4.js" crossorigin="anonymous"></script>
 
     <!-- Chat JS -->
-    <script src="/scripts/js/chat.js"></script>
+    <script src="/scripts/js/chat.js?v=3"></script>
 
     <!-- Common -->
     <script src="/scripts/js/common.js"></script>

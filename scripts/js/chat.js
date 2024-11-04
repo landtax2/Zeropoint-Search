@@ -9,7 +9,9 @@ function send_chat() {
     // Calculate the context window size - not exact but a good guess
     const userPrompt = document.getElementById('user_prompt').value;
     const userData = document.getElementById('user_data').value;
-    const contextWindow = (userPrompt.split(/\s+/).length + userData.split(/\s+/).length) * 2.5;
+    //const contextWindow = (userPrompt.split(/\s+/).length + userData.split(/\s+/).length) * 2.5;
+
+    const contextWindow = countTokens(userPrompt + userData);
 
     // Add the context window size to the data being sent
     toSend += '&context_window=' + encodeURIComponent(contextWindow);
@@ -134,4 +136,25 @@ function open_chat(prompt, user_template) {
         document.getElementById('user_data').focus();
     }, 500);
 
+}
+
+function countTokens(text) {
+    // Split by sequences of word characters or single non-word characters (punctuation, whitespace)
+    const tokens = text.match(/\S+|\s/g) || [];
+    let tokenCount = 0;
+
+    tokens.forEach(token => {
+        if (/\s/.test(token)) {
+            // Count whitespace as one token
+            tokenCount += 1;
+        } else if (token.length <= 4) {
+            // Short words or symbols count as one token
+            tokenCount += 1;
+        } else {
+            // For longer words, assume around 4 characters per token
+            tokenCount += Math.ceil(token.length / 4);
+        }
+    });
+
+    return tokenCount;
 }
