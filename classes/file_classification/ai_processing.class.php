@@ -330,6 +330,7 @@ class ai_processing
     public function answer_query($prompt)
     {
         $this->initializeChat(0.7);
+        $this->chat->contextWindow = $this->calculate_context_window($prompt);
 
         try {
             $answer = $this->chat->sendRequest($prompt);
@@ -339,5 +340,27 @@ class ai_processing
             //Throws an exception
             throw new Exception('An error occurred while answering the query.');
         }
+    }
+
+    private function calculate_context_window($prompt)
+    {
+        // Split text into tokens (words and whitespace)
+        $tokens = preg_split('/(\s+|\b)/', $prompt, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+        $tokenCount = 0;
+
+        foreach ($tokens as $token) {
+            if (preg_match('/\s/', $token)) {
+                // Count whitespace as one token
+                $tokenCount += 1;
+            } else if (strlen($token) <= 4) {
+                // Short words or symbols count as one token 
+                $tokenCount += 1;
+            } else {
+                // For longer words, assume around 4 characters per token
+                $tokenCount += ceil(strlen($token) / 4);
+            }
+        }
+
+        return $tokenCount + 1000;
     }
 }

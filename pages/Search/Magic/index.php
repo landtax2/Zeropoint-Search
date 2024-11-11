@@ -16,7 +16,14 @@ $common->print_template_card('Magic Search', 'start');
             </button>
         </div>
     </div>
+    <div class="form-check form-switch mb-3">
+        <input class="form-check-input" type="checkbox" role="switch" id="useFullText">
+        <label class="form-check-label" for="useFullText">
+            Use document full text
+        </label>
+    </div>
 </form>
+
 
 
 
@@ -118,6 +125,7 @@ $common->print_template_card('Magic Search', 'start');
         e.preventDefault();
 
         const query = document.getElementById('searchQuery').value;
+        const useFullText = document.getElementById('useFullText').checked;
 
         // Show loading screen
         Swal.fire({
@@ -138,7 +146,8 @@ $common->print_template_card('Magic Search', 'start');
                 },
                 body: JSON.stringify({
                     action: 'magic_search',
-                    query: query
+                    query: query,
+                    useFullText: useFullText
                 })
             })
             .then(response => response.json())

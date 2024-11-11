@@ -59,8 +59,19 @@ switch ($data['action']) {
         }
         $and = implode(' & ', $words);
         $or = implode(' | ', $words);
-
-        $queryText = "
+        if ($data['useFullText'] == 'true') {
+            $queryText = "
+            SELECT t1.id, t1.name, t1.path, t1.ai_title, t2.full_text as ai_summary, t1.last_found, t1.date_created, t1.date_modified, t1.ai_tags, t1.ai_contact_information,
+            ts_rank(to_tsvector('english', t2.full_text), to_tsquery('english', :ai_summary)) AS rank
+            FROM network_file t1
+            LEFT OUTER JOIN network_file_fulltext t2 ON t1.id = t2.network_file_id
+            WHERE 
+            t2.full_text @@ to_tsquery('english', :ai_summary)
+            AND found_last = 1
+            ORDER BY rank DESC
+            LIMIT 20";
+        } else {
+            $queryText = "
         SELECT id, name, path, ai_title, ai_summary, last_found, date_created, date_modified, ai_tags, ai_contact_information,
         ts_rank(to_tsvector('english', ai_summary), to_tsquery('english', :ai_summary)) AS rank
         FROM network_file
@@ -69,6 +80,7 @@ switch ($data['action']) {
         AND found_last = 1
         ORDER BY rank DESC
         LIMIT 20";
+        }
         $params[':ai_summary'] = $or;
         $files = $common->query_to_md_array($queryText, $params);
         if (count($files) == 0) {
