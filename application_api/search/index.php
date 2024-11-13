@@ -69,7 +69,7 @@ switch ($data['action']) {
             t2.full_text @@ to_tsquery('english', :ai_summary)
             AND found_last = 1
             ORDER BY rank DESC
-            LIMIT 20";
+            LIMIT 10";
         } else {
             $queryText = "
         SELECT id, name, path, ai_title, ai_summary, last_found, date_created, date_modified, ai_tags, ai_contact_information,
