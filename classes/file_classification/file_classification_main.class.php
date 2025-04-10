@@ -243,6 +243,8 @@ class file_classification_main
             $dataFunctions->store_full_text($this->post['file_id'], $extracted_text_full);
         }
 
+        //store chunks
+        $dataFunctions->store_chunks($this->post['file_id'], $extracted_text_full);
 
         $analysis_detials = [
             'title' => $title,

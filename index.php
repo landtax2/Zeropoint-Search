@@ -190,6 +190,11 @@ $common->write_to_log('access', $_SERVER['REQUEST_URI'], $access);
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/?s1=Search&s2=Chunk&s3=Ranked">
+                            <span class="nav-icon"></span><i class="fa fa-cubes"></i> &nbsp; Ranked Chunks
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/?s1=Search&s2=Tag">
                             <span class="nav-icon"></span><i class="fa fa-tag"></i> &nbsp; Tag Search
                         </a>

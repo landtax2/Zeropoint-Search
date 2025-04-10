@@ -70,6 +70,17 @@ switch ($data['action']) {
             AND found_last = 1
             ORDER BY rank DESC
             LIMIT 10";
+        } else if ($data['useChunk'] == 'true') {
+            $queryText = "
+            SELECT t1.id, t1.name, t1.path, t1.ai_title, t2.chunk_text_overlap as ai_summary, t1.last_found, t1.date_created, t1.date_modified, t1.ai_tags, t1.ai_contact_information,
+            ts_rank(to_tsvector('english', t2.chunk_text_overlap), to_tsquery('english', :ai_summary)) AS rank
+            FROM network_file t1
+            LEFT OUTER JOIN network_file_chunk t2 ON t1.id = t2.network_file_id
+            WHERE 
+            t2.chunk_text_overlap @@ to_tsquery('english', :ai_summary)
+            AND found_last = 1
+            ORDER BY rank DESC
+            LIMIT 10";
         } else {
             $queryText = "
         SELECT id, name, path, ai_title, ai_summary, last_found, date_created, date_modified, ai_tags, ai_contact_information,
@@ -88,6 +99,9 @@ switch ($data['action']) {
             $files = $common->query_to_md_array($queryText, $params);
         }
 
+        //querytext with params substituted into the query
+        $queryText_substituted = str_replace(':ai_summary', $or, $queryText);
+
         //handle no results or results
         if (count($files) == 0) {
             echo json_encode(array('success' => false, 'message' => 'No results found'));
@@ -97,11 +111,13 @@ switch ($data['action']) {
             foreach ($files as $file) {
                 $file_summary .= $file['ai_summary'] . "\n\n";
             }
+            $file_summary = substr($file_summary, 0, $common->get_config_value('AI_PROCESSING_CHAT_MAX_LENGTH'));
             //Prompt
             $prompt = "Answer the below query using the provided text.  The text is delimited by: ####  The query is: " . $data['query'] . "  The text is: #### " . $file_summary . " ####";
             //Feeds the results to the LLM to answer the original query
             $answer = $ai_processing->answer_query($prompt);
-            echo json_encode(array('success' => true, 'result' => $answer, 'files' => $files, 'prompt' => $prompt));
+            //$answer = 'test';
+            echo json_encode(array('success' => true, 'result' => $answer, 'files' => $files, 'prompt' => $prompt, 'querytext' => $queryText_substituted));
             exit;
         }
 

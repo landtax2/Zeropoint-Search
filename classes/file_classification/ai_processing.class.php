@@ -304,7 +304,7 @@ class ai_processing
 
     public function magic_search_prompt($extracted_text)
     {
-        $prompt = "Return a list of words from the below text that could be used to find a matching document.  Return the list as comma separated words.  Return only a comma separated list without explanation.  Exclude any insignificant words or words that might not be contained in matching document summaries. The text to analyze is delimited by: #### \n ####" . $extracted_text . "####";
+        $prompt = "Return a list of words from the below text that could be used to find a matching document.  Return the list as comma separated words.  Return only a comma separated list without explanation.  Exclude any insignificant words or words that might not be contained in matching document summaries.  Do not include any words that are not in the text.  The text to analyze is delimited by: #### \n ####" . $extracted_text . "####";
         return $prompt;
     }
 

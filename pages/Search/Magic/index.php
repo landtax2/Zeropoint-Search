@@ -17,9 +17,14 @@ $common->print_template_card('Magic Search', 'start');
         </div>
     </div>
     <div class="form-check form-switch mb-3">
-        <input class="form-check-input" type="checkbox" role="switch" id="useFullText">
+        <input class="form-check-input" type="checkbox" role="switch" id="useFullText" onchange="if(this.checked) document.getElementById('useChunk').checked = false">
         <label class="form-check-label" for="useFullText">
             Use document full text
+        </label>
+        <br />
+        <input class="form-check-input" type="checkbox" role="switch" id="useChunk" onchange="if(this.checked) document.getElementById('useFullText').checked = false">
+        <label class="form-check-label" for="useChunk">
+            Use chunk text
         </label>
     </div>
 </form>
@@ -49,7 +54,7 @@ $common->print_template_card('Magic Search', 'start');
                         <th>Name</th>
                         <th class="none">Path</th>
                         <th>AI Title</th>
-                        <th class="none">AI Summary</th>
+                        <th class="none">Text</th>
                         <th>Last Found</th>
                     </tr>
                 </thead>
@@ -60,6 +65,16 @@ $common->print_template_card('Magic Search', 'start');
         </div>
     </div>
 </div>
+
+
+<br />
+<br />
+
+<h4>Query</h4>
+
+<pre class="line-numbers"><code class="language-sql" id="queryText">
+    
+</code></pre>
 
 
 <script>
@@ -126,6 +141,7 @@ $common->print_template_card('Magic Search', 'start');
 
         const query = document.getElementById('searchQuery').value;
         const useFullText = document.getElementById('useFullText').checked;
+        const useChunk = document.getElementById('useChunk').checked;
 
         // Show loading screen
         Swal.fire({
@@ -147,7 +163,8 @@ $common->print_template_card('Magic Search', 'start');
                 body: JSON.stringify({
                     action: 'magic_search',
                     query: query,
-                    useFullText: useFullText
+                    useFullText: useFullText,
+                    useChunk: useChunk
                 })
             })
             .then(response => response.json())
@@ -156,6 +173,15 @@ $common->print_template_card('Magic Search', 'start');
                 $result = data.result.replace(/\n/g, '<br>');
                 document.getElementById('resultContent').innerHTML = `<p>${$result}</p>`;
                 populateFileTable(data.files);
+                document.getElementById('queryText').innerHTML = data.querytext;
+                // Remove empty lines and leading whitespace from query text, all trim each line of text
+                document.getElementById('queryText').innerHTML = data.querytext.replace(/^[ \t]*[\r\n]+/gm, '').trim();
+                // Trim each line of querytext
+                document.getElementById('queryText').innerHTML = data.querytext.split('\n').map(line => line.trim()).join('\n');
+                // Initialize Prism syntax highlighting
+                Prism.highlightElement(document.getElementById('queryText'));
+
+
             })
             .catch(error => {
                 Swal.fire({

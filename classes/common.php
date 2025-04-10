@@ -5,7 +5,7 @@ class common
 
     private $db_connection;
     public $env;
-    public $db_version = '113';
+    public $db_version = '114';
     public $boolean = array('0' => 'False', '1' => 'True');
 
     public function __construct($env)
@@ -377,5 +377,61 @@ class common
             </p>';
             echo '</div></div></div></div>';
         }
+    }
+
+
+    public function chunk_text(string $text, int $maxWords = 750, int $desiredOverlap = 100): array
+    {
+        // Normalize line breaks and split into paragraphs
+        $text = str_replace(["\r\n", "\r"], "\n", $text);
+        $paragraphs = preg_split("/\n\s*\n/", trim($text));
+
+        $chunks = [];
+        $totalParagraphs = count($paragraphs);
+        $start = 0;
+        $overlapText = ''; // Variable to hold the overlap text
+
+        while ($start < $totalParagraphs) {
+            $chunkParagraphs = [];
+            $chunkWordCount = 0;
+            $end = $start;
+
+            // Build the chunk until we hit the word limit
+            while ($end < $totalParagraphs) {
+                $para = trim($paragraphs[$end]);
+                $paraWordCount = str_word_count($para);
+
+                if ($chunkWordCount + $paraWordCount > $maxWords && !empty($chunkParagraphs)) {
+                    break;
+                }
+
+                $chunkParagraphs[] = $para;
+                $chunkWordCount += $paraWordCount;
+                $end++;
+            }
+
+            // Save the chunk, including the overlap text
+            $chunks[] = $overlapText . "\n\n" . implode("\n\n", $chunkParagraphs);
+
+            if ($desiredOverlap > 0) {
+                // Determine how many words to overlap
+                $overlapWordCount = 0;
+                $overlapParagraphs = [];
+                // Iterate backwards to get enough words for overlap
+                for ($i = count($chunkParagraphs) - 1; $i >= 0 && $overlapWordCount < $desiredOverlap; $i--) {
+                    $para = $chunkParagraphs[$i];
+                    $overlapParagraphs[] = $para;
+                    $overlapWordCount += str_word_count($para);
+                }
+
+                // Reverse the overlap paragraphs to ensure correct order
+                $overlapText = implode("\n\n", array_reverse($overlapParagraphs)) . "\n\n";
+            }
+
+            // Move the start to the next chunk
+            $start = $end;
+        }
+
+        return $chunks;
     }
 }

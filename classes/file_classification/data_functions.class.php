@@ -39,6 +39,25 @@ class DataFunctions
         $this->common->query_to_sd_array($queryText, $params);
     }
 
+    public function store_chunks($file_id, $full_text)
+    {
+        //gets the network_file_id from the file_id
+        $queryText = "SELECT id FROM network_file WHERE file_id = :file_id";
+        $params = [':file_id' => $file_id];
+        $network_file_id = $this->common->query_to_sd_array($queryText, $params)['id'];
+
+        $chunks_overlap = $this->common->chunk_text($full_text, 600, 100);
+        $chunks_no_overlap = $this->common->chunk_text($full_text, 600, 0);
+
+        $count = 0;
+        foreach ($chunks_overlap as $chunk) {
+            $queryText = "INSERT INTO network_file_chunk (network_file_id, chunk_seq, chunk_text_overlap, chunk_text_no_overlap) VALUES (:network_file_id, :chunk_seq, :chunk_text_overlap, :chunk_text_no_overlap)";
+            $params = [':network_file_id' => $network_file_id, ':chunk_seq' => $count, ':chunk_text_overlap' => trim($chunk), ':chunk_text_no_overlap' => trim($chunks_no_overlap[$count])];
+            $this->common->query_to_sd_array($queryText, $params);
+            $count++;
+        }
+    }
+
     public function updateNetworkFile($updateData)
     {
         $updateQuery = "UPDATE network_file
