@@ -42,6 +42,7 @@ services:
       - DB_PORT=5432
       - DEBUGGING=1
       - TZ=America/New_York  
+      - STORE_FULLTEXT=1
     restart: unless-stopped
   postgres:
     image: postgres:latest
