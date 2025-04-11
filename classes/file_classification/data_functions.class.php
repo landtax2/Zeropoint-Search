@@ -46,8 +46,11 @@ class DataFunctions
         $params = [':file_id' => $file_id];
         $network_file_id = $this->common->query_to_sd_array($queryText, $params)['id'];
 
-        $chunks_overlap = $this->common->chunk_text($full_text, 600, 100);
-        $chunks_no_overlap = $this->common->chunk_text($full_text, 600, 0);
+        $max_words = $this->common->get_config_value('CHUNK_WORDS');
+        $desired_overlap = $this->common->get_config_value('CHUNK_OVERLAP');
+
+        $chunks_overlap = $this->common->chunk_text($full_text, $max_words, $desired_overlap);
+        $chunks_no_overlap = $this->common->chunk_text($full_text, $max_words, 0);
 
         $count = 0;
         foreach ($chunks_overlap as $chunk) {

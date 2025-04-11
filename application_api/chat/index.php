@@ -2,12 +2,20 @@
 //start the session
 session_start();
 
+//Initialize environment variables
+$env = [];
+$env_file = $_SERVER['DOCUMENT_ROOT'] . '/.env';
+
 //parse the .env file if it exists
-if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/.env')) {
-    $env = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/.env');
-} else {
-    $env = [];
+if (is_readable($env_file)) {
+    $parsed_env = @parse_ini_file($env_file);
+    if ($parsed_env === false) {
+        $common->write_to_log('access', $_SERVER['REQUEST_URI'], ['error' => 'Failed to parse .env file', 'env_file' => $env_file]);
+    } else {
+        $env = $parsed_env;
+    }
 }
+
 
 // Set maximum execution time to 5 minutes (300 seconds)
 ini_set('max_execution_time', 300);

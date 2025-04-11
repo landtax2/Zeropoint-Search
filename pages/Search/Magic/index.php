@@ -22,7 +22,7 @@ $common->print_template_card('Magic Search', 'start');
             Use document full text
         </label>
         <br />
-        <input class="form-check-input" type="checkbox" role="switch" id="useChunk" onchange="if(this.checked) document.getElementById('useFullText').checked = false">
+        <input class="form-check-input" default checked type="checkbox" role="switch" id="useChunk" onchange="if(this.checked) document.getElementById('useFullText').checked = false">
         <label class="form-check-label" for="useChunk">
             Use chunk text
         </label>
@@ -71,10 +71,20 @@ $common->print_template_card('Magic Search', 'start');
 <br />
 
 <h4>Query</h4>
+<pre class="line-numbers">
+    <code class="language-sql" id="queryText">
+    </code>
+</pre>
 
-<pre class="line-numbers"><code class="language-sql" id="queryText">
-    
-</code></pre>
+<br />
+
+<h4>AI Prompt</h4>
+<pre class="line-numbers language-plaintext">
+    <code id="promptText" class="language-plaintext">
+    </code>
+</pre>
+
+
 
 
 <script>
@@ -90,10 +100,19 @@ $common->print_template_card('Magic Search', 'start');
 
         files.forEach(file => {
             const row = tableBody.insertRow();
+
+
+
             row.insertCell(0).textContent = file.name;
             row.insertCell(1).textContent = file.path;
             row.insertCell(2).textContent = file.ai_title;
-            row.insertCell(3).textContent = file.ai_summary;
+
+            if (file.chunk_text_overlap) {
+                row.insertCell(3).textContent = file.chunk_text_overlap;
+            } else {
+                row.insertCell(3).textContent = file.ai_summary;
+            }
+
             row.insertCell(4).textContent = file.last_found;
 
             // Add a link to the file name in the first cell
@@ -180,7 +199,8 @@ $common->print_template_card('Magic Search', 'start');
                 document.getElementById('queryText').innerHTML = data.querytext.split('\n').map(line => line.trim()).join('\n');
                 // Initialize Prism syntax highlighting
                 Prism.highlightElement(document.getElementById('queryText'));
-
+                document.getElementById('promptText').innerHTML = data.prompt;
+                Prism.highlightElement(document.getElementById('promptText'));
 
             })
             .catch(error => {

@@ -5,7 +5,7 @@ class common
 
     private $db_connection;
     public $env;
-    public $db_version = '114';
+    public $db_version = '115';
     public $boolean = array('0' => 'False', '1' => 'True');
 
     public function __construct($env)
@@ -380,56 +380,48 @@ class common
     }
 
 
+
     public function chunk_text(string $text, int $maxWords = 750, int $desiredOverlap = 100): array
     {
-        // Normalize line breaks and split into paragraphs
+        // Normalize line breaks and split into sentences
         $text = str_replace(["\r\n", "\r"], "\n", $text);
-        $paragraphs = preg_split("/\n\s*\n/", trim($text));
+        $sentences = preg_split('/(?<=[.?!])\s+(?=[A-Z])/', trim($text));
 
         $chunks = [];
-        $totalParagraphs = count($paragraphs);
-        $start = 0;
-        $overlapText = ''; // Variable to hold the overlap text
+        $chunk = [];
+        $wordCount = 0;
+        $overlapSentences = [];
 
-        while ($start < $totalParagraphs) {
-            $chunkParagraphs = [];
-            $chunkWordCount = 0;
-            $end = $start;
+        foreach ($sentences as $sentence) {
+            $sentence = trim($sentence);
+            $sentenceWordCount = str_word_count($sentence);
 
-            // Build the chunk until we hit the word limit
-            while ($end < $totalParagraphs) {
-                $para = trim($paragraphs[$end]);
-                $paraWordCount = str_word_count($para);
+            // If adding this sentence exceeds the limit, start a new chunk
+            if ($wordCount + $sentenceWordCount > $maxWords && !empty($chunk)) {
+                $chunks[] = implode(' ', array_merge($overlapSentences, $chunk));
 
-                if ($chunkWordCount + $paraWordCount > $maxWords && !empty($chunkParagraphs)) {
-                    break;
+                // Build overlap sentences for the next chunk
+                if ($desiredOverlap > 0) {
+                    $overlapSentences = [];
+                    $overlapWords = 0;
+                    for ($i = count($chunk) - 1; $i >= 0 && $overlapWords < $desiredOverlap; $i--) {
+                        array_unshift($overlapSentences, $chunk[$i]);
+                        $overlapWords += str_word_count($chunk[$i]);
+                    }
                 }
 
-                $chunkParagraphs[] = $para;
-                $chunkWordCount += $paraWordCount;
-                $end++;
+                // Reset chunk and word count
+                $chunk = [];
+                $wordCount = 0;
             }
 
-            // Save the chunk, including the overlap text
-            $chunks[] = $overlapText . "\n\n" . implode("\n\n", $chunkParagraphs);
+            $chunk[] = $sentence;
+            $wordCount += $sentenceWordCount;
+        }
 
-            if ($desiredOverlap > 0) {
-                // Determine how many words to overlap
-                $overlapWordCount = 0;
-                $overlapParagraphs = [];
-                // Iterate backwards to get enough words for overlap
-                for ($i = count($chunkParagraphs) - 1; $i >= 0 && $overlapWordCount < $desiredOverlap; $i--) {
-                    $para = $chunkParagraphs[$i];
-                    $overlapParagraphs[] = $para;
-                    $overlapWordCount += str_word_count($para);
-                }
-
-                // Reverse the overlap paragraphs to ensure correct order
-                $overlapText = implode("\n\n", array_reverse($overlapParagraphs)) . "\n\n";
-            }
-
-            // Move the start to the next chunk
-            $start = $end;
+        // Add final chunk
+        if (!empty($chunk)) {
+            $chunks[] = implode(' ', array_merge($overlapSentences, $chunk));
         }
 
         return $chunks;
