@@ -113,7 +113,7 @@ class file_classification_main
 
         //truncates the text to the max length. helps with performance
         $extracted_text_total_length = strlen($extracted_text);
-        $extracted_text = substr($extracted_text, 0, $this->common->get_config_value('AI_PROCESSING_CHAT_MAX_LENGTH'));
+        //$extracted_text = substr($extracted_text, 0, $this->common->get_config_value('AI_PROCESSING_CHAT_MAX_LENGTH'));
         $extracted_text_total_length_after = strlen($extracted_text);
 
         //Remove the temporary file
@@ -169,7 +169,7 @@ class file_classification_main
         $execution_times['summary'] = time() - $time;
 
         //AI processing for title
-        $title = $ai_processing->titleText($extracted_text);
+        $title = $ai_processing->titleText($extracted_text, $this->post['name']);
         $execution_times['title'] = time() - $time;
 
         //AI processing for tags

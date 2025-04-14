@@ -5,7 +5,7 @@ class Chat_ollama
     // Private properties for storing chat configuration
     private $url;
     private $model;
-    private $temperature = 0.7;
+    private $temperature = 0.3;
     private $maxTokens = -1;
     private $stream = false;
     public float $seed = -1;

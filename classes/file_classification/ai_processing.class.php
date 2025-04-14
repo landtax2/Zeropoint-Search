@@ -19,26 +19,45 @@ class ai_processing
 
     public function get_pii_prompt($extracted_text)
     {
-        $prompt = "Does the text below contain PII? PII stands for Personally Identifiable Information, which is any information that can be used to identify a person directly or indirectly. The text is delimited by ####. Answer using json following this format:\n
-            {
-              \"contains_social_security_number\": \"yes or no\",
-              \"contains_phone_number\": \"yes or no\",
-              \"contains_street_address\": \"yes or no\",
-              \"contains_first_and_last_name\": \"yes or no\",
-              \"contains_personal_medical_information\":\"yes or no\",
-              \"contains_username_and_password\":\"yes or no\",
-              \"contains_email_address\":\"yes or no\",
-              \"contains_credit_card\":\"yes or no\",
-              \"contains_banking_information\":\"yes or no\",
-              \"severity_of_personal_information\":\"1 to 10\"
-            }
-            
-            Only respond with valid json. Do not escape quotes.
-
-            Text to analyze:####" . $extracted_text . "####";
         if (strlen(trim($this->common->get_config_value('PROMPT_OVERRIDE_PII'))) > 10) {
             $prompt = $this->common->get_config_value('PROMPT_OVERRIDE_PII') . " #### " . $extracted_text . "####";
+        } else {
+            $prompt  = "You are an AI trained to detect Personally Identifiable Information (PII) in text. ";
+            $prompt .= "PII refers only to data that can directly or indirectly identify a specific person. ";
+            $prompt .= "Examples include names, social security numbers, personal addresses, phone numbers, medical details, passwords, credit card numbers, and banking information. ";
+            $prompt .= "Do not flag technical documentation, system logs, configuration files, device names, or software instructions as PII unless they include real personal identifiers. ";
+            $prompt .= "Return only a valid JSON object using the exact format below. ";
+            $prompt .= "Do not include explanations, escaped quotes, or any extra output.\n\n";
+
+            $prompt .= "Guidance for each field:\n";
+            $prompt .= "1. contains_social_security_number: Flag if the text contains a full or partial social security number (e.g., 123-45-6789).\n";
+            $prompt .= "2. contains_phone_number: Flag if the text contains a personal phone number (e.g., mobile, home, or work number).\n";
+            $prompt .= "3. contains_street_address: Flag if the text contains a full or partial address (e.g., 123 Main St, City, State, Zip).\n";
+            $prompt .= "4. contains_first_and_last_name: Flag if the text contains a full name (e.g., John Doe).\n";
+            $prompt .= "5. contains_personal_medical_information: Flag if the text contains medical information (e.g., diagnosis, treatment, prescription details).\n";
+            $prompt .= "6. contains_username_and_password: Flag if the text contains any user credentials (e.g., login details, username and password pairs).\n";
+            $prompt .= "7. contains_email_address: Flag if the text contains an email address (e.g., user@example.com).\n";
+            $prompt .= "8. contains_credit_card: Flag if the text contains a full or partial credit card number (e.g., 4111-1111-1111-1111).\n";
+            $prompt .= "9. contains_banking_information: Flag if the text contains any banking information (e.g., account number, routing number, check details).\n";
+            $prompt .= "10. severity_of_personal_information: Assign a value from 1 to 10, where 1 means minimal or no PII, and 10 means highly sensitive information (e.g., full identity, medical, or financial info).\n\n";
+
+            $prompt .= "Return the result in the following JSON format:\n";
+            $prompt .= "{\n";
+            $prompt .= "  \"contains_social_security_number\": \"yes or no\",\n";
+            $prompt .= "  \"contains_phone_number\": \"yes or no\",\n";
+            $prompt .= "  \"contains_street_address\": \"yes or no\",\n";
+            $prompt .= "  \"contains_first_and_last_name\": \"yes or no\",\n";
+            $prompt .= "  \"contains_personal_medical_information\": \"yes or no\",\n";
+            $prompt .= "  \"contains_username_and_password\": \"yes or no\",\n";
+            $prompt .= "  \"contains_email_address\": \"yes or no\",\n";
+            $prompt .= "  \"contains_credit_card\": \"yes or no\",\n";
+            $prompt .= "  \"contains_banking_information\": \"yes or no\",\n";
+            $prompt .= "  \"severity_of_personal_information\": \"1 to 10\"\n";
+            $prompt .= "}\n\n";
+            $prompt .= "Text to analyze is enclosed below between #### markers:\n";
+            $prompt .= "####" . $this->common->substring_words($extracted_text, 2000) . "####";
         }
+
 
         return $prompt;
     }
@@ -142,9 +161,13 @@ class ai_processing
 
     public function get_ai_tags_prompt($extracted_text)
     {
-        $prompt = "From the text provided, provide a comma separated list of relevant tags. Provide only the list without explanation. The text is delimited by #### . The text to analyze is:\n ####" . $extracted_text . '####';
+
         if (strlen(trim($this->common->get_config_value('PROMPT_OVERRIDE_TAGS'))) > 10) {
             $prompt = $this->common->get_config_value('PROMPT_OVERRIDE_TAGS') . " #### " . $extracted_text . "####";
+        } else {
+            $prompt = "Analyze the text below and return a concise, comma-separated list of relevant tags. ";
+            $prompt .= "Include only the tags—no explanations, formatting, or additional text. ";
+            $prompt .= "The text is enclosed between #### markers:\n####" . $extracted_text . "####";
         }
         return $prompt;
     }
@@ -175,12 +198,18 @@ class ai_processing
 
     public function get_summary_prompt($extracted_text)
     {
-        $summary_length = $this->common->get_config_value('AI_PROCESSING_SUMMARY_LENGTH');
-        $prompt = "Your task is to review the provided text and create a summary of the content in less than $summary_length words. Respond with just the summary without any additional text or introduction. This summary will be used in a search index so include any relevant details that a user might search for. Summarize the text delimited by #### The text to analyze is:\n";
-        $prompt .= "#### " . $extracted_text . ' ####';
-
         if (strlen(trim($this->common->get_config_value('PROMPT_OVERRIDE_SUMMARY'))) > 10) {
             $prompt = $this->common->get_config_value('PROMPT_OVERRIDE_SUMMARY') . " #### " . $extracted_text . "####";
+        } else {
+            $summary_length = $this->common->get_config_value('AI_PROCESSING_SUMMARY_LENGTH');
+            $prompt  = "Summarize the following text in no more than $summary_length words. ";
+            $prompt .= "Focus solely on the **core concepts**, **key purposes**, and **high-level overviews** that are explicitly stated in the text. ";
+            $prompt .= "Do not refer to or infer anything about the text’s format, structure, or context, and do not incorporate any external or prior knowledge. ";
+            $prompt .= "Exclude all technical details such as file names, paths, configuration settings, specific operational steps, meta-data, revision histories, or any extraneous information. ";
+            $prompt .= "Ensure that the summary is cohesive, concise, and entirely based on the provided content. ";
+            $prompt .= "If the text is ambiguous or incomplete, summarize only the clear points without making assumptions. ";
+            $prompt .= "Respond solely with the summary—do not include any additional commentary or content. ";
+            $prompt .= "The text to summarize is enclosed between #### markers:\n#### " . $this->common->substring_words($extracted_text, 1500) . " ####";
         }
         return $prompt;
     }
@@ -235,20 +264,33 @@ class ai_processing
         return $summary;
     }
 
-    public function get_title_prompt($extracted_text)
+    public function get_title_prompt($text, $file_name = '')
     {
-        $prompt = "You are an AI specialized in generating document names. Your task is to review the provided text and create a clear, concise document name that captures the essence of the content. The text to name is delimieted by ####. The name should be 10 words or less. Only respond with the name. The text to analyze is:\n ####" . $extracted_text . "####";
         if (strlen(trim($this->common->get_config_value('PROMPT_OVERRIDE_TITLE'))) > 10) {
-            $prompt = $this->common->get_config_value('PROMPT_OVERRIDE_TITLE') . " #### " . $extracted_text . "####";
+            $prompt = $this->common->get_config_value('PROMPT_OVERRIDE_TITLE') . " #### " . $text . "####";
+        } else if ($file_name != '') {
+            $prompt = "You are an AI that specializes in naming documents. ";
+            $prompt .= "Create a clear, concise name for the document using 10 words or fewer. ";
+            $prompt .= "Prioritize the file name when determining relevance, but consider the content for context. ";
+            $prompt .= "Respond with the name only—no explanations or extra text. ";
+            $prompt .= "File name: " . $file_name . ". ";
+            $prompt .= "The document content is enclosed below between #### markers:\n####" . $this->common->substring_words($text, 250) . "####";
+        } else {
+            $prompt = "You are an AI that specializes in naming documents. ";
+            $prompt .= "Create a clear, concise name for the document using 10 words or fewer. ";
+            $prompt .= "Prioritize the file name when determining relevance, but consider the content for context. ";
+            $prompt .= "Respond with the name only—no explanations or extra text. ";
+            $prompt .= "The document content is enclosed below between #### markers:\n####" . $this->common->substring_words($text, 250) . "####";
         }
+
         return $prompt;
     }
 
-    public function titleText($extracted_text)
+    public function titleText($extracted_text, $file_name = '')
     {
         $this->initializeChat(0.7);
 
-        $prompt = $this->get_title_prompt($extracted_text);
+        $prompt = $this->get_title_prompt($extracted_text, $file_name);
 
         try {
             $title = $this->chat->sendRequest($prompt);

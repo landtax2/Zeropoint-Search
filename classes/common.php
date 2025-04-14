@@ -380,7 +380,7 @@ class common
     }
 
 
-
+    //chunk text into chunks of a specific number of words by breaking at sentence boundaries
     public function chunk_text(string $text, int $maxWords = 750, int $desiredOverlap = 100): array
     {
         // Normalize line breaks and split into sentences
@@ -425,5 +425,24 @@ class common
         }
 
         return $chunks;
+    }
+
+    //substring text to a specific number of words
+    public function substring_words($text, $limit = 10, $suffix = '...')
+    {
+        // Remove extra whitespace
+        $text = trim(preg_replace('/\s+/', ' ', $text));
+
+        // Split text into words
+        $words = explode(' ', $text);
+
+        // If the number of words is less than or equal to the limit, return full text
+        if (count($words) <= $limit) {
+            return $text;
+        }
+
+        // Otherwise, slice and rejoin with suffix
+        $truncated = array_slice($words, 0, $limit);
+        return implode(' ', $truncated) . $suffix;
     }
 }
